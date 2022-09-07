@@ -18,7 +18,7 @@ class CreateSuggestionsTable extends Migration
             $table->text('title');
             $table->text('author');
             $table->string('publishers', 255);
-            $table->enum('status', ['proses review', 'ditolak', 'diterima']);
+            $table->enum('status', ['proses review', 'ditolak', 'diterima'])->default('proses review');
             $table->timestamps();
         });
     }

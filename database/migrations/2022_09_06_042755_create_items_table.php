@@ -14,13 +14,17 @@ class CreateItemsTable extends Migration
     public function up()
     {
         Schema::create('items', function (Blueprint $table) {
-            $table->id();
-            $table->string('register_num', 50);
-            $table->enum('source',['pembelian','hadiah']);
-            $table->integer('price');
-            $table->enum('status',['dipinjam', 'tersedia']);
-            $table->tinyInteger('is_deleted')->length(1);
+            $table->string('register_num', 50)->primary();
+            $table->enum('source',['pembelian','hadiah'])->default('pembelian');
+            $table->integer('price')->default(0);
+            $table->enum('status',['dipinjam', 'tersedia'])->default('tersedia');
+            $table->tinyInteger('is_deleted')->length(1)->default(0);
             $table->timestamps();
+        });
+
+        Schema::table('items', function(Blueprint $table){
+            $table->unsignedBigInteger('biblios_id')->default(0);
+            $table->foreign('biblios_id')->references('id')->on('biblios');
         });
     }
 
@@ -31,6 +35,11 @@ class CreateItemsTable extends Migration
      */
     public function down()
     {
+        Schema::table('items', function(Blueprint $table){
+            $table->dropForeign(['biblios_id']);
+            $table->dropColumn('biblios_id');
+        });
+
         Schema::dropIfExists('items');
     }
 }

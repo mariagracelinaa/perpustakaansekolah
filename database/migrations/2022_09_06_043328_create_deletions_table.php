@@ -19,6 +19,16 @@ class CreateDeletionsTable extends Migration
             $table->string('description', 100);
             $table->timestamps();
         });
+
+        Schema::table('deletions', function(Blueprint $table){
+            $table->unsignedBigInteger('biblios_id')->default(0);
+            $table->foreign('biblios_id')->references('id')->on('biblios');
+        });
+
+        Schema::table('deletions', function(Blueprint $table){
+            $table->string('register_num')->default(0);
+            $table->foreign('register_num')->references('register_num')->on('items');
+        });
     }
 
     /**
@@ -28,6 +38,16 @@ class CreateDeletionsTable extends Migration
      */
     public function down()
     {
+        Schema::table('deletions', function(Blueprint $table){
+            $table->dropForeign(['biblios_id']);
+            $table->dropColumn('biblios_id');
+        });
+
+        Schema::table('deletions', function(Blueprint $table){
+            $table->dropForeign(['register_num']);
+            $table->dropColumn('register_num');
+        });
+
         Schema::dropIfExists('deletions');
     }
 }

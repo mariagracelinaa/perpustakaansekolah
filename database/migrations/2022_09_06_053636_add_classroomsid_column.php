@@ -14,7 +14,7 @@ class AddClassroomsidColumn extends Migration
     public function up()
     {
         Schema::table('users', function(Blueprint $table){
-            $table->unsignedBigInteger('classrooms_id');
+            $table->unsignedBigInteger('classrooms_id')->default(0);
             $table->foreign('classrooms_id')->references('id')->on('classrooms');
         });
     }

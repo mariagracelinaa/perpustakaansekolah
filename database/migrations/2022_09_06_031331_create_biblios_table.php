@@ -22,7 +22,7 @@ class CreateBibliosTable extends Migration
             $table->enum('ddc', ['000', '100','200','300','400','500','600','700','800','900']);
             $table->string('classification', 50);
             $table->string('image', 255);
-            $table->integer('edition');
+            $table->integer('edition')->default(1);
             $table->integer('page');
             $table->integer('book_height');
             $table->enum('location', ['rak 000', 'rak 100','rak 200','rak 300','rak 400','rak 500','rak 600','rak 700','rak 800','rak 900']);
