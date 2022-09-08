@@ -14,7 +14,10 @@ class BiblioController extends Controller
      */
     public function index()
     {
-        //
+        $result = Biblio::all();
+        // $result = Biblio::find(2);
+        // dd($result);
+        return view('biblio.index', compact('result'));
     }
 
     /**
@@ -81,5 +84,14 @@ class BiblioController extends Controller
     public function destroy(Biblio $biblio)
     {
         //
+    }
+
+    public function detailBiblio($biblios_id){
+        //Ambil data biblio sesuai ID yang ingin dilihat detailnya
+        $data = Biblio::find($biblios_id);
+
+        //Ambil semua item dari biblio yang dimaksud
+        $items = $data->items;
+        return view('biblio.detailbiblio', compact('data','items'));
     }
 }

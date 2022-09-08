@@ -14,7 +14,8 @@ class PublisherController extends Controller
      */
     public function index()
     {
-        //
+        $result = Publisher::all();
+        dd($result);
     }
 
     /**

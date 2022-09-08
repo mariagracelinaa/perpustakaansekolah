@@ -16,3 +16,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Publisher
+Route::resource('daftar-penerbit', 'PublisherController');
+
+// Author
+Route::resource('daftar-penulis', 'AuthorController');
+
+// Biblio + Item
+Route::resource('daftar-buku', 'BiblioController');
+// Route::get('buku-item', 'ItemController@index');
+Route::get('daftar-buku-detail/{id}','BiblioController@detailBiblio');

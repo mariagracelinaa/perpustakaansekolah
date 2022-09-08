@@ -14,7 +14,10 @@ class ItemController extends Controller
      */
     public function index()
     {
-        //
+        $items = Item::where('register_num', '0001/per-C/Hd/2020/1')->first();
+        // $items = Item::all();
+        dd($items->biblios->title);
+        // echo $items;
     }
 
     /**
