@@ -10,4 +10,6 @@ class Publisher extends Model
     {
         return $this->hasMany('App\Biblio', 'publishers_id', 'id');
     }
+
+    public $timestamps = false;
 }

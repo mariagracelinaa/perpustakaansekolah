@@ -14,7 +14,8 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        // $result = Author::all();
+        $result = Author::all();
+        return view('author.index', compact('result'));
     }
 
     /**
@@ -35,7 +36,16 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try{
+            $data = new Author();
+            $data->name = $request->get('name');
+            $data->save();
+
+            return redirect()->route('daftar-penulis.index')->with('status','Data penulis baru berhasil disimpan');
+        }catch (\PDOException $e) {
+            return redirect()->route('daftar-penulis.index')->with('error', 'Gagal menambah data baru, silahkan coba lagi');
+        }
+        
     }
 
     /**
@@ -57,7 +67,6 @@ class AuthorController extends Controller
      */
     public function edit(Author $author)
     {
-        //
     }
 
     /**
@@ -69,7 +78,14 @@ class AuthorController extends Controller
      */
     public function update(Request $request, Author $author)
     {
-        //
+        try{
+            $author->name = $request->get('name');
+            // $author->save();
+            dd($author);
+            // return redirect()->route('daftar-penerbit.index')->with('status', 'Data penerbit berhasil diubah');
+        }catch (\PDOException $e) {
+            return redirect()->route('daftar-penulis.index')->with('error', 'Data penulis gagal diubah, silahkan coba lagi');
+        }
     }
 
     /**
@@ -81,5 +97,15 @@ class AuthorController extends Controller
     public function destroy(Author $author)
     {
         //
+    }
+
+    public function getEditForm(Request $request){
+        $id = $request->get('id');
+        $data = Author::find($id);
+        // dd($data);
+        return response()->json(array(
+            'status'=>'OK',
+            'msg'=>view('author.getEditForm', compact('data'))->render()
+        ), 200);
     }
 }

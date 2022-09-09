@@ -43,7 +43,7 @@
           <td>{{$biblio->book_height}}</td>
           <td>{{$biblio->location}}</td>
           <td>{{$biblio->publishers->name}}</td>
-          <td><a href="">Edit</a> <a href="daftar-buku-detail/{{$biblio->id}}">Detail</a></td>
+          <td><a href="">Ubah</a> <a href="daftar-buku-detail/{{$biblio->id}}">Detail</a></td>
         </tr>
       @endforeach
     </tbody>
