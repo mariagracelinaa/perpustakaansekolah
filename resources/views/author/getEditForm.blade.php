@@ -11,14 +11,14 @@
         <div class="form-body">
             <div class="form-group">
                 <label for="exampleInputEmail1">Nama Penulis</label>
-                <input id="#eName" type="text" class="form-control" placeholder="Isikan nama penulis" name="name" value="{{$data->name}}">
+                <input id="eName" type="text" class="form-control" placeholder="Isikan nama penulis" name="name" value="{{$data->name}}">
                 <span class="help-block">
                 Tulis nama penulis dengan lengkap</span>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-info" data-dismiss="modal"  onclick="update">Ubah</button>
+      <button type="button" class="btn btn-info" data-dismiss="modal" onclick="updateData({{$data->id}})">Ubah</button>
       <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
      </div>
   </form>

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Author;
 use Illuminate\Http\Request;
 
+use DB;
+
 class AuthorController extends Controller
 {
     /**
@@ -78,14 +80,14 @@ class AuthorController extends Controller
      */
     public function update(Request $request, Author $author)
     {
-        try{
-            $author->name = $request->get('name');
+        // try{
+        //     $author->name = $request->get('name');
             // $author->save();
-            dd($author);
+            // dd($author);
             // return redirect()->route('daftar-penerbit.index')->with('status', 'Data penerbit berhasil diubah');
-        }catch (\PDOException $e) {
-            return redirect()->route('daftar-penulis.index')->with('error', 'Data penulis gagal diubah, silahkan coba lagi');
-        }
+        // }catch (\PDOException $e) {
+        //     return redirect()->route('daftar-penulis.index')->with('error', 'Data penulis gagal diubah, silahkan coba lagi');
+        // }
     }
 
     /**
@@ -102,10 +104,23 @@ class AuthorController extends Controller
     public function getEditForm(Request $request){
         $id = $request->get('id');
         $data = Author::find($id);
-        // dd($data);
         return response()->json(array(
             'status'=>'OK',
             'msg'=>view('author.getEditForm', compact('data'))->render()
         ), 200);
+    }
+
+    public function updateData(Request $request){
+        $id = $request->get('id');
+        $name = $request->get('name');
+        try{
+            $data = DB::table('authors')
+                    ->where('id', $id)
+                    ->update(['name' => $name]);
+                    
+            $request->session()->flash('status','Data penulis berhasil diubah');
+        }catch (\PDOException $e) {
+            $request->session()->flash('error', 'Gagal mengubah data penulis, silahkan coba lagi');
+        }  
     }
 }

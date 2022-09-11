@@ -122,11 +122,9 @@ class PublisherController extends Controller
                     ->where('id', $id)
                     ->update(['name' => $name, 'city' => $city]);
 
-            return redirect()->route('daftar-penerbit.index')->with('status','Data penerbit berhasil diubah');
-
+            $request->session()->flash('status','Data penerbit berhasil diubah');
         }catch (\PDOException $e) {
-            return redirect()->route('daftar-penerbit.index')->with('error', 'Gagal menambah data baru, silahkan coba lagi');
-        }
-        
+            $request->session()->flash('error', 'Gagal mengubah data penerbit, silahkan coba lagi');
+        }  
     }
 }

@@ -26,6 +26,7 @@ Route::post('daftar-penerbit/updateData','PublisherController@updateData')->name
 // Author
 Route::resource('daftar-penulis', 'AuthorController');
 Route::post('/daftar-penulis/getEditForm','AuthorController@getEditForm')->name('daftar-penulis.getEditForm');
+Route::post('daftar-penulis/updateData','AuthorController@updateData')->name('daftar-penulis.updateData');
 
 
 // Biblio + Item

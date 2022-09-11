@@ -9,30 +9,38 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 
 <div class="container">
-  @if(session('status'))
-    {{-- Alert start --}}
-        <div class="alert alert-success">
-            <strong>Sukses!</strong> {{session('status')}}
-        </div>
-    {{-- Alert End --}}
-  @endif
+  {{-- Alert start --}}
+    @if(session('status'))  
+      <div class="alert alert-success">
+          <strong>Sukses!</strong> {{session('status')}}
+      </div>
+    @elseif(session('error')) 
+      <div class="alert alert-danger">
+        <strong>Gagal!</strong> {{session('error')}}
+      </div>
+    @endif
+  {{-- Alert End --}}
   <h2>Daftar Penerbit</h2>
-  <a href="#modalCreate" data-toggle="modal" class="btn btn-info">+ Tambah Data</a>         
+  <button href="#modalCreate" data-toggle="modal" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Data</button>       
   <table class="table table-bordered">
     <thead>
       <tr>
+        <th>No</th>
         <th>Nama Penerbit</th>
         <th>Kota</th>
         <th>Aksi</th>
       </tr>
     </thead>
     <tbody>
+      @php $no = 1; @endphp
       @foreach ($result as $publisher)
         <tr>
+          <td>{{ $no++ }}</td>
           <td>{{$publisher->name}}</td>
           <td>{{$publisher->city}}</td>
           <td>
@@ -131,32 +139,10 @@
                 'city':eCity
               },
           success:function(data) {
-            $("#modalContent").html(data.msg);
+            location.reload();
           }
       });
     }
 </script>
 </body>
 </html>
-
-
-
-{{-- start ajax --}}
-{{-- @section('javascript')
-<script type="text/javascript">
-    function getEditForm(id) {
-    $.ajax({
-        type:'POST',
-        url:'{{route("daftar-penerbit.getEditForm")}}',
-        data:{
-              '_token': '',
-              'id':id
-            },
-        success:function(data) {
-            $("#modalContent").html(data.msg);
-        }
-    });
-    }
-</script>
-@endsection --}}
-{{-- end ajax --}}
