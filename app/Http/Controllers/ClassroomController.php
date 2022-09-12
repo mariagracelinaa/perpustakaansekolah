@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Author;
+use App\Classroom;
+use App\User;
 use Illuminate\Http\Request;
-
 use DB;
 
-class AuthorController extends Controller
+class ClassroomController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,18 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        $result = Author::all();
-        return view('author.index', compact('result'));
+        $result = Classroom::all();
+
+        $count = DB::table('classrooms')
+                ->Select(DB::raw('count(users.classrooms_id) as total_murid'))
+                ->leftJoin('users','users.classrooms_id','=','classrooms.id')
+                ->groupBy('classrooms.id')
+                ->orderBy('classrooms.id', 'asc')
+                ->get();
+
+        $class = Classroom::select()->count();
+        // dd($count);
+        return view('classroom.index', compact('result', 'count', 'class'));
     }
 
     /**
@@ -39,23 +49,23 @@ class AuthorController extends Controller
     public function store(Request $request)
     {
         try{
-            $data = new Author();
+            $data = new Classroom();
             $data->name = $request->get('name');
             $data->save();
-            return redirect()->route('daftar-penulis.index')->with('status','Data penulis baru berhasil disimpan');
+
+            return redirect()->route('daftar-kelas.index')->with('status','Data ruang kelas baru berhasil disimpan');
         }catch (\PDOException $e) {
-            return redirect()->route('daftar-penulis.index')->with('error', 'Gagal menambah data baru, silahkan coba lagi');
+            return redirect()->route('daftar-kelas.index')->with('error', 'Gagal menambah data baru, silahkan coba lagi');
         }
-        
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Author  $author
+     * @param  \App\Classroom  $classroom
      * @return \Illuminate\Http\Response
      */
-    public function show(Author $author)
+    public function show(Classroom $classroom)
     {
         //
     }
@@ -63,49 +73,43 @@ class AuthorController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Author  $author
+     * @param  \App\Classroom  $classroom
      * @return \Illuminate\Http\Response
      */
-    public function edit(Author $author)
+    public function edit(Classroom $classroom)
     {
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Author  $author
+     * @param  \App\Classroom  $classroom
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Author $author)
+    public function update(Request $request, Classroom $classroom)
     {
-        // try{
-        //     $author->name = $request->get('name');
-            // $author->save();
-            // dd($author);
-            // return redirect()->route('daftar-penerbit.index')->with('status', 'Data penerbit berhasil diubah');
-        // }catch (\PDOException $e) {
-        //     return redirect()->route('daftar-penulis.index')->with('error', 'Data penulis gagal diubah, silahkan coba lagi');
-        // }
+
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Author  $author
+     * @param  \App\Classroom  $classroom
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Author $author)
+    public function destroy(Classroom $classroom)
     {
         //
     }
 
     public function getEditForm(Request $request){
         $id = $request->get('id');
-        $data = Author::find($id);
+        $data = Classroom::find($id);
         return response()->json(array(
             'status'=>'OK',
-            'msg'=>view('author.getEditForm', compact('data'))->render()
+            'msg'=>view('classroom.getEditForm', compact('data'))->render()
         ), 200);
     }
 
@@ -113,13 +117,13 @@ class AuthorController extends Controller
         $id = $request->get('id');
         $name = $request->get('name');
         try{
-            $data = DB::table('authors')
+            $data = DB::table('classrooms')
                     ->where('id', $id)
                     ->update(['name' => $name]);
                     
-            $request->session()->flash('status','Data penulis berhasil diubah');
+            $request->session()->flash('status','Data ruang kelas berhasil diubah');
         }catch (\PDOException $e) {
-            $request->session()->flash('error', 'Gagal mengubah data penulis, silahkan coba lagi');
+            $request->session()->flash('error', 'Gagal mengubah data ruang kelas, silahkan coba lagi');
         }  
     }
 }

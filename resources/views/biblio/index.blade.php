@@ -7,11 +7,28 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 
 <div class="container">
-  <h2>Daftar Buku</h2>          
+  {{-- Alert start --}}
+  @if(session('status'))  
+    <div class="alert alert-success">
+        <strong>Sukses!</strong> {{session('status')}}
+    </div>
+  @elseif(session('error')) 
+    <div class="alert alert-danger">
+      <strong>Gagal!</strong> {{session('error')}}
+    </div>
+  @endif
+  {{-- Alert End --}}
+
+<div class="container">
+  <h2>Daftar Buku</h2>   
+  <button href="#modalCreate" data-toggle="modal" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Data</button>           
   <table class="table table-bordered">
     <thead>
       <tr>
