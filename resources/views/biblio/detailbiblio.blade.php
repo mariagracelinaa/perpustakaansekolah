@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 
@@ -25,6 +27,18 @@
             <tr>
                 <td>Penerbit </td>
                 <td>: {{$data->publishers->name}}</td>
+            </tr>
+            <tr>
+                <td>Kota Terbit </td>
+                <td>: {{$data->publishers->city}}</td>
+            </tr>
+            <tr>
+                <td>Penulis</td>
+                <td>: 
+                    @foreach($author_name as $an)
+                        {{$an}}
+                    @endforeach
+                </td>
             </tr>
             <tr>
                 <td>Tahun terbit </td>
@@ -60,12 +74,15 @@
             </tr>
         </tbody>
     </table>    
-    <br>
+    <div style="float: right;">
+        <button href="#modalCreate" data-toggle="modal" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Item</button>           
+    </div>
     <table class="table table-bordered">
         <thead>
         <tr>
             <th>Nomor registrasi buku</th>
             <th>Status</th>
+            <th>Aksi</th>
         </tr>
         </thead>
         <tbody>
@@ -81,6 +98,11 @@
                             Sedang Dipinjam
                         </td>
                     @endif
+                    <td>
+                        <a href="#modalEdit" data-toggle="modal" class="btn btn-warning">Ubah</a>
+                        {{-- onclick="getEditForm({{$publisher->id}})" --}}
+                        <a class="btn btn-danger" onclick="if(confirm('Apakah anda yakin menghapus data {{$item->register_num}}'))">Hapus</a>
+                    </td>
                 </tr>
             @endforeach
         </tbody>

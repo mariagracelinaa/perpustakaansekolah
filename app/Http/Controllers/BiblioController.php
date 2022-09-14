@@ -44,9 +44,9 @@ class BiblioController extends Controller
         try{
             // Ambil id peneribit sesuai nama yang dimasukkan pengguna
             $pub_id = DB::table('publishers')
-            ->select()
-            ->where('name', '=', $request->get('listPublisher'))
-            ->get();
+                    ->select()
+                    ->where('name', '=', $request->get('listPublisher'))
+                    ->get();
 
             // Ambil id penulis sesuai nama yang dimasukkan pengguna
             $arr_author = $request->get('listAuthor');
@@ -149,8 +149,70 @@ class BiblioController extends Controller
         //Ambil data biblio sesuai ID yang ingin dilihat detailnya
         $data = Biblio::find($biblios_id);
 
+        //Ambil data author sesuai biblio
+        $listAuthorBiblio = DB::table('authors_biblios')
+                            ->where('biblios_id', $biblios_id)
+                            ->orderBy('primary_author', 'desc')
+                            ->get();
+
+        $author_name = [];
+
+        //Masukin nama author berdasarkan id yang ada
+        for($i = 0; $i < count($listAuthorBiblio); $i++){
+            $name = DB::table('authors')
+                ->select()
+                ->where('id', '=', $listAuthorBiblio[$i]->authors_id)
+                ->get();
+
+            $author_name[$i] = $name[0]->name;  
+        } 
         //Ambil semua item dari biblio yang dimaksud
         $items = $data->items;
-        return view('biblio.detailbiblio', compact('data','items'));
+        return view('biblio.detailbiblio', compact('data','items', 'author_name'));
+    }
+
+    public function getEditForm(Request $request){
+        $id = $request->get('id');
+        $data = Biblio::find($id);
+
+        $listAuthorBiblio = DB::table('authors_biblios')
+                            ->where('biblios_id', $id)
+                            ->orderBy('primary_author', 'desc')
+                            ->get();
+
+        $author_data = [];
+
+        for($i = 0; $i < count($listAuthorBiblio); $i++){
+            $auth = DB::table('authors')
+                ->select()
+                ->where('id', '=', $listAuthorBiblio[$i]->authors_id)
+                ->get();
+
+            $author_data[$i] = $auth[0]->name;  
+        }
+
+        $publisher = Publisher::all();
+        $author = Author::all();
+
+        return response()->json(array(
+            'status'=>'OK',
+            'msg'=>view('biblio.getEditForm', compact('data','author_data','publisher','author'))->render()
+        ), 200);
+    }
+
+    public function updateData(Request $request){
+        dd($request);
+        // $id = $request->get('id');
+        // $name = $request->get('name');
+        // $city = $request->get('city');
+        // try{
+        //     $data = DB::table('publishers')
+        //             ->where('id', $id)
+        //             ->update(['name' => $name, 'city' => $city]);
+
+        //     $request->session()->flash('status','Data penerbit berhasil diubah');
+        // }catch (\PDOException $e) {
+        //     $request->session()->flash('error', 'Gagal mengubah data penerbit, silahkan coba lagi');
+        // }  
     }
 }

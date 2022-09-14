@@ -18,5 +18,9 @@ class Biblio extends Model
         return $this->hasMany('App\Item', 'biblios_id', 'id');
     }
 
+    public function authors(){
+        return $this->belongsToMany('App\Author','authors_biblios','biblios_id','authors_id')
+                    ->withPivot('primary_author');
+    }
     
 }

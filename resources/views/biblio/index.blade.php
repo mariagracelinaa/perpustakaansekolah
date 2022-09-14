@@ -63,7 +63,10 @@
           <td>{{$biblio->book_height}}</td>
           <td>{{$biblio->location}}</td>
           <td>{{$biblio->publishers->name}}</td>
-          <td><a href="">Ubah</a> <a href="daftar-buku-detail/{{$biblio->id}}">Detail</a></td>
+          <td>
+            <a href="#modalEdit" data-toggle="modal" class="btn btn-warning" onclick="getEditForm({{$biblio->id}})">Ubah</a>
+            <a class="btn btn-primary" href="daftar-buku-detail/{{$biblio->id}}">Detail</a>
+          </td>
         </tr>
       @endforeach
     </tbody>
@@ -221,7 +224,20 @@
 </div>
 {{-- Modal end --}}
 
-
+{{-- Modal start Edit--}}
+<div class="modal fade" id="modalEdit" tabindex="-1" role="basic" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" id="modalContent">
+      <div class="modal-header">
+        <button type="button" class="close" 
+          data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Ubah Data Buku</h4>
+      </div>
+      {{-- Isinya dari getEditForm.blade.php --}}
+    </div>
+  </div>
+</div>
+{{-- Modal end edit --}}
 
 </body>
 </html>
@@ -261,5 +277,38 @@
           }
       });    
   });  
+
+  function getEditForm(id) {
+    $.ajax({
+        type:'POST',
+        url:'{{route("daftar-buku.getEditForm")}}',
+        data:{
+              '_token': '<?php echo csrf_token() ?>',
+              'id':id
+            },
+        success:function(data) {
+            $("#modalContent").html(data.msg);
+        }
+    });
+  }
+
+  function updateData(id)
+  {
+    var formData = new FormData($("#edit_biblio")[0]);
+    $.ajax({
+   		url: '{{route("daftar-buku.updateData")}}',
+   		type: 'POST',
+      data: formData,
+			async: false,
+			cache: false,
+			contentType: false,
+			enctype: 'multipart/form-data',
+			processData: false,
+      success:function(data) {
+        // location.reload();
+        // window.location.href = "{{route('daftar-buku.index')}}";
+      }
+    });
+  }
 </script>
  
