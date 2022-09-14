@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Biblio extends Model
 {
+    public $timestamps = false;
+    
     public function publishers()
     {
         return $this->belongsTo('App\Publisher','publishers_id');
@@ -15,4 +17,6 @@ class Biblio extends Model
     {
         return $this->hasMany('App\Item', 'biblios_id', 'id');
     }
+
+    
 }
