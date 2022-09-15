@@ -34,9 +34,12 @@ Route::post('daftar-penulis/updateData','AuthorController@updateData')->name('da
 // Biblio + Item
 //Admin Akses
 Route::resource('daftar-buku', 'BiblioController');
-Route::get('daftar-buku-detail/{id}','BiblioController@detailBiblio');
-Route::post('/daftar-buku/getEditForm','BiblioController@getEditForm')->name('daftar-buku.getEditForm');
+Route::resource('daftar-item', 'ItemController');
+Route::get('daftar-buku-detail/{id}','BiblioController@detailBiblio')->name('daftar-buku-detail');
+Route::post('/daftar-buku/getEditForm', 'BiblioController@getEditForm')->name('daftar-buku.getEditForm');
 Route::post('daftar-buku/updateData','BiblioController@updateData')->name('daftar-buku.updateData');
+Route::post('/daftar-item/getEditForm', 'ItemController@getEditForm')->name('daftar-item.getEditForm');
+Route::post('daftar-item/updateData','ItemController@updateData')->name('daftar-item.updateData');
 //User Akses
 
 //Classroom

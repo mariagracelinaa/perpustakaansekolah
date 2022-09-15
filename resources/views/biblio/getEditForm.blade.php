@@ -8,7 +8,7 @@
     </div>
     <div class="modal-body">
         @csrf
-        @method('PUT')
+        {{-- @method('PUT') --}}
         <div class="form-body">
             <div class="form-group">
                 <label for="exampleInputEmail1">Judul Buku</label>
@@ -257,13 +257,19 @@
         </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-info" data-dismiss="modal" onclick="updateData({{$data->id}})">Simpan</button>
-      <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-info" data-dismiss="modal" onclick="updateData({{$data->id}})">Ubah</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
      </div>
+     <input type="hidden" id="updateID" name="updateID" value={{$data->id}}>
   </form>
   {{-- Form end --}}
   <script type="text/javascript"> 
     $('#edit').click(function(){
         $('#dynamic_field2').append('<tr id="{{$i}}"><td><input id="author" name="listAuthor[]" list="listAuthor" placeholder="Tulis nama penulis"><datalist id="listAuthor">@foreach ($author as $aut)<option idp="{{$aut->id}}" value="{{$aut->name}}">@endforeach</datalist></td><td><button type="button" name="remove" id="{{$i}}" class="btn btn-danger btn_remove"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td></tr>');    
     }); 
+
+    $(document).on('click', '.btn_remove', function(){    
+           var button_id = $(this).attr("id");     
+           $('#'+button_id+'').remove();    
+    });
   </script>

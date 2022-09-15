@@ -35,6 +35,7 @@
   <table class="table table-bordered">
     <thead>
       <tr>
+        <th>No</th>
         <th>Judul</th>
         <th>ISBN</th>
         <th>Tahun Terbit</th>
@@ -50,8 +51,12 @@
       </tr>
     </thead>
     <tbody>
+      @php
+          $i = 1;
+      @endphp
       @foreach ($result as $biblio)
         <tr>
+          <td>{{$i++}}</td>
           <td>{{$biblio->title}}</td>
           <td>{{$biblio->isbn}}</td>
           <td>{{$biblio->publish_year}}</td>
@@ -293,22 +298,22 @@
   }
 
   function updateData(id)
-  {
-    var formData = new FormData($("#edit_biblio")[0]);
-    $.ajax({
-   		url: '{{route("daftar-buku.updateData")}}',
-   		type: 'POST',
-      data: formData,
-			async: false,
-			cache: false,
-			contentType: false,
-			enctype: 'multipart/form-data',
-			processData: false,
-      success:function(data) {
-        // location.reload();
-        // window.location.href = "{{route('daftar-buku.index')}}";
-      }
-    });
-  }
+    {
+        var formData = new FormData($("#edit_biblio")[0]);
+        $.ajax({
+            async: true,
+            url: '{{route("daftar-buku.updateData")}}',
+            type: 'POST',
+            data: formData,
+            cache: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            processData: false,
+        success:function(data) {
+            // location.reload();
+            // window.location.href = "{{route('daftar-buku.index')}}";
+        }
+        });
+    }
 </script>
  
