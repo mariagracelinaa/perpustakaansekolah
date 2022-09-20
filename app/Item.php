@@ -12,4 +12,10 @@ class Item extends Model
     {
         return $this->belongsTo('App\Biblio','biblios_id');
     }
+
+    public function deletions()
+    {
+        return $this->hasOne('App\Deletion');
+    }
+    
 }

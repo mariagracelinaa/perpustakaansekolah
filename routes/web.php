@@ -40,12 +40,14 @@ Route::post('/daftar-buku/getEditForm', 'BiblioController@getEditForm')->name('d
 Route::post('daftar-buku/updateData','BiblioController@updateData')->name('daftar-buku.updateData');
 Route::post('/daftar-item/getEditForm', 'ItemController@getEditForm')->name('daftar-item.getEditForm');
 Route::post('daftar-item/updateData','ItemController@updateData')->name('daftar-item.updateData');
+Route::post('daftar-item/getDeleteForm','ItemController@getDeleteForm')->name('daftar-item.getDeleteForm');
+Route::post('daftar-item/deleteData','ItemController@deleteData')->name('daftar-item.deleteData');
 //User Akses
 
-//Classroom
+//Class
 //Admin Akses
-Route::resource('daftar-kelas', 'ClassroomController');
-Route::post('/daftar-kelas/getEditForm','ClassroomController@getEditForm')->name('daftar-kelas.getEditForm');
-Route::post('daftar-kelas/updateData','ClassroomController@updateData')->name('daftar-kelas.updateData');
+Route::resource('daftar-kelas', 'ClassesController');
+Route::post('/daftar-kelas/getEditForm','ClassesController@getEditForm')->name('daftar-kelas.getEditForm');
+Route::post('daftar-kelas/updateData','ClassesController@updateData')->name('daftar-kelas.updateData');
 
 

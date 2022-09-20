@@ -39,7 +39,7 @@
         <th>Judul</th>
         <th>ISBN</th>
         <th>Tahun Terbit</th>
-        <th>Tahun Pengadaan</th>
+        <th>Pertama Pengadaan</th>
         <th>Kelas DDC</th>
         <th>Klasifikasi</th>
         <th>Edisi</th>
@@ -60,7 +60,7 @@
           <td>{{$biblio->title}}</td>
           <td>{{$biblio->isbn}}</td>
           <td>{{$biblio->publish_year}}</td>
-          <td>{{$biblio->purchase_year}}</td>
+          <td>{{$biblio->first_purchase}}</td>
           <td>{{$biblio->ddc}}</td>
           <td>{{$biblio->classification}}</td>
           <td>{{$biblio->edition}}</td>
@@ -148,7 +148,7 @@
                 </div>
                 <div class="form-group">
                   <label>Tahun Pengadaan</label>
-                  <input id="purchase_year" type="number" class="form-control" placeholder="Isikan tahun pengadaan buku di perpustakaan" name="purchase_year">
+                  <input id="first_purchase" type="number" class="form-control" placeholder="Isikan tahun pengadaan buku di perpustakaan" name="first_purchase">
                   <span class="help-block">
                   Tulis tahun pengadaan buku di perpustakaan</span>
                 </div>
@@ -297,9 +297,9 @@
     });
   }
 
-  function updateData(id)
-    {
-        var formData = new FormData($("#edit_biblio")[0]);
+  function updateBiblio(id)
+  {
+    var formData = new FormData($("#edit_biblio")[0]);
         $.ajax({
             async: true,
             url: '{{route("daftar-buku.updateData")}}',
@@ -310,10 +310,9 @@
             enctype: 'multipart/form-data',
             processData: false,
         success:function(data) {
-            // location.reload();
-            // window.location.href = "{{route('daftar-buku.index')}}";
+            location.reload();
         }
-        });
-    }
+    });
+  }
 </script>
  

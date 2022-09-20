@@ -11,6 +11,12 @@
         {{-- @method('PUT') --}}
         <div class="form-body">
             <div class="form-group">
+                <label for="exampleInputEmail1">ID Buku</label>
+                <input id="id" type="text" class="form-control" placeholder="Isikan judul buku" name="id" value="{{$data->id}}" readonly>
+                <span class="help-block">
+                Tulis judul buku dengan lengkap</span>
+            </div>
+            <div class="form-group">
                 <label for="exampleInputEmail1">Judul Buku</label>
                 <input id="title" type="text" class="form-control" placeholder="Isikan judul buku" name="title" value="{{$data->title}}">
                 <span class="help-block">
@@ -86,7 +92,7 @@
             </div>
             <div class="form-group">
                 <label>Tahun Pengadaan</label>
-                <input id="purchase_year" type="number" class="form-control" placeholder="Isikan tahun pengadaan buku di perpustakaan" name="purchase_year" value="{{$data->purchase_year}}">
+                <input id="first_purchase" type="number" class="form-control" placeholder="Isikan tahun pengadaan buku di perpustakaan" name="first_purchase" value="{{$data->first_purchase}}">
                 <span class="help-block">
                 Tulis tahun pengadaan buku di perpustakaan</span>
             </div>
@@ -257,10 +263,9 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-info" data-dismiss="modal" onclick="updateData({{$data->id}})">Ubah</button>
+        <button type="button" class="btn btn-info" data-dismiss="modal" onclick="updateBiblio({{$data->id}})">Ubah</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
      </div>
-     <input type="hidden" id="updateID" name="updateID" value={{$data->id}}>
   </form>
   {{-- Form end --}}
   <script type="text/javascript"> 

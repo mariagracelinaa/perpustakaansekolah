@@ -28,11 +28,6 @@
     <table>
         <tbody>
             <tr>
-                <td>
-                    <img src= "{{asset('images/'.$data->image)}}" height="150px">
-                </td>
-            </tr>
-            <tr>
                 <td>Judul </td>
                 <td> : {{$data->title}}</td>
             </tr>
@@ -72,7 +67,7 @@
             </tr>
             <tr>
                 <td>Tahun pengadaan pertama </td>
-                <td> : {{$data->purchase_year}}</td>
+                <td> : {{$data->first_purchase}}</td>
             </tr>
             <tr>
                 <td>Kelas DDC </td>
@@ -99,7 +94,10 @@
                 <td> : {{$data->location}}</td>
             </tr>
         </tbody>
-    </table>    
+    </table>   
+    <div>
+        <img src= "{{asset('images/'.$data->image)}}" height="150px">
+    </div> 
     <div style="float: right;">
         <button href="#modalCreate" data-toggle="modal" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Item</button>           
     </div>
@@ -137,8 +135,7 @@
                         @endif
                         <td>
                             <a href="#modalEdit" data-toggle="modal" class="btn btn-warning" onclick="getEditForm('{{$item->register_num}}')">Ubah</a>
-                            {{-- onclick="getEditForm({{$publisher->id}})" --}}
-                            <a class="btn btn-danger" onclick="if(confirm('Apakah anda yakin menghapus data {{$item->register_num}}'))">Hapus</a>
+                            <a href="#modalDelete" data-toggle="modal" class="btn btn-danger" onclick="getDeleteForm('{{$item->register_num}}')">Hapus</a>
                         </td>
                     </tr>
                 @endif
@@ -223,6 +220,21 @@
         </div>
     </div>
   {{-- Modal end edit --}}
+
+  {{-- Modal start delete--}}
+<div class="modal fade" id="modalDelete" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" id="modalContentDelete">
+        <div class="modal-header">
+          <button type="button" class="close" 
+            data-dismiss="modal" aria-hidden="true"></button>
+          <h4 class="modal-title">Hapus Data Item Buku</h4>
+        </div>
+        {{-- Isinya dari deleteItem.blade.php --}}
+      </div>
+    </div>
+  </div>
+  {{-- Modal end delete --}}
 </body>
 </html>
 
@@ -261,4 +273,37 @@
             }
         });
       }
+
+    function getDeleteForm(id) {
+        $.ajax({
+            type:'POST',
+            url:'{{route("daftar-item.getDeleteForm")}}',
+            data:{
+                '_token': '<?php echo csrf_token() ?>',
+                'id':id
+                },
+            success:function(data) {
+                $("#modalContentDelete").html(data.msg);
+            }
+        });
+    }
+
+  function deleteData(id)
+    {
+        var formData = new FormData($("#delete_item")[0]);
+        $.ajax({
+            async: true,
+            url: '{{route("daftar-item.deleteData")}}',
+            type: 'POST',
+            data: formData,
+            cache: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            processData: false,
+        success:function(data) {
+            location.reload();
+            // window.location.href = "{{route('daftar-buku.index')}}";
+        }
+    });
+    }
   </script>

@@ -37,9 +37,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function classrooms()
+    public function class()
     {
-        return $this->belongsTo('App\Classroom','classrooms_id');
+        return $this->belongsTo('App\Classes','class_id');
     }
 
     public $timestamps = false;

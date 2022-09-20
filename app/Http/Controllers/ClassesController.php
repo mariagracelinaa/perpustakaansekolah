@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Classroom;
-use App\User;
+use App\Classes;
 use Illuminate\Http\Request;
 use DB;
 
-class ClassroomController extends Controller
+class ClassesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,18 +15,18 @@ class ClassroomController extends Controller
      */
     public function index()
     {
-        $result = Classroom::all();
+        $result = Classes::all();
 
-        $count = DB::table('classrooms')
-                ->Select(DB::raw('count(users.classrooms_id) as total_murid'))
-                ->leftJoin('users','users.classrooms_id','=','classrooms.id')
-                ->groupBy('classrooms.id')
-                ->orderBy('classrooms.id', 'asc')
+        $count = DB::table('class')
+                ->Select(DB::raw('count(users.class_id) as total_murid'))
+                ->leftJoin('users','users.class_id','=','class.id')
+                ->groupBy('class.id')
+                ->orderBy('class.id', 'asc')
                 ->get();
 
-        $class = Classroom::select()->count();
+        $class = Classes::select()->count();
         // dd($count);
-        return view('classroom.index', compact('result', 'count', 'class'));
+        return view('class.index', compact('result', 'count', 'class'));
     }
 
     /**
@@ -49,7 +48,7 @@ class ClassroomController extends Controller
     public function store(Request $request)
     {
         try{
-            $data = new Classroom();
+            $data = new Classes();
             $data->name = $request->get('name');
             $data->save();
 
@@ -62,10 +61,10 @@ class ClassroomController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Classroom  $classroom
+     * @param  \App\Classes  $classes
      * @return \Illuminate\Http\Response
      */
-    public function show(Classroom $classroom)
+    public function show(Classes $classes)
     {
         //
     }
@@ -73,10 +72,10 @@ class ClassroomController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Classroom  $classroom
+     * @param  \App\Classes  $classes
      * @return \Illuminate\Http\Response
      */
-    public function edit(Classroom $classroom)
+    public function edit(Classes $classes)
     {
         //
     }
@@ -85,31 +84,31 @@ class ClassroomController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Classroom  $classroom
+     * @param  \App\Classes  $classes
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Classroom $classroom)
+    public function update(Request $request, Classes $classes)
     {
-
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Classroom  $classroom
+     * @param  \App\Classes  $classes
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Classroom $classroom)
+    public function destroy(Classes $classes)
     {
         //
     }
 
     public function getEditForm(Request $request){
         $id = $request->get('id');
-        $data = Classroom::find($id);
+        $data = Classes::find($id);
         return response()->json(array(
             'status'=>'OK',
-            'msg'=>view('classroom.getEditForm', compact('data'))->render()
+            'msg'=>view('class.getEditForm', compact('data'))->render()
         ), 200);
     }
 
@@ -117,7 +116,7 @@ class ClassroomController extends Controller
         $id = $request->get('id');
         $name = $request->get('name');
         try{
-            $data = DB::table('classrooms')
+            $data = DB::table('class')
                     ->where('id', $id)
                     ->update(['name' => $name]);
                     

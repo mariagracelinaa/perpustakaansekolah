@@ -32,7 +32,7 @@
                             <option value="pembelian">Pembelian</option>    
                         @endif
 
-                        @if($data[0]->source == "pembelian")
+                        @if($data[0]->source == "hadiah")
                             <option value="hadiah" selected >Hadiah</option>
                         @else
                              <option value="hadiah">Hadiah</option> 

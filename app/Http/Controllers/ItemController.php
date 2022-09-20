@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Item;
+use App\Deletion;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use DB;
@@ -71,7 +72,7 @@ class ItemController extends Controller
             // return redirect()->url('daftar-buku-detail/{{$biblios_id}}')->with('status','Data item buku baru berhasil disimpan');
             // return redirect()->route('daftar-buku-detail/{{$biblios_id}}')->with('status','Data item buku baru berhasil disimpan');
         }catch (\PDOException $e) {
-            // return redirect()->route('daftar-buku-detail/{{$biblios_id}}')->with('error', 'Gagal menambah data baru, silahkan coba lagi');
+            return redirect()->route('daftar-buku-detail', ['id' => $biblios_id])->with('error', 'Gagal menambah data baru, silahkan coba lagi');
         }
     }
 
@@ -130,6 +131,39 @@ class ItemController extends Controller
         ), 200);
     }
 
+    public function getDeleteForm(Request $request){
+        $id = $request->get('id');
+        $data = Item::where('register_num', $id)->get();
+        // dd($data);
+        return response()->json(array(
+            'status'=>'OK',
+            'msg'=>view('biblio.deleteItem', compact('data'))->render()
+        ), 200);
+    }
+
+    public function deleteData(Request $request){
+        try{
+            // dd($request);
+            $register_num = $request->get('register_num');
+            $desc = $request->get('desc');
+            $date = date('Y-m-d');
+
+            $delete = DB::table('deletions')->insert(['register_num' => $register_num, 'deletion_date' => $date, 'description' => $desc]);
+            if($delete){
+                DB::table('items')
+                  ->where('register_num', $register_num)
+                  ->update(['is_deleted' => 1]);
+
+                $request->session()->flash('status','Data item buku berhasil dihapus');
+            }else{
+                $request->session()->flash('error', 'Gagal menghapus item buku, silahkan coba lagi');
+            }
+
+        }catch (\PDOException $e) {
+            $request->session()->flash('error', 'Gagal menghapus item buku, silahkan coba lagi');
+        } 
+    }
+
     public function updateData(Request $request){
         try{
             $id = $request->get('id');
@@ -137,9 +171,21 @@ class ItemController extends Controller
             $price = $request->get('price');
             $year = $request->get('year');
 
+            $fix = substr($id, 0, 10);
+
+            $source_code = "";
+            if($source == "pembelian"){
+                $source_code = "Pb";
+            }else{
+                $source_code = "Hd";
+            }
+            // dd($fix);
+            $register_num = $fix.$source_code."/".$year;
+            // dd($register_num);
+
             $data = DB::table('items')
                     ->where('register_num', $id)
-                    ->update(['source' => $source, 'price' => $price, 'purchase_year' => $year]);
+                    ->update(['source' => $source, 'price' => $price, 'purchase_year' => $year, 'register_num' => $register_num]);
 
             $request->session()->flash('status','Data item buku berhasil diubah');
         }catch (\PDOException $e) {
