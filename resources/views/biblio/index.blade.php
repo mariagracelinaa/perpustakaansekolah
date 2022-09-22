@@ -91,25 +91,21 @@
         </div>
         <div class="modal-body">
             @csrf
+            <div class="alert alert-danger" style="display:none"></div>
             <div class="form-body">
                 <div class="form-group">
                     <label for="exampleInputEmail1">Judul Buku</label>
-                    <input id="title" type="text" class="form-control" placeholder="Isikan judul buku" name="title">
-                    <span class="help-block">
-                    Tulis judul buku dengan lengkap</span>
+                    <input id="title" type="text" class="form-control" placeholder="Tulis judul buku dengan lengkap" name="title">
+                    <span class="text-danger error-text title_error"></span>
                 </div>
                 <div class="form-group">
                     <label>Nomor ISBN</label>
-                    <input id="isbn" type="number" class="form-control" placeholder="Isikan nomor ISBN" name="isbn">
-                    <span class="help-block">
-                    Tulis nomor ISBN 10 atau 13</span>
+                    <input id="isbn" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Tulis nomor ISBN 10 atau 13" name="isbn">
+                    <span class="text-danger error-text isbn_error"></span>
                 </div>
                 {{-- Penerbit, nanti dibuat bisa search --}}
                 <div class="form-group">
                   <label>Penerbit</label><br>
-                  {{-- <input id="publisher" type="number" class="form-control" placeholder="Isikan nama penerbit" name="publisher">
-                  <span class="help-block">
-                  Tuliskan nama penerbit</span> --}}
                   <input id="publisher" name="listPublisher" list="listPublisher" placeholder="Tulis nama penerbit">
                     <datalist id="listPublisher">
                       <select id="selectedPublisher">
@@ -117,6 +113,7 @@
                         <option idp="{{$pub->id}}" value="{{$pub->name}}">
                       @endforeach</select>
                   </datalist> 
+                  <br><span class="text-danger error-text listPublisher_error"></span>
                 </div>
                 {{-- Penerbit, nanti dibuat bisa search --}}
                 {{-- Penulis, nanti dibuat bisa search --}}
@@ -132,6 +129,7 @@
                             <option idp="{{$aut->id}}" value="{{$aut->name}}">
                           @endforeach
                         </datalist>
+                        <span class="text-danger error-text listAuthor_error"></span>
                       </td>
                       <td>
                         <button type="button" name="add" id="add" class="btn btn-light"><i class="fa fa-plus"></i> Tambah Penulis</button>
@@ -142,15 +140,13 @@
                 {{-- Penulis, nanti dibuat bisa search --}}
                 <div class="form-group">
                   <label>Tahun Terbit</label>
-                  <input id="publish_year" type="number" class="form-control" placeholder="Isikan tahun terbit buku" name="publish_year">
-                  <span class="help-block">
-                  Tulis tahun terbit buku pertama kali</span>
+                  <input id="publish_year" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Tulis tahun terbit buku" name="publish_year">
+                  <span class="text-danger error-text publish_year_error"></span>
                 </div>
                 <div class="form-group">
                   <label>Tahun Pengadaan</label>
-                  <input id="first_purchase" type="number" class="form-control" placeholder="Isikan tahun pengadaan buku di perpustakaan" name="first_purchase">
-                  <span class="help-block">
-                  Tulis tahun pengadaan buku di perpustakaan</span>
+                  <input id="first_purchase" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Isikan tahun pengadaan buku di perpustakaan pertama kali" name="first_purchase">
+                  <span class="text-danger error-text first_purchase_error"></span>
                 </div>
                 {{-- Combobox DDC --}}
                 <div class="form-group">
@@ -167,13 +163,13 @@
                     <option value="800">800 - Kesusastraan</option>
                     <option value="900">900 - Sejarah dan Geografi</option>
                   </select>
+                  <span class="text-danger error-text ddc_error"></span>
                 </div>
                 {{-- Combobox DDC --}}
                 <div class="form-group">
                   <label>Nomor Panggil</label>
-                  <input id="classification" type="text" class="form-control" placeholder="Isikan nomor panggil buku" name="classification">
-                  <span class="help-block">
-                  Tulis nomor panggil buku dengan lengkap. Contoh: 813 Sus r</span>
+                  <input id="classification" type="text" class="form-control" placeholder="Tulis nomor panggil buku dengan lengkap. Contoh: 813 Sus r" name="classification">
+                  <span class="text-danger error-text classification_error"></span>
                 </div>
                 {{-- Ini nanti buat upload gambar --}}
                 <div class="form-group">
@@ -185,21 +181,18 @@
                 {{-- Ini nanti buat upload gambar --}}
                 <div class="form-group">
                   <label>Edisi</label>
-                  <input id="edition" type="number" class="form-control" placeholder="Isikan edisi buku" name="edition">
-                  <span class="help-block">
-                  Tulis edisi buku. Jika tidak ada, tuliskan 1</span>
+                  <input id="edition" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Tulis edisi buku. Jika tidak ada, tuliskan 1" name="edition">
+                  <span class="text-danger error-text edition_error"></span>
                 </div>
                 <div class="form-group">
                   <label>Jumlah Halaman</label>
-                  <input id="page" type="number" class="form-control" placeholder="Isikan jumlah halaman buku" name="page">
-                  <span class="help-block">
-                  Tulis jumlah halaman buku. Contoh: 150</span>
+                  <input id="page" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Isikan jumlah halaman buku" name="page">
+                  <span class="text-danger error-text page_error"></span>
                 </div>
                 <div class="form-group">
                   <label>Tinggi Buku</label>
-                  <input id="height" type="number" class="form-control" placeholder="Isikan tinggi buku" name="height">
-                  <span class="help-block">
-                  Tulis tinggi buku. Contoh: 20</span>
+                  <input id="height" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').replace(/^0[^.]/, '0');" class="form-control" placeholder="Isikan tinggi buku" name="height">
+                  <span class="text-danger error-text height_error"></span>
                 </div>
                 <div class="form-group">
                   <label for="location">Pilih Lokasi Rak Buku:</label>
@@ -215,11 +208,12 @@
                     <option value="rak 800">Rak 800 - Kesusastraan</option>
                     <option value="rak 900">Rak 900 - Sejarah dan Geografi</option>
                   </select>
+                  <span class="text-danger error-text location_error"></span>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-          <button type="button" data-dismiss="modal" name="submit" id="submit" class="btn btn-info">Simpan</button>
+          <button type="button" name="submit" id="submit" class="btn btn-info">Simpan</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
          </div>
       </form>
@@ -276,9 +270,17 @@
 			   	contentType: false,
 			   	enctype: 'multipart/form-data',
 			   	processData: false,
+          beforeSend:function(){
+            $(document).find('span.error-text').text('');
+          },
           success:function(data) {
-            // location.reload();
-            window.location.href = "{{route('daftar-buku.index')}}";
+            if(data.status == 0){
+              $.each(data.errors, function(prefix, val){
+                $('span.'+ prefix +'_error').text(val[0]);
+              });
+            }else{
+              window.location.href = "{{route('daftar-buku.index')}}";
+            }
           }
       });    
   });  
@@ -309,9 +311,18 @@
             contentType: false,
             enctype: 'multipart/form-data',
             processData: false,
-        success:function(data) {
-            location.reload();
-        }
+          beforeSend:function(){
+            $(document).find('span.eEror-text').text('');
+          },
+          success:function(data) {
+            if(data.status == 0){
+              $.each(data.errors, function(prefix, val){
+                $('span.'+ prefix +'_eError').text(val[0]);
+              });
+            }else{
+              window.location.href = "{{route('daftar-buku.index')}}";
+            }
+          }
     });
   }
 </script>

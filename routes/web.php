@@ -50,4 +50,8 @@ Route::resource('daftar-kelas', 'ClassesController');
 Route::post('/daftar-kelas/getEditForm','ClassesController@getEditForm')->name('daftar-kelas.getEditForm');
 Route::post('daftar-kelas/updateData','ClassesController@updateData')->name('daftar-kelas.updateData');
 
+//Borrow + borrow transaction
+//Admin Akses
+Route::resource('daftar-peminjaman', 'BorrowController');
+
 

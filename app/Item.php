@@ -17,5 +17,10 @@ class Item extends Model
     {
         return $this->hasOne('App\Deletion');
     }
+
+    public function borrows(){
+        return $this->belongsToMany('App\Borrow','borrow_transaction','register_num','borrows_id')
+                    ->withPivot('return_date', 'fine');
+    }
     
 }

@@ -42,65 +42,98 @@ class BiblioController extends Controller
     public function store(Request $request)
     {
         // dd($request);
-        try{
+        $validator = \Validator::make($request->all(), [
+            'title' => 'required',
+            'isbn' => 'required',
+            'listPublisher' => 'required',
+            'listAuthor' => 'required',
+            'publish_year' => 'required',
+            'first_purchase' => 'required',
+            'ddc' => 'required',
+            'classification' => 'required',
+            'edition' => 'required',
+            'page' => 'required',
+            'height' => 'required',
+            'location' => 'required',
+        ],
+        [
+            'title.required' => 'Judul tidak boleh kosong',
+            'isbn.required' => 'Nomor ISBN tidak boleh kosong',
+            'listPublisher.required' => 'Penerbit tidak boleh kosong',
+            'listAuthor.required' => 'Penulis tidak boleh kosong',
+            'publish_year.required' => 'Tahun terbit tidak boleh kosong. Jika tidak diketahui isikan 0',
+            'first_purchase.required' => 'Tahun pertama pengadaan tidak boleh kosong. Jika tidak diketahui isikan 0',
+            'ddc.required' => 'Kategori DDC tidak boleh kosong',
+            'classification.required' => 'Nomor panggil buku tidak boleh kosong',
+            'edition.required' => 'Edisi tidak boleh kosong. Jika tidak diketahui isikan 1',
+            'page.required' => 'Jumlah halaman tidak boleh kosong',
+            'height.required' => 'Tinggi buku tidak boleh kosong',
+            'location.required' => 'Lokasi buku tidak boleh kosong',
+        ]);
+        
+        if (!$validator->passes())
+        {
+            return response()->json(['status'=>0, 'errors'=>$validator->errors()->toArray()]);
+        }else{
+            try{
             // Ambil id peneribit sesuai nama yang dimasukkan pengguna
-            $pub_id = DB::table('publishers')
-                    ->select()
-                    ->where('name', '=', $request->get('listPublisher'))
-                    ->get();
-            
-
-            // // Ambil id penulis sesuai nama yang dimasukkan pengguna
-            $arr_author = $request->get('listAuthor');
-            $arr_id = [];
-            for($i = 0; $i < count($arr_author); $i++){
-                $id = DB::table('authors')
+                $pub_id = DB::table('publishers')
                         ->select()
-                        ->where('name', '=', $arr_author[$i])
+                        ->where('name', '=', $request->get('listPublisher'))
                         ->get();
+                
 
-                $arr_id[$i] = $id[0]->id;
-            }
+                // // Ambil id penulis sesuai nama yang dimasukkan pengguna
+                $arr_author = $request->get('listAuthor');
+                $arr_id = [];
+                for($i = 0; $i < count($arr_author); $i++){
+                    $id = DB::table('authors')
+                            ->select()
+                            ->where('name', '=', $arr_author[$i])
+                            ->get();
 
-            // // Save ke biblio
-            $biblio = new Biblio();
-            $biblio->title = $request->get('title');
-            $biblio->isbn = $request->get('isbn');
-            $biblio->publishers_id = $pub_id[0]->id;
-            $biblio->publish_year = $request->get('publish_year');
-            $biblio->first_purchase = $request->get('first_purchase');
-            $biblio->ddc = $request->get('ddc');
-            $biblio->classification = $request->get('classification');
-            
-            $file = $request->file('image');
-            $imgFolder = 'images';
-            $imgFile = $request->file('image')->getClientOriginalName();
-            $file->move($imgFolder, $imgFile);
-            $biblio->image = $imgFile;
-
-            $biblio->edition = $request->get('edition');
-            $biblio->page = $request->get('page');
-            $biblio->book_height = $request->get('height');
-            $biblio->location = $request->get('location');
-            // dd($biblio);
-            $biblio->save();
-
-            if($biblio){
-                // // Save ke authors_biblios
-                for($j = 0; $j < count($arr_id); $j++){
-                    if($j == 0){
-                        $auth_biblio = DB::table('authors_biblios')
-                                ->insert(['authors_id' => $arr_id[$j], 'biblios_id' => $biblio->id, 'primary_author' => 1]);
-                    }else{
-                        $auth_biblio = DB::table('authors_biblios')
-                                ->insert(['authors_id' => $arr_id[$j], 'biblios_id' => $biblio->id, 'primary_author' => 0]);
-                    }        
+                    $arr_id[$i] = $id[0]->id;
                 }
+
+                // // Save ke biblio
+                $biblio = new Biblio();
+                $biblio->title = $request->get('title');
+                $biblio->isbn = $request->get('isbn');
+                $biblio->publishers_id = $pub_id[0]->id;
+                $biblio->publish_year = $request->get('publish_year');
+                $biblio->first_purchase = $request->get('first_purchase');
+                $biblio->ddc = $request->get('ddc');
+                $biblio->classification = $request->get('classification');
+                
+                $file = $request->file('image');
+                $imgFolder = 'images';
+                $imgFile = $request->file('image')->getClientOriginalName();
+                $file->move($imgFolder, $imgFile);
+                $biblio->image = $imgFile;
+
+                $biblio->edition = $request->get('edition');
+                $biblio->page = $request->get('page');
+                $biblio->book_height = $request->get('height');
+                $biblio->location = $request->get('location');
+                // dd($biblio);
+                $biblio->save();
+
+                if($biblio){
+                    // // Save ke authors_biblios
+                    for($j = 0; $j < count($arr_id); $j++){
+                        if($j == 0){
+                            $auth_biblio = DB::table('authors_biblios')
+                                    ->insert(['authors_id' => $arr_id[$j], 'biblios_id' => $biblio->id, 'primary_author' => 1]);
+                        }else{
+                            $auth_biblio = DB::table('authors_biblios')
+                                    ->insert(['authors_id' => $arr_id[$j], 'biblios_id' => $biblio->id, 'primary_author' => 0]);
+                        }        
+                    }
+                }
+                return redirect()->route('daftar-buku.index')->with('status','Data buku baru berhasil disimpan');
+            }catch (\PDOException $e) {
+                return redirect()->route('daftar-buku.index')->with('error', 'Gagal menambah data baru, silahkan coba lagi');
             }
-            // $request->session()->flash('daftar-buku.index')->with('status','Data buku baru berhasil disimpan');
-            // return redirect()->route('daftar-buku.index')->with('status','Data buku baru berhasil disimpan');
-        }catch (\PDOException $e) {
-            // $request->session()->flash('daftar-buku.index')->with('error', 'Gagal menambah data baru, silahkan coba lagi');
         }
     }
 
@@ -204,71 +237,105 @@ class BiblioController extends Controller
     }
 
     public function updateData(Request $request){
-        try{
-            // Ambil id peneribit sesuai nama yang dimasukkan pengguna
-            $pub_id = DB::table('publishers')
-                    ->select()
-                    ->where('name', '=', $request->get('listPublisher'))
-                    ->get();
-            
-
-            // Ambil id penulis sesuai nama yang dimasukkan pengguna
-            $arr_author = $request->get('listAuthor');
-            $arr_id = [];
-            for($i = 0; $i < count($arr_author); $i++){
-                $id = DB::table('authors')
+        $validator = \Validator::make($request->all(), [
+            'title' => 'required',
+            'isbn' => 'required',
+            'listPublisher' => 'required',
+            'listAuthor' => 'required',
+            'publish_year' => 'required',
+            'first_purchase' => 'required',
+            'ddc' => 'required',
+            'classification' => 'required',
+            'edition' => 'required',
+            'page' => 'required',
+            'height' => 'required',
+            'location' => 'required',
+        ],
+        [
+            'title.required' => 'Judul tidak boleh kosong',
+            'isbn.required' => 'Nomor ISBN tidak boleh kosong',
+            'listPublisher.required' => 'Penerbit tidak boleh kosong',
+            'listAuthor.required' => 'Penulis tidak boleh kosong',
+            'publish_year.required' => 'Tahun terbit tidak boleh kosong. Jika tidak diketahui isikan 0',
+            'first_purchase.required' => 'Tahun pertama pengadaan tidak boleh kosong. Jika tidak diketahui isikan 0',
+            'ddc.required' => 'Kategori DDC tidak boleh kosong',
+            'classification.required' => 'Nomor panggil buku tidak boleh kosong',
+            'edition.required' => 'Edisi tidak boleh kosong. Jika tidak diketahui isikan 1',
+            'page.required' => 'Jumlah halaman tidak boleh kosong',
+            'height.required' => 'Tinggi buku tidak boleh kosong',
+            'location.required' => 'Lokasi buku tidak boleh kosong',
+        ]);
+        
+        if (!$validator->passes())
+        {
+            return response()->json(['status'=>0, 'errors'=>$validator->errors()->toArray()]);
+        }else{
+            try{
+                // Ambil id peneribit sesuai nama yang dimasukkan pengguna
+                $pub_id = DB::table('publishers')
                         ->select()
-                        ->where('name', '=', $arr_author[$i])
+                        ->where('name', '=', $request->get('listPublisher'))
                         ->get();
+                
 
-                $arr_id[$i] = $id[0]->id;
-            }
+                // Ambil id penulis sesuai nama yang dimasukkan pengguna
+                $arr_author = $request->get('listAuthor');
+                $arr_id = [];
+                for($i = 0; $i < count($arr_author); $i++){
+                    $id = DB::table('authors')
+                            ->select()
+                            ->where('name', '=', $arr_author[$i])
+                            ->get();
 
-            $title = $request->get('title');
-            $isbn = $request->get('isbn');
-            $publishers_id = $pub_id[0]->id;
-            $publish_year = $request->get('publish_year');
-            $first_purchase = $request->get('first_purchase');
-            $ddc = $request->get('ddc');
-            $classification = $request->get('classification');
-            
-            $file = $request->file('image');
-            $imgFolder = 'images';
-            $imgFile = $request->file('image')->getClientOriginalName();
-            $file->move($imgFolder, $imgFile);
-            $image = $imgFile;
-
-            $edition = $request->get('edition');
-            $page = $request->get('page');
-            $book_height = $request->get('height');
-            $location = $request->get('location');
-
-            // dd($title, $isbn , $publish_year, $publishers_id, $first_purchase, $ddc, $classification, $image, $edition, $page, $book_height, $location);
-
-            $data = DB::table('biblios')
-                    ->where('id', $request->get('id'))
-                    ->update(['title' => $title, 'isbn' => $isbn, 'publishers_id' => $publishers_id,'publish_year' => $publish_year, 'first_purchase' => $first_purchase, 'ddc' => $ddc, 'classification' => $classification, 'image' => $image, 'edition' => $edition, 'page' => $page, 'book_height' => $book_height, 'location' => $location]);
-
-            if($data){
-                $delete = DB::table('authors_biblios')->where('biblios_id', '=', $request->get('id'))->delete();
-
-                // // Save ke authors_biblios
-                for($j = 0; $j < count($arr_id); $j++){
-                    if($j == 0){
-                        $auth_biblio = DB::table('authors_biblios')
-                                ->insert(['authors_id' => $arr_id[$j], 'biblios_id' => $request->get('id'), 'primary_author' => 1]);
-                    }else{
-                        $auth_biblio = DB::table('authors_biblios')
-                                ->insert(['authors_id' => $arr_id[$j], 'biblios_id' => $request->get('id'), 'primary_author' => 0]);
-                    }        
+                    $arr_id[$i] = $id[0]->id;
                 }
-                $request->session()->flash('status','Data buku berhasil diubah');
-            }else{
+
+                $title = $request->get('title');
+                $isbn = $request->get('isbn');
+                $publishers_id = $pub_id[0]->id;
+                $publish_year = $request->get('publish_year');
+                $first_purchase = $request->get('first_purchase');
+                $ddc = $request->get('ddc');
+                $classification = $request->get('classification');
+                
+                $file = $request->file('image');
+                $imgFolder = 'images';
+                $imgFile = $request->file('image')->getClientOriginalName();
+                $file->move($imgFolder, $imgFile);
+                $image = $imgFile;
+
+                $edition = $request->get('edition');
+                $page = $request->get('page');
+                $book_height = $request->get('height');
+                $location = $request->get('location');
+
+                // dd($title, $isbn , $publish_year, $publishers_id, $first_purchase, $ddc, $classification, $image, $edition, $page, $book_height, $location);
+
+                $data = DB::table('biblios')
+                        ->where('id', $request->get('id'))
+                        ->update(['title' => $title, 'isbn' => $isbn, 'publishers_id' => $publishers_id,'publish_year' => $publish_year, 'first_purchase' => $first_purchase, 'ddc' => $ddc, 'classification' => $classification, 'image' => $image, 'edition' => $edition, 'page' => $page, 'book_height' => $book_height, 'location' => $location]);
+
+                if($data){
+                    $delete = DB::table('authors_biblios')->where('biblios_id', '=', $request->get('id'))->delete();
+
+                    // // Save ke authors_biblios
+                    for($j = 0; $j < count($arr_id); $j++){
+                        if($j == 0){
+                            $auth_biblio = DB::table('authors_biblios')
+                                    ->insert(['authors_id' => $arr_id[$j], 'biblios_id' => $request->get('id'), 'primary_author' => 1]);
+                        }else{
+                            $auth_biblio = DB::table('authors_biblios')
+                                    ->insert(['authors_id' => $arr_id[$j], 'biblios_id' => $request->get('id'), 'primary_author' => 0]);
+                        }        
+                    }
+                    $request->session()->flash('status','Data buku berhasil diubah');
+                }else{
+                    $request->session()->flash('error', 'Gagal mengubah data buku, silahkan coba lagi');
+                }
+                
+            }catch (\PDOException $e) {
                 $request->session()->flash('error', 'Gagal mengubah data buku, silahkan coba lagi');
-            }
-            
-        }catch (\PDOException $e) {
-            $request->session()->flash('error', 'Gagal mengubah data buku, silahkan coba lagi');
-        }  
+            }  
+        }
     }
 }

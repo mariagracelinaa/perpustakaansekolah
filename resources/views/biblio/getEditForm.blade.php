@@ -13,20 +13,16 @@
             <div class="form-group">
                 <label for="exampleInputEmail1">ID Buku</label>
                 <input id="id" type="text" class="form-control" placeholder="Isikan judul buku" name="id" value="{{$data->id}}" readonly>
-                <span class="help-block">
-                Tulis judul buku dengan lengkap</span>
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail1">Judul Buku</label>
-                <input id="title" type="text" class="form-control" placeholder="Isikan judul buku" name="title" value="{{$data->title}}">
-                <span class="help-block">
-                Tulis judul buku dengan lengkap</span>
+                <input id="title" type="text" class="form-control" placeholder="Tulis judul buku dengan lengkap" name="title" value="{{$data->title}}">
+                <span class="text-danger eError-text title_eError"></span>
             </div>
             <div class="form-group">
                 <label>Nomor ISBN</label>
-                <input id="isbn" type="number" class="form-control" placeholder="Isikan nomor ISBN" name="isbn" value="{{$data->isbn}}">
-                <span class="help-block">
-                Tulis nomor ISBN 10 atau 13</span>
+                <input id="isbn" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Tulis nomor ISBN 10 atau 13" name="isbn" value="{{$data->isbn}}">
+                <span class="text-danger eError-text isbn_eError"></span>
             </div>
             <div class="form-group">
               <label>Penerbit</label><br>
@@ -37,7 +33,8 @@
                             <option idp="{{$pub->id}}" value="{{$pub->name}}">
                         @endforeach
                     </select>
-              </datalist> 
+                </datalist> 
+                <span class="text-danger eError-text listPublisher_eError"></span>
             </div>
             <div class="form-group">
               <label>Penulis</label><br>
@@ -83,18 +80,17 @@
                     @endif
                 @endforeach
               </table>
+              <span class="text-danger eError-text listAuthor_eError"></span>
             </div>
             <div class="form-group">
                 <label>Tahun Terbit</label>
-                <input id="publish_year" type="number" class="form-control" placeholder="Isikan tahun terbit buku" name="publish_year" value="{{$data->publish_year}}">
-                <span class="help-block">
-                Tulis tahun terbit buku pertama kali</span>
+                <input id="publish_year" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Tulis tahun terbit buku" name="publish_year" value="{{$data->publish_year}}">
+                <span class="text-danger eError-text publish_year_eError"></span>
             </div>
             <div class="form-group">
                 <label>Tahun Pengadaan</label>
-                <input id="first_purchase" type="number" class="form-control" placeholder="Isikan tahun pengadaan buku di perpustakaan" name="first_purchase" value="{{$data->first_purchase}}">
-                <span class="help-block">
-                Tulis tahun pengadaan buku di perpustakaan</span>
+                <input id="first_purchase" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Tulis tahun pengadaan buku di perpustakaan pertama kali" name="first_purchase" value="{{$data->first_purchase}}">
+                <span class="text-danger eError-text first_purchase_eError"></span>
             </div>
             {{-- Combobox DDC --}}
             <div class="form-group">
@@ -160,13 +156,13 @@
                         <option value="900">900 - Sejarah dan Geografi</option>
                     @endif
                 </select>
+                <span class="text-danger eError-text ddc_eError"></span>
             </div>
             {{-- Combobox DDC --}}
             <div class="form-group">
                 <label>Nomor Panggil</label>
-                <input id="classification" type="text" class="form-control" placeholder="Isikan nomor panggil buku" name="classification" value="{{$data->classification}}">
-                <span class="help-block">
-                Tulis nomor panggil buku dengan lengkap. Contoh: 813 Sus r</span>
+                <input id="classification" type="text" class="form-control" placeholder="Tulis nomor panggil buku dengan lengkap. Contoh: 813 Sus r" name="classification" value="{{$data->classification}}">
+                <span class="text-danger eError-text classification_eError"></span>
             </div>
             {{-- Ini nanti buat upload gambar --}}
             <div class="form-group">
@@ -180,21 +176,18 @@
             {{-- Ini nanti buat upload gambar --}}
             <div class="form-group">
                 <label>Edisi</label>
-                <input id="edition" type="number" class="form-control" placeholder="Isikan edisi buku" name="edition" value="{{$data->edition}}">
-                <span class="help-block">
-                Tulis edisi buku. Jika tidak ada, tuliskan 1</span>
+                <input id="edition" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Tulis edisi buku. Jika tidak ada, tuliskan 1" name="edition" value="{{$data->edition}}">
+                <span class="text-danger eError-text edition_eError"></span>
             </div>
             <div class="form-group">
                 <label>Jumlah Halaman</label>
-                <input id="page" type="number" class="form-control" placeholder="Isikan jumlah halaman buku" name="page" value="{{$data->page}}">
-                <span class="help-block">
-                Tulis jumlah halaman buku. Contoh: 150</span>
+                <input id="page" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Isikan jumlah halaman buku" name="page" value="{{$data->page}}">
+                <span class="text-danger eError-text page_eError"></span>
             </div>
             <div class="form-group">
                 <label>Tinggi Buku</label>
-                <input id="height" type="number" class="form-control" placeholder="Isikan tinggi buku" name="height" value="{{$data->book_height}}">
-                <span class="help-block">
-                Tulis tinggi buku. Contoh: 20</span>
+                <input id="height" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Isikan tinggi buku" name="height" value="{{$data->book_height}}">
+                <span class="text-danger eError-text height_eError"></span>
             </div>
             <div class="form-group">
                 <label for="location">Pilih Lokasi Rak Buku:</label>
@@ -259,11 +252,12 @@
                         <option value="rak 900">Rak 900 - Sejarah dan Geografi</option>
                     @endif
                 </select>
+                <span class="text-danger eError-text location_eError"></span>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-info" data-dismiss="modal" onclick="updateBiblio({{$data->id}})">Ubah</button>
+        <button type="button" class="btn btn-info" onclick="updateBiblio({{$data->id}})">Ubah</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
      </div>
   </form>

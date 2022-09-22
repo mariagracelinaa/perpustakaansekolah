@@ -72,13 +72,13 @@
             <div class="form-body">
                 <div class="form-group">
                     <label for="exampleInputEmail1">Nama Penerbit</label>
-                    <input type="text" class="form-control" placeholder="Isikan nama penerbit" name="name">
+                    <input type="text" required class="form-control" placeholder="Isikan nama penerbit" name="name">
                     <span class="help-block">
                     Tulis nama penerbit dengan lengkap</span>
                 </div>
                 <div class="form-group">
                     <label>Kota Penerbit</label>
-                    <input type="text" class="form-control" placeholder="Isikan kota penerbit" name="city">
+                    <input type="text" required class="form-control" placeholder="Isikan kota penerbit" name="city">
                     <span class="help-block">
                     Tulis kota penerbit dengan diawali huruf kapital. Contoh: Jakarta</span>
                 </div>

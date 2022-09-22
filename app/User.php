@@ -42,5 +42,11 @@ class User extends Authenticatable
         return $this->belongsTo('App\Classes','class_id');
     }
 
+    public function borrows()
+    {
+        return $this->hasMany('App\Borrow', 'nisn_niy', 'nisn_niy');
+    }
+
+
     public $timestamps = false;
 }
