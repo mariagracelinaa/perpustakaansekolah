@@ -236,6 +236,13 @@ class BiblioController extends Controller
         ), 200);
     }
 
+    public function getAddForm(){
+        return response()->json(array(
+            'status'=>'OK',
+            'msg'=>view('biblio.getAddForm')
+        ), 200);
+    }
+
     public function updateData(Request $request){
         $validator = \Validator::make($request->all(), [
             'title' => 'required',
@@ -315,23 +322,19 @@ class BiblioController extends Controller
                         ->where('id', $request->get('id'))
                         ->update(['title' => $title, 'isbn' => $isbn, 'publishers_id' => $publishers_id,'publish_year' => $publish_year, 'first_purchase' => $first_purchase, 'ddc' => $ddc, 'classification' => $classification, 'image' => $image, 'edition' => $edition, 'page' => $page, 'book_height' => $book_height, 'location' => $location]);
 
-                if($data){
-                    $delete = DB::table('authors_biblios')->where('biblios_id', '=', $request->get('id'))->delete();
+                $delete = DB::table('authors_biblios')->where('biblios_id', '=', $request->get('id'))->delete();
 
-                    // // Save ke authors_biblios
-                    for($j = 0; $j < count($arr_id); $j++){
-                        if($j == 0){
+                        // Save ke authors_biblios
+                for($j = 0; $j < count($arr_id); $j++){
+                    if($j == 0){
+                        $auth_biblio = DB::table('authors_biblios')
+                                ->insert(['authors_id' => $arr_id[$j], 'biblios_id' => $request->get('id'), 'primary_author' => 1]);
+                    }else{
                             $auth_biblio = DB::table('authors_biblios')
-                                    ->insert(['authors_id' => $arr_id[$j], 'biblios_id' => $request->get('id'), 'primary_author' => 1]);
-                        }else{
-                            $auth_biblio = DB::table('authors_biblios')
-                                    ->insert(['authors_id' => $arr_id[$j], 'biblios_id' => $request->get('id'), 'primary_author' => 0]);
-                        }        
-                    }
-                    $request->session()->flash('status','Data buku berhasil diubah');
-                }else{
-                    $request->session()->flash('error', 'Gagal mengubah data buku, silahkan coba lagi');
+                                ->insert(['authors_id' => $arr_id[$j], 'biblios_id' => $request->get('id'), 'primary_author' => 0]);
+                    }        
                 }
+                $request->session()->flash('status','Data buku berhasil diubah');
                 
             }catch (\PDOException $e) {
                 $request->session()->flash('error', 'Gagal mengubah data buku, silahkan coba lagi');

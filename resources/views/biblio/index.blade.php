@@ -1,82 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Bootstrap Example</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+@extends('layouts.gentelella')
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-  {{-- Jangan lupa dipindah ini butuh buat ajax --}}
-  <meta name="csrf-token" content="{{ csrf_token() }}" />
-</head>
-<body>
-
-<div class="container">
-  {{-- Alert start --}}
-  @if(session('status'))  
-    <div class="alert alert-success">
-        <strong>Sukses!</strong> {{session('status')}}
+@section('content')
+<div class="container"> 
+  <div class="row">
+    <div class="col-md-12 col-sm-12 ">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>Daftar Buku</small></h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <button href="#modalCreate" data-toggle="modal" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Data</button>  
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+              <div class="row">
+                  <div class="col-sm-12">
+                    <div class="card-box table-responsive">
+            <table id="custometable" class="table table-striped table-bordered" style="width:100%">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Judul</th>
+                  <th>ISBN</th>
+                  <th>Tahun Terbit</th>
+                  <th>Pertama Pengadaan</th>
+                  <th>Kelas DDC</th>
+                  <th>Klasifikasi</th>
+                  <th>Edisi</th>
+                  <th>Jumlah Halaman</th>
+                  <th>Tinggi Buku (cm)</th>
+                  <th>Lokasi</th>
+                  <th>Penerbit</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                @php
+                    $i = 1;
+                @endphp
+                @foreach ($result as $biblio)
+                  <tr>
+                    <td>{{$i++}}</td>
+                    <td>{{$biblio->title}}</td>
+                    <td>{{$biblio->isbn}}</td>
+                    <td>{{$biblio->publish_year}}</td>
+                    <td>{{$biblio->first_purchase}}</td>
+                    <td>{{$biblio->ddc}}</td>
+                    <td>{{$biblio->classification}}</td>
+                    <td>{{$biblio->edition}}</td>
+                    <td>{{$biblio->page}}</td>
+                    <td>{{$biblio->book_height}}</td>
+                    <td>{{$biblio->location}}</td>
+                    <td>{{$biblio->publishers->name}}</td>
+                    <td>
+                      <a href="#modalEdit" data-toggle="modal" class="btn btn-warning" onclick="getEditForm({{$biblio->id}})">Ubah</a>
+                      <a class="btn btn-primary" href="daftar-buku-detail/{{$biblio->id}}">Detail</a>
+                    </td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
+          </div>
+      </div>
     </div>
-  @elseif(session('error')) 
-    <div class="alert alert-danger">
-      <strong>Gagal!</strong> {{session('error')}}
-    </div>
-  @endif
-  {{-- Alert End --}}
-
-<div class="container">
-  <h2>Daftar Buku</h2>   
-  <button href="#modalCreate" data-toggle="modal" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Data</button>           
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>No</th>
-        <th>Judul</th>
-        <th>ISBN</th>
-        <th>Tahun Terbit</th>
-        <th>Pertama Pengadaan</th>
-        <th>Kelas DDC</th>
-        <th>Klasifikasi</th>
-        <th>Edisi</th>
-        <th>Jumlah Halaman</th>
-        <th>Tinggi Buku (cm)</th>
-        <th>Lokasi</th>
-        <th>Penerbit</th>
-        <th>Aksi</th>
-      </tr>
-    </thead>
-    <tbody>
-      @php
-          $i = 1;
-      @endphp
-      @foreach ($result as $biblio)
-        <tr>
-          <td>{{$i++}}</td>
-          <td>{{$biblio->title}}</td>
-          <td>{{$biblio->isbn}}</td>
-          <td>{{$biblio->publish_year}}</td>
-          <td>{{$biblio->first_purchase}}</td>
-          <td>{{$biblio->ddc}}</td>
-          <td>{{$biblio->classification}}</td>
-          <td>{{$biblio->edition}}</td>
-          <td>{{$biblio->page}}</td>
-          <td>{{$biblio->book_height}}</td>
-          <td>{{$biblio->location}}</td>
-          <td>{{$biblio->publishers->name}}</td>
-          <td>
-            <a href="#modalEdit" data-toggle="modal" class="btn btn-warning" onclick="getEditForm({{$biblio->id}})">Ubah</a>
-            <a class="btn btn-primary" href="daftar-buku-detail/{{$biblio->id}}">Detail</a>
-          </td>
-        </tr>
-      @endforeach
-    </tbody>
-  </table>
+  </div>
 </div>
+
 
 {{-- Modal start Add--}}
 <div class="modal fade" id="modalCreate" tabindex="-1" role="basic" aria-hidden="true">
@@ -213,7 +203,7 @@
             </div>
         </div>
         <div class="modal-footer">
-          <button type="button" name="submit" id="submit" class="btn btn-info">Simpan</button>
+          <button type="button" name="submit" onclick="submitAdd()" class="btn btn-info">Simpan</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
          </div>
       </form>
@@ -235,55 +225,52 @@
       {{-- Isinya dari getEditForm.blade.php --}}
     </div>
   </div>
-</div>
+
 {{-- Modal end edit --}}
+@endsection
 
-</body>
-</html>
 
-<script type="text/javascript">
-  $.ajaxSetup({
-      headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
+@section('javascript')
+<script type="text/javascript">  
+  $(document).ready(function(){
+    var i=1; 
+    $('#add').click(function(){ 
+      i++;
+      $('#dynamic_field').append('<tr id="row'+i+'"><td><input id="author" name="listAuthor[]" list="listAuthor" placeholder="Tulis nama penulis"><datalist id="listAuthor">@foreach ($author as $aut)<option idp="{{$aut->id}}" value="{{$aut->name}}">@endforeach</datalist></td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td></tr>');    
+    }); 
+      
+    $(document).on('click', '.btn_remove', function(){    
+      var button_id = $(this).attr("id");     
+      $('#row'+button_id+'').remove();    
+    }); 
   });
-
-  var i=1; 
-  $('#add').click(function(){ 
-    i++;
-    $('#dynamic_field').append('<tr id="row'+i+'"><td><input id="author" name="listAuthor[]" list="listAuthor" placeholder="Tulis nama penulis"><datalist id="listAuthor">@foreach ($author as $aut)<option idp="{{$aut->id}}" value="{{$aut->name}}">@endforeach</datalist></td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td></tr>');    
-  }); 
-
-  $(document).on('click', '.btn_remove', function(){    
-           var button_id = $(this).attr("id");     
-           $('#row'+button_id+'').remove();    
-  }); 
-  
-  $('#submit').click(function(){  
+     
+  function submitAdd(){
     var formData = new FormData($("#add_biblio")[0]);
-    $.ajax({
-   				url: '{{route("daftar-buku.store")}}',
-   				type: 'POST',
-          data: formData,
-			   	async: false,
-			   	cache: false,
-			   	contentType: false,
-			   	enctype: 'multipart/form-data',
-			   	processData: false,
-          beforeSend:function(){
-            $(document).find('span.error-text').text('');
-          },
-          success:function(data) {
-            if(data.status == 0){
-              $.each(data.errors, function(prefix, val){
-                $('span.'+ prefix +'_error').text(val[0]);
-              });
-            }else{
-              window.location.href = "{{route('daftar-buku.index')}}";
+      $.ajax({
+            url: '{{route("daftar-buku.store")}}',
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            processData: false,
+            beforeSend:function(){
+              $(document).find('span.error-text').text('');
+            },
+            success:function(data) {
+              if(data.status == 0){
+                $.each(data.errors, function(prefix, val){
+                  $('span.'+ prefix +'_error').text(val[0]);
+                });
+              }else{
+                window.location.href = "{{route('daftar-buku.index')}}";
+              }
             }
-          }
-      });    
-  });  
+        }); 
+  }
+
 
   function getEditForm(id) {
     $.ajax({
@@ -325,5 +312,8 @@
           }
     });
   }
+
+  
 </script>
+@endsection
  

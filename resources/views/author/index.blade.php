@@ -105,7 +105,8 @@
 </body>
 </html>
 
-<script type="text/javascript">
+@section('javascript')
+<script>
   function getEditForm(id) {
     $.ajax({
         type:'POST',
@@ -137,3 +138,4 @@
       });
     }
 </script>
+@endsection
