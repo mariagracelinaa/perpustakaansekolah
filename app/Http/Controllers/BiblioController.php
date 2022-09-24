@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Biblio;
 use App\Publisher;
+use App\Deletion;
+use App\Item;
 use App\Author;
 use Illuminate\Http\Request;
 use DB;
@@ -324,7 +326,7 @@ class BiblioController extends Controller
 
                 $delete = DB::table('authors_biblios')->where('biblios_id', '=', $request->get('id'))->delete();
 
-                        // Save ke authors_biblios
+                // Save ke authors_biblios
                 for($j = 0; $j < count($arr_id); $j++){
                     if($j == 0){
                         $auth_biblio = DB::table('authors_biblios')
@@ -340,5 +342,16 @@ class BiblioController extends Controller
                 $request->session()->flash('error', 'Gagal mengubah data buku, silahkan coba lagi');
             }  
         }
+    }
+
+    // Laporan penghapusan buku (Tabel deletions)
+    public function deletion(){
+        $data = DB::table('deletions')
+                ->join('items', 'items.register_num','=','deletions.register_num')
+                ->join('biblios', 'items.biblios_id','=','biblios.id')
+                ->select('deletions.*', 'biblios.title', 'items.source', 'items.price')
+                ->get();
+        // dd($data);
+        return view('biblio.deleteReport', compact('data'));
     }
 }

@@ -53,8 +53,15 @@
                     <td>{{$biblio->location}}</td>
                     <td>{{$biblio->publishers->name}}</td>
                     <td>
-                      <a href="#modalEdit" data-toggle="modal" class="btn btn-warning" onclick="getEditForm({{$biblio->id}})">Ubah</a>
-                      <a class="btn btn-primary" href="daftar-buku-detail/{{$biblio->id}}">Detail</a>
+                      <div class="container">
+                        <a class="btn" data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="#modalEdit" data-toggle="modal" class="btn links" onclick="getEditForm({{$biblio->id}})"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Ubah</a></li>
+                          <li>
+                            <a class="btn links" href="daftar-buku-detail/{{$biblio->id}}"><i class="fa fa-info-circle" aria-hidden="true"></i> Detail</a>
+                          </li>
+                        </ul>
+                      </div>
                     </td>
                   </tr>
                 @endforeach

@@ -42,6 +42,8 @@ Route::post('/daftar-item/getEditForm', 'ItemController@getEditForm')->name('daf
 Route::post('daftar-item/updateData','ItemController@updateData')->name('daftar-item.updateData');
 Route::post('daftar-item/getDeleteForm','ItemController@getDeleteForm')->name('daftar-item.getDeleteForm');
 Route::post('daftar-item/deleteData','ItemController@deleteData')->name('daftar-item.deleteData');
+Route::get('daftar-penghapusan-buku','BiblioController@deletion');
+
 //User Akses
 
 //Class

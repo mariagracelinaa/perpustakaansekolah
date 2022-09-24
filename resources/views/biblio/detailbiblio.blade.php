@@ -71,56 +71,81 @@
                 <td> : {{$data->location}}</td>
             </tr>
         </tbody>
-    </table>   
+    </table>
+    <br> 
     <div>
         <img src= "{{asset('images/'.$data->image)}}" height="150px">
     </div> 
-    <div style="float: right;">
-        <button href="#modalCreate" data-toggle="modal" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Item</button>           
-    </div>
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>Nomor registrasi buku</th>
-            <th>Sumber</th>
-            <th>Harga</th>
-            <th>Status</th>
-            <th>Aksi</th>
-        </tr>
-        </thead>
-        <tbody>
-            @foreach($items as $item)
-                @if($item->is_deleted == 0)
-                    <tr>
-                        <td>{{$item->register_num}}</td>
-                        <td>
-                            @if( $item->source== "pembelian")
-                                Pembelian
-                            @else
-                                Hadiah
-                            @endif
-                        </td>
-                        <td>{{$item->price}}</td>
-                        @if($item->status == "tersedia")
-                            <td style="background-color: rgb(113, 255, 113)">
-                                Tersedia
-                            </td>
-                        @else
-                            <td style="background-color: rgb(255, 64, 64)">
-                                Sedang Dipinjam
-                            </td>
-                        @endif
-                        <td>
-                            <a href="#modalEdit" data-toggle="modal" class="btn btn-warning" onclick="getEditForm('{{$item->register_num}}')">Ubah</a>
-                            <a href="#modalDelete" data-toggle="modal" class="btn btn-danger" onclick="getDeleteForm('{{$item->register_num}}')">Hapus</a>
-                        </td>
-                    </tr>
-                @endif
-            @endforeach
-        </tbody>
-  </table>
-
-
+    <br>
+    <div class="container"> 
+        <div class="row">
+          <div class="col-md-12 col-sm-12 ">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Daftar Item Buku</small></h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <button href="#modalCreate" data-toggle="modal" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Item</button>
+                  </ul>
+                  <div class="clearfix"></div>
+                </div>
+                    <div class="x_content">
+                        <div class="row">
+                            <div class="col-sm-12">
+                            <div class="card-box table-responsive">
+                    <table id="custometable" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Nomor registrasi buku</th>
+                                <th>Sumber</th>
+                                <th>Harga</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($items as $item)
+                                    @if($item->is_deleted == 0)
+                                        <tr>
+                                            <td>{{$item->register_num}}</td>
+                                            <td>
+                                                @if( $item->source== "pembelian")
+                                                    Pembelian
+                                                @else
+                                                    Hadiah
+                                                @endif
+                                            </td>
+                                            <td style="text-align: right">{{number_format($item->price)}}</td>
+                                            @if($item->status == "tersedia")
+                                                <td style="background-color: rgb(113, 255, 113)">
+                                                    Tersedia
+                                                </td>
+                                            @else
+                                                <td style="background-color: rgb(255, 64, 64)">
+                                                    Sedang Dipinjam
+                                                </td>
+                                            @endif
+                                            <td style="width: 5%;">
+                                                <div class="container">
+                                                    <a class="btn" data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
+                                                    <ul class="dropdown-menu">
+                                                      <li><a href="#modalEdit" data-toggle="modal" class="btn" onclick="getEditForm('{{$item->register_num}}')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Ubah</a></li>
+                                                      <li>
+                                                        <a href="#modalDelete" data-toggle="modal" class="btn" onclick="getDeleteForm('{{$item->register_num}}')"><i class="fa fa-trash-o" aria-hidden="true"></i> Hapus</a>
+                                                      </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                @endforeach
+                            </tbody>
+                    </table>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
 {{-- Modal start Add--}}
 <div class="modal fade" id="modalCreate" tabindex="-1" role="basic" aria-hidden="true">

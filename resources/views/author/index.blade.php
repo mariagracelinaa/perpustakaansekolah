@@ -1,57 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Bootstrap Example</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+@extends('layouts.gentelella')
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
-<body>
-
-<div class="container">
-  {{-- Alert start --}}
-  @if(session('status'))  
-    <div class="alert alert-success">
-        <strong>Sukses!</strong> {{session('status')}}
+@section('content')
+<div class="container"> 
+  <div class="row">
+    <div class="col-md-12 col-sm-12 ">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>Daftar Penulis</small></h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <button href="#modalCreate" data-toggle="modal" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Data</button>    
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+              <div class="row">
+                  <div class="col-sm-12">
+                    <div class="card-box table-responsive">
+            <table id="custometable" class="table table-striped table-bordered" style="width:100%">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Nama Penulis</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+              @php $no = 1; @endphp
+                @foreach ($result as $aut)
+                  <tr>
+                    <td style="width: 5%;">{{ $no++ }}</td>
+                    <td>{{$aut->name}}</td>
+                    <td style="width: 5%;">
+                      <div class="container">
+                        <a class="btn" data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="#modalEdit" data-toggle="modal" class="btn" onclick="getEditForm({{$aut->id}})"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Ubah</a></li>
+                          <li>
+                            <a class="btn" onclick="if(confirm('Apakah anda yakin menghapus data {{$aut->name}}'))"><i class="fa fa-trash-o" aria-hidden="true"></i> Hapus</a>
+                          </li>
+                        </ul>
+                      </div>
+                      
+                      
+                    </td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
+          </div>
+      </div>
     </div>
-  @elseif(session('error')) 
-    <div class="alert alert-danger">
-      <strong>Gagal!</strong> {{session('error')}}
-    </div>
-  @endif
-  {{-- Alert End --}}
-
-  <h2>Daftar Penulis</h2>
-  <button href="#modalCreate" data-toggle="modal" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Data</button>    
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>No</th>
-        <th>Nama Penulis</th>
-        <th>Aksi</th>
-      </tr>
-    </thead>
-    <tbody>
-    @php $no = 1; @endphp
-      @foreach ($result as $aut)
-        <tr>
-            <td>{{ $no++ }}</td>
-            <td>{{$aut->name}}</td>
-            <td>
-              <a href="#modalEdit" data-toggle="modal" class="btn btn-warning" onclick="getEditForm({{$aut->id}})">Ubah</a>
-              <a class="btn btn-danger" onclick="if(confirm('Apakah anda yakin menghapus data {{$aut->name}}'))">Hapus</a>
-            </td>
-        </tr>
-      @endforeach
-    </tbody>
-  </table>
+  </div>
 </div>
-
 
 {{-- Modal start Add--}}
 <div class="modal fade" id="modalCreate" tabindex="-1" role="basic" aria-hidden="true">
@@ -101,9 +102,7 @@
   </div>
 </div>
 {{-- Modal end edit --}}
-
-</body>
-</html>
+@endsection
 
 @section('javascript')
 <script>
