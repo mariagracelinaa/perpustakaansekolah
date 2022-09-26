@@ -352,6 +352,22 @@ class BiblioController extends Controller
                 ->select('deletions.*', 'biblios.title', 'items.source', 'items.price')
                 ->get();
         // dd($data);
-        return view('biblio.deleteReport', compact('data'));
+        return view('report.deleteReport', compact('data'));
+    }
+
+    // Cetak laporan penghapusan buku
+    public function printDeleteReport(Request $request){
+        $start = $request->get('start_date');
+        $end = $request->get('end_date');
+        
+        $today = strftime('%d %B %Y');
+        $data = DB::table('deletions')
+                ->join('items', 'items.register_num','=','deletions.register_num')
+                ->join('biblios', 'items.biblios_id','=','biblios.id')
+                ->select('deletions.*', 'biblios.title', 'items.source', 'items.price')
+                ->whereBetween('deletion_date', [$start,$end])
+                ->get();
+        // dd($data);
+        return view('report.printDeleteReport', compact('data', 'start', 'end', 'today'));
     }
 }

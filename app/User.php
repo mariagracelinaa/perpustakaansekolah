@@ -44,9 +44,14 @@ class User extends Authenticatable
 
     public function borrows()
     {
+        // fk, pk -----------------------------------\/
         return $this->hasMany('App\Borrow', 'nisn_niy', 'nisn_niy');
     }
 
+    // public function visits()
+    // {
+    //     return $this->hasMany('App\Visit', 'nisn_niy', 'nisn_niy');
+    // }
 
     public $timestamps = false;
 }

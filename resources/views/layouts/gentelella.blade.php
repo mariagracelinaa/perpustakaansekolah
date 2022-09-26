@@ -39,6 +39,12 @@
     
     <!-- Custom Theme Style -->
     <link href="{{asset('assets/build/css/custom.min.css" rel="stylesheet')}}">
+
+    {{-- Chart JS --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    {{-- PDF --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
   </head>
 
   <body class="nav-md">
@@ -62,8 +68,6 @@
                       <li><a href="{{url('/daftar-penerbit')}}">Daftar Penerbit</a></li>
                       <li><a href="{{url('/daftar-kelas')}}">Daftar Kelas</a></li>
                       <li><a href="">Daftar Siswa</a></li>
-                      <li><a href="{{url('/daftar-penghapusan-buku')}}">Laporan Penghapusan</a></li>
-                    
                     </ul>
                   </li>
                   <li><a><i class="fa fa-list" aria-hidden="true"></i> Data Peminjaman <span class="fa fa-chevron-down"></span></a>
@@ -77,7 +81,8 @@
                       <li><a href="">Daftar Pemesanan Buku</a></li>
                       <li><a href="">Daftar Usulan Buku</a></li>
                       <li><a href="">Buku Tamu</a></li>
-                      <li><a href="">Laporan Pengunjung</a></li>
+                      <li><a href="{{url('/kunjungan')}}">Laporan Pengunjung</a></li>
+                      <li><a href="{{url('/daftar-penghapusan-buku')}}">Laporan Penghapusan</a></li>
                     </ul>
                   </li>
                 </ul>
@@ -153,8 +158,6 @@
     <script src="{{asset('assets/vendors/fastclick/lib/fastclick.js')}}"></script>
     <!-- NProgress -->
     <script src="{{asset('assets/vendors/nprogress/nprogress.js')}}"></script>
-    <!-- Chart.js -->
-    <script src="{{asset('assets/vendors/Chart.js/dist/Chart.min.js')}}"></script>
     <!-- gauge.js -->
     <script src="{{asset('assets/vendors/gauge.js/dist/gauge.min.js')}}"></script>
     <!-- bootstrap-progressbar -->
