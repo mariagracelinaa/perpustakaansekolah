@@ -36,15 +36,11 @@
 
     <!-- Datatables -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
-    
-    <!-- Custom Theme Style -->
-    <link href="{{asset('assets/build/css/custom.min.css" rel="stylesheet')}}">
 
-    {{-- Chart JS --}}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     {{-- PDF --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
   </head>
 
   <body class="nav-md">
@@ -68,6 +64,7 @@
                       <li><a href="{{url('/daftar-penerbit')}}">Daftar Penerbit</a></li>
                       <li><a href="{{url('/daftar-kelas')}}">Daftar Kelas</a></li>
                       <li><a href="">Daftar Siswa</a></li>
+                      <li><a href="">Daftar Guru</a></li>
                     </ul>
                   </li>
                   <li><a><i class="fa fa-list" aria-hidden="true"></i> Data Peminjaman <span class="fa fa-chevron-down"></span></a>
@@ -83,6 +80,7 @@
                       <li><a href="">Buku Tamu</a></li>
                       <li><a href="{{url('/kunjungan')}}">Laporan Pengunjung</a></li>
                       <li><a href="{{url('/daftar-penghapusan-buku')}}">Laporan Penghapusan</a></li>
+                      <li><a href="">Laporan Peminjaman</a></li>
                     </ul>
                   </li>
                 </ul>
@@ -189,10 +187,13 @@
     <!-- Datatables -->
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
 
+    
 
     <!-- Custom Theme Scripts -->
     <script src="{{asset('assets/build/js/custom.min.js')}}"></script>
     <script src="{{asset('assets/vendors/jquery/dist/app.js')}}"></script>
+
+    
     <script>
       jQuery(document).ready(function() {    
          App.init(); // initla  

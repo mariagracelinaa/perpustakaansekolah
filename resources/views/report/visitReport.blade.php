@@ -1,20 +1,68 @@
 @extends('layouts.gentelella')
 
 @section('content')
-    <div>
-        {{-- Pake canvas biar responsiv besar kecil chartnya, disarankan --}}
-        <canvas id="visitChart"></canvas>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 ">
+            <div class="x_panel">
+                <div>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <button onclick="convertToPDF()" class="btn btn-primary"><i class="fa fa-print"></i> Simpan File PDF</button>  
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="card-box table-responsive">
+                                <h3 style="text-align: center; color: black; margin-top: 20px">
+                                    Grafik Pengunjung Perpustakaan SMA Santo Carolus Surabaya Tahun {{$this_year}}
+                                </h3>
+                                <canvas id="visitChart">
+                                    {{-- grafik --}}
+                                </canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
+@php
+    $data_student = "";
+    $data_teacher = "";
+    foreach ($monthly_student as $ds) {
+        $data_student .= "'$ds'".",";
+    }
+    foreach ($monthly_teacher as $dt) {
+        $data_teacher .= "'$dt'".",";
+    }
+    // echo $data;
+@endphp
+ 
 @section('javascript')
+    {{-- Chart JS --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {{-- Chart value --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    
     <script>
         // Label di chartnya
         const labels = [
-            'Minggu 1',
-            'Minggu 2',
-            'Minggu 3',
-            'Minggu 4',
+            'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Agustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember',
         ];
 
         // Dataset isian dari chartnya
@@ -23,29 +71,46 @@
             datasets: [
                 {
                     label: 'Guru/Staf',
-                    backgroundColor: 'rgb(0, 0, 255)',
-                    borderColor: 'rgb(0, 0, 255)',
-                    data: [0, 10, 18, 2, 10, 30, 45],
+                    backgroundColor: '#27D888',
+                    borderColor: '#27D888',
+                    data: [<?= $data_teacher?>],        
                 }, 
                 {
                     label: 'Murid',
-                    backgroundColor: 'rgb(255, 0, 0)',
-                    borderColor: 'rgb(255, 0, 0)',
-                    data: [0, 0, 5, 10, 20, 16, 55]
+                    backgroundColor: '#D82777',
+                    borderColor: '#D82777',
+                    data: [<?= $data_student?>],
                 }
             ]
         };
 
+        const colorBackgroundImage = {
+            id :'color',
+            beforeDraw: (chart, options) => {
+                const {ctx, width, height} = chart;
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0,0, width, height)
+                ctx.restore()
+            }
+        }
+
         const config = {
-            type: 'line',
+            type: 'bar',
             data: data,
             options: {
-                // scales: {
-                //     y: {
-                //         beginAtZero: true
-                //     }
-                // }
-            }
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    datalabels:{
+                        anchor:'end',
+                        align:'top',
+                    }
+                }
+            },
+            plugins: [colorBackgroundImage],
         };
 
         // Menempatkan chartnya di canvas yang sudah dibuat di bagian body
@@ -54,5 +119,21 @@
             // config -> chartnya
             config
         );
+        
+        // Save PDF
+        function convertToPDF(){
+            const cv = document.getElementById('visitChart');
+
+            // chart to image
+            const img = cv.toDataURL('images/png', 1.0);
+
+            // taruh img ke pdf nya
+            let pdf = new jsPDF('landscape');
+            pdf.setFontSize(20);
+            pdf.addImage(img, 'PNG', 15, 15, 250, 150);
+            pdf.text(30,15 ,'Grafik Pengunjung Perpustakaan SMA Santo Carolus Surabaya Tahun {{$this_year}}');
+            pdf.save('pengunjung_perpustakaan_sma_carolus_sby.pdf');
+        }
+
     </script>
 @endsection

@@ -16,49 +16,48 @@ class VisitController extends Controller
     public function index()
     {
         $this_year = date('Y');
-        $this_month = date('m');
-        
 
-        $data = DB::table('deletions')
-        ->join('items', 'items.register_num','=','deletions.register_num')
-        ->join('biblios', 'items.biblios_id','=','biblios.id')
-        ->select('deletions.*', 'biblios.title', 'items.source', 'items.price')
-        ->get();
-
-        $monthly_student = DB::table('visits') 
+        $monthly_student = [];
+        $monthly_teacher = [];
+        for($i = 1; $i <= 12; $i++){
+            $count_student = DB::table('visits') 
                             ->join('users', 'users.nisn_niy', '=', 'visits.nisn_niy')
-                            ->select(DB::raw('count(*)'))
+                            ->select(DB::raw('count(*) as count'))
                             ->where(DB::raw('year(visits.date)'), '=', $this_year)
                             ->where('users.role', '=', 'murid')
-                            ->groupBy(DB::raw('month(visits.date)'))
+                            ->where(DB::raw('month(visits.date)'),'=', $i)
                             ->get();
-
-        $monthly_teacher = DB::table('visits') 
+            $monthly_student[$i] = $count_student[0]->count;
+        }
+       
+        for($i = 1; $i <= 12; $i++){
+            $count_teacher = DB::table('visits') 
                             ->join('users', 'users.nisn_niy', '=', 'visits.nisn_niy')
-                            ->select(DB::raw('count(*)'))
+                            ->select(DB::raw('count(*) as count'))
                             ->where(DB::raw('year(visits.date)'), '=', $this_year)
                             ->where('users.role', '=', 'guru/staf')
-                            ->groupBy(DB::raw('month(visits.date)'))
+                            ->where(DB::raw('month(visits.date)'),'=', $i)
                             ->get();
-
+            $monthly_teacher[$i] = $count_teacher[0]->count;
+        }
                             
-        $weekly_student = DB::table('visits') 
-                            ->join('users', 'users.nisn_niy', '=', 'visits.nisn_niy')
-                            ->select(DB::raw('count(*)'))
-                            ->where(DB::raw('year(visits.date)'), '=', $this_year)
-                            ->where('users.role', '=', 'murid')
-                            ->groupBy(DB::raw('week(visits.date)'))
-                            ->get();
+        // $weekly_student = DB::table('visits') 
+        //                     ->join('users', 'users.nisn_niy', '=', 'visits.nisn_niy')
+        //                     ->select(DB::raw('count(*)'))
+        //                     ->where(DB::raw('year(visits.date)'), '=', $this_year)
+        //                     ->where('users.role', '=', 'murid')
+        //                     ->groupBy(DB::raw('week(visits.date)'))
+        //                     ->get();
 
-        $weekly_teacher = DB::table('visits') 
-                            ->join('users', 'users.nisn_niy', '=', 'visits.nisn_niy')
-                            ->select(DB::raw('count(*)'))
-                            ->where(DB::raw('year(visits.date)'), '=', $this_year)
-                            ->where('users.role', '=', 'guru/staf')
-                            ->groupBy(DB::raw('week(visits.date)'))
-                            ->get();
-        // dd($this_month);
-        return view('report.visitReport');
+        // $weekly_teacher = DB::table('visits') 
+        //                     ->join('users', 'users.nisn_niy', '=', 'visits.nisn_niy')
+        //                     ->select(DB::raw('count(*)'))
+        //                     ->where(DB::raw('year(visits.date)'), '=', $this_year)
+        //                     ->where('users.role', '=', 'guru/staf')
+        //                     ->groupBy(DB::raw('week(visits.date)'))
+        //                     ->get();
+        // dd($monthly_student);
+        return view('report.visitReport', compact('monthly_student', 'monthly_teacher', 'this_year'));
     }
 
     /**
