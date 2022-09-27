@@ -110,7 +110,7 @@
                     }
                 }
             },
-            plugins: [colorBackgroundImage],
+            plugins: [ChartDataLabels, colorBackgroundImage],
         };
 
         // Menempatkan chartnya di canvas yang sudah dibuat di bagian body

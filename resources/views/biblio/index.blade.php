@@ -25,7 +25,7 @@
                   <th>Tahun Terbit</th>
                   <th>Pertama Pengadaan</th>
                   <th>Kelas DDC</th>
-                  <th>Klasifikasi</th>
+                  <th>Nomor Panggil</th>
                   <th>Edisi</th>
                   <th>Jumlah Halaman</th>
                   <th>Tinggi Buku (cm)</th>

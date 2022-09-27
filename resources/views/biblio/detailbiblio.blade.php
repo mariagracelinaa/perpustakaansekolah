@@ -51,7 +51,7 @@
                 <td> : {{$data->ddc}}</td>
             </tr>
             <tr>
-                <td>Klasifikasi </td>
+                <td>Nomor Panggil </td>
                 <td> : {{$data->classification}}</td>
             </tr>
             <tr>

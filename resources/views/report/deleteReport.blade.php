@@ -79,7 +79,7 @@
                     <input type="date" required class="form-control" name="start_date" required>
                 </div>
                 <div class="form-group">
-                    <label>Kota Penerbit</label>
+                    <label>Tanggal Selesai</label>
                     <input type="date" required class="form-control" name="end_date" required>
                 </div>
             </div>
