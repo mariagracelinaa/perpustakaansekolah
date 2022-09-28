@@ -39,9 +39,7 @@
                             <a class="btn" onclick="if(confirm('Apakah anda yakin menghapus data {{$aut->name}}'))"><i class="fa fa-trash-o" aria-hidden="true"></i> Hapus</a>
                           </li>
                         </ul>
-                      </div>
-                      
-                      
+                      </div> 
                     </td>
                   </tr>
                 @endforeach

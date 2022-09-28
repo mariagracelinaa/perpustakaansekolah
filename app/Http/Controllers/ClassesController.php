@@ -18,8 +18,8 @@ class ClassesController extends Controller
         $result = Classes::all();
 
         $count = DB::table('class')
-                ->Select(DB::raw('count(users.class_id) as total_murid'))
-                ->leftJoin('users','users.class_id','=','class.id')
+                ->Select(DB::raw('count(students.class_id) as total_murid'))
+                ->leftJoin('students','students.class_id','=','class.id')
                 ->groupBy('class.id')
                 ->orderBy('class.id', 'asc')
                 ->get();

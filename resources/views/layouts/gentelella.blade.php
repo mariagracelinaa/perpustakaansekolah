@@ -63,8 +63,8 @@
                       <li><a href="{{url('/daftar-penulis')}}">Daftar Penulis</a></li>
                       <li><a href="{{url('/daftar-penerbit')}}">Daftar Penerbit</a></li>
                       <li><a href="{{url('/daftar-kelas')}}">Daftar Kelas</a></li>
-                      <li><a href="">Daftar Siswa</a></li>
-                      <li><a href="">Daftar Guru</a></li>
+                      <li><a href="{{url('/daftar-murid')}}">Daftar Murid</a></li>
+                      <li><a href="{{url('/daftar-guru')}}">Daftar Guru</a></li>
                     </ul>
                   </li>
                   <li><a><i class="fa fa-list" aria-hidden="true"></i> Data Peminjaman <span class="fa fa-chevron-down"></span></a>
@@ -75,8 +75,8 @@
                   </li>
                   <li><a><i class="fa fa-desktop"></i> Data Administrasi <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="">Daftar Pemesanan Buku</a></li>
-                      <li><a href="">Daftar Usulan Buku</a></li>
+                      <li><a href="{{url('/daftar-pesanan')}}">Daftar Pemesanan Buku</a></li>
+                      <li><a href="{{url('/daftar-usulan-buku')}}">Daftar Usulan Buku</a></li>
                       <li><a href="">Buku Tamu</a></li>
                       <li><a href="{{url('/kunjungan')}}">Laporan Pengunjung</a></li>
                       <li><a href="{{url('/daftar-penghapusan-buku')}}">Laporan Penghapusan</a></li>

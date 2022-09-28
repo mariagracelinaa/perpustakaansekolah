@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	<title>Cetak Laporan Penghapusan Buku</title>
+	<title>Cetak Daftar Usulan Buku</title>
 </head>
 
 <style>
@@ -14,7 +14,7 @@
         border-top: 1px solid #000;
     }
 
-    tr, td {
+    th {
         text-align: center;
     }
 </style>
@@ -30,13 +30,13 @@
                             </div>
                             <div style="width:80%">
                                 <p align="center">
-                                    LAPORAN PENGHAPUSAN BUKU
+                                    LAPORAN USULAN BUKU
                                 </p>
                                 <p align="center" style="line-height: 1.5; font-weight: bold;">
                                     PERPUSTAKAAN SMA KATOLIK SANTO CAROLUS SURABAYA
                                 </p>
                                 <p align="center">
-                                    Periode Tanggal Penghapusan {{$start}} s/d {{$end}}
+                                    Periode Tanggal Usulan {{$start}} s/d {{$end}}
                                 </p>
                             </div> 
                         </div>
@@ -46,35 +46,36 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Nomor Register</th>
+                                <th>Nama Pengusul</th>
                                 <th>Judul Buku</th>
-                                <th>Sumber Buku</th>
-                                <th>Harga</th>
-                                <th>Tanggal Penghapusan</th>
-                                <th>Deskripsi</th>
+                                <th>Penulis</th>
+                                <th>Penerbit</th>
+                                <th>Tanggal Usulan</th>
+                                <th>Status</th>
                             </tr>
                           </thead>
                           <tbody>
                             @php $no = 1; $i = 0 @endphp
-                            @foreach ($data as $del)
+                            @foreach ($data as $u)
                                 <tr>
-                                    <td>{{ $no++ }}</td>
-                                    <td>{{$del->register_num}}</td>
-                                    <td>{{$del->title}}</td>
+                                    <td style="width: 5%;">{{ $no++ }}</td>
+                                    <td>{{$u->name}}</td>
+                                    <td>{{$u->title}}</td>
+                                    <td>{{$u->author}}</td>
+                                    <td>{{$u->publisher}}</td>
+                                    <td>{{$u->date}}</td>
                                     <td>
-                                        @if($del->source == 'pembelian')
-                                        Pembelian
-                                        @else
-                                        Hadiah
-                                        @endif
-                                    </td>
-                                    <td style="text-align: right">{{number_format($del->price)}}</td>
-                                    <td>{{$del->deletion_date}}</td>
-                                    <td>{{$del->description}}</td>
+                                    @if($u->status == 'proses review')
+                                        Proses Review
+                                    @elseif($u->status == 'ditolak')
+                                        Ditolak
+                                    @elseif($u->status == 'diterima')
+                                        Diterima
+                                    @else
+                                        Selesai
+                                    @endif
+                                </td>
                                 </tr>
-                                @php
-                                    $i++;
-                                @endphp
                             @endforeach
                           </tbody>
                     </table>

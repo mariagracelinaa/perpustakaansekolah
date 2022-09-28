@@ -37,21 +37,32 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function class()
-    {
-        return $this->belongsTo('App\Classes','class_id');
-    }
-
     public function borrows()
     {
         // fk, pk -----------------------------------\/
-        return $this->hasMany('App\Borrow', 'nisn_niy', 'nisn_niy');
+        return $this->hasMany('App\Borrow', 'users_id', 'id');
     }
 
-    // public function visits()
-    // {
-    //     return $this->hasMany('App\Visit', 'nisn_niy', 'nisn_niy');
-    // }
+    public function suggestions()
+    {
+        // fk, pk -----------------------------------\/
+        return $this->hasMany('App\Suggestion', 'users_id', 'id');
+    }
+
+    public function students()
+    {
+        return $this->hasOne('App\Student');
+    }
+
+    public function teachers()
+    {
+        return $this->hasOne('App\Teacher');
+    }
+
+    public function biblios(){
+        return $this->belongsToMany('App\Biblio','bookings','users_id','biblios_id')
+                    ->withPivot('booking_date');
+    }
 
     public $timestamps = false;
 }

@@ -43,7 +43,8 @@ Route::post('daftar-item/updateData','ItemController@updateData')->name('daftar-
 Route::post('daftar-item/getDeleteForm','ItemController@getDeleteForm')->name('daftar-item.getDeleteForm');
 Route::post('daftar-item/deleteData','ItemController@deleteData')->name('daftar-item.deleteData');
 Route::get('daftar-penghapusan-buku','BiblioController@deletion');
-Route::get('/daftar-penghapusan-buku/cetak-laporan','BiblioController@printDeleteReport')->name('daftar-penghapusan-buku.printDeleteReport');
+Route::get('/cetak-laporan-penghapusan','BiblioController@printDeleteReport')->name('daftar-penghapusan-buku.printDeleteReport');
+Route::get('/daftar-pesanan','BiblioController@bookingList');
 
 //User Akses
 
@@ -59,5 +60,14 @@ Route::resource('daftar-peminjaman', 'BorrowController');
 
 // Visit
 Route::resource('kunjungan', 'VisitController');
+
+// Student + Teacher + suggestion
+Route::resource('daftar-murid', 'StudentController');
+Route::resource('daftar-guru', 'TeacherController');
+Route::resource('daftar-usulan-buku', 'SuggestionController');
+Route::post('/daftar-usulan-buku/getEditForm','SuggestionController@getEditForm')->name('daftar-usulan-buku.getEditForm');
+Route::post('daftar-usulan-buku/updateData','SuggestionController@updateData')->name('daftar-usulan-buku.updateData');
+Route::post('daftar-usulan-buku/deleteDataAdmin','SuggestionController@deleteDataAdmin')->name('suggestions.deleteDataAdmin');
+Route::get('/cetak-usulan','SuggestionController@printSuggestionReport');
 
 

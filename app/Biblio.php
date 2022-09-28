@@ -22,5 +22,10 @@ class Biblio extends Model
         return $this->belongsToMany('App\Author','authors_biblios','biblios_id','authors_id')
                     ->withPivot('primary_author');
     }
+
+    public function users(){
+        return $this->belongsToMany('App\User','bookings','biblios_id','users_id')
+                    ->withPivot('booking_date');
+    }
     
 }

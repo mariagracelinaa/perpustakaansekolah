@@ -368,6 +368,19 @@ class BiblioController extends Controller
                 ->whereBetween('deletion_date', [$start,$end])
                 ->get();
         // dd($data);
+        $start = strftime('%d %B %Y', strtotime($start));
+        $end = strftime('%d %B %Y', strtotime($end));
         return view('report.printDeleteReport', compact('data', 'start', 'end', 'today'));
+    }
+
+    public function bookingList(){
+        $data = DB::table('bookings')
+                ->join('biblios', 'biblios.id','=','bookings.biblios_id')
+                ->join('users','users.id','=','bookings.users_id')
+                ->select('users.name', 'biblios.title', 'bookings.booking_date')
+                ->orderBy('booking_date','ASC')
+                ->get();
+        // dd($data);
+        return view('booking.index', compact('data'));
     }
 }

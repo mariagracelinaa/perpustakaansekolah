@@ -139,6 +139,9 @@ return [
         /*
          * Laravel Framework Service Providers...
          */
+        // sweet alert
+        RealRashid\SweetAlert\SweetAlertServiceProvider::class,
+
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
@@ -189,6 +192,8 @@ return [
     */
 
     'aliases' => [
+        // sweet alert
+        // 'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
 
         'App' => Illuminate\Support\Facades\App::class,
         'Arr' => Illuminate\Support\Arr::class,

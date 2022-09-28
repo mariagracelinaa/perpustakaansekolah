@@ -64,7 +64,7 @@
   <div class="modal-dialog">
     <div class="modal-content" >
         {{-- Form start --}}
-        <form role="form" target="_blank" method="GET" action="{{url('/daftar-penghapusan-buku/cetak-laporan')}}">
+        <form role="form" target="_blank" method="GET" action="{{url('/cetak-laporan-penghapusan')}}">
         <div class="modal-header">
             <button type="button" class="close" 
             data-dismiss="modal" aria-hidden="true"></button>
