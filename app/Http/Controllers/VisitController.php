@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Visit;
+use App\User;
 use Illuminate\Http\Request;
 use DB;
 
@@ -15,49 +16,17 @@ class VisitController extends Controller
      */
     public function index()
     {
-        $this_year = date('Y');
 
-        $monthly_student = [];
-        $monthly_teacher = [];
-        for($i = 1; $i <= 12; $i++){
-            $count_student = DB::table('visits') 
-                            ->join('users', 'users.id', '=', 'visits.users_id')
-                            ->select(DB::raw('count(*) as count'))
-                            ->where(DB::raw('year(visits.visit_time)'), '=', $this_year)
-                            ->where('users.role', '=', 'murid')
-                            ->where(DB::raw('month(visits.visit_time)'),'=', $i)
-                            ->get();
-            $monthly_student[$i] = $count_student[0]->count;
-        }
-       
-        for($i = 1; $i <= 12; $i++){
-            $count_teacher = DB::table('visits') 
-                            ->join('users', 'users.id', '=', 'visits.users_id')
-                            ->select(DB::raw('count(*) as count'))
-                            ->where(DB::raw('year(visits.visit_time)'), '=', $this_year)
-                            ->where('users.role', '=', 'guru/staf')
-                            ->where(DB::raw('month(visits.visit_time)'),'=', $i)
-                            ->get();
-            $monthly_teacher[$i] = $count_teacher[0]->count;
-        }
-                            
-        // $weekly_student = DB::table('visits') 
-        //                     ->join('users', 'users.nisn_niy', '=', 'visits.nisn_niy')
-        //                     ->select(DB::raw('count(*)'))
-        //                     ->where(DB::raw('year(visits.date)'), '=', $this_year)
-        //                     ->where('users.role', '=', 'murid')
-        //                     ->groupBy(DB::raw('week(visits.date)'))
-        //                     ->get();
+        $data = DB::table('users')
+                ->leftJoin('students','users.id','=','students.users_id')
+                ->leftJoin('teachers','users.id','=','teachers.users_id')
+                ->leftJoin('class','class.id','=','students.class_id')
+                ->select('users.id','students.nisn','teachers.niy','users.name','class.name as class', 'users.role')
+                ->orderBy('users.name', 'asc')
+                ->get();
 
-        // $weekly_teacher = DB::table('visits') 
-        //                     ->join('users', 'users.nisn_niy', '=', 'visits.nisn_niy')
-        //                     ->select(DB::raw('count(*)'))
-        //                     ->where(DB::raw('year(visits.date)'), '=', $this_year)
-        //                     ->where('users.role', '=', 'guru/staf')
-        //                     ->groupBy(DB::raw('week(visits.date)'))
-        //                     ->get();
-        // dd($monthly_student);
-        return view('report.visitReport', compact('monthly_student', 'monthly_teacher', 'this_year'));
+        // dd($data);
+        return view('visit.index', compact('data'));
     }
 
     /**
@@ -124,5 +93,127 @@ class VisitController extends Controller
     public function destroy(Visit $visit)
     {
         //
+    }
+
+    public function graphic(){
+        $this_year = date('Y');
+
+        $monthly_student = [];
+        $monthly_teacher = [];
+        for($i = 1; $i <= 12; $i++){
+            $count_student = DB::table('visits') 
+                            ->join('users', 'users.id', '=', 'visits.users_id')
+                            ->select(DB::raw('count(*) as count'))
+                            ->where(DB::raw('year(visits.visit_time)'), '=', $this_year)
+                            ->where('users.role', '=', 'murid')
+                            ->where(DB::raw('month(visits.visit_time)'),'=', $i)
+                            ->get();
+            $monthly_student[$i] = $count_student[0]->count;
+        }
+       
+        for($i = 1; $i <= 12; $i++){
+            $count_teacher = DB::table('visits') 
+                            ->join('users', 'users.id', '=', 'visits.users_id')
+                            ->select(DB::raw('count(*) as count'))
+                            ->where(DB::raw('year(visits.visit_time)'), '=', $this_year)
+                            ->where('users.role', '=', 'guru/staf')
+                            ->where(DB::raw('month(visits.visit_time)'),'=', $i)
+                            ->get();
+            $monthly_teacher[$i] = $count_teacher[0]->count;
+        }
+                            
+        // $weekly_student = DB::table('visits') 
+        //                     ->join('users', 'users.nisn_niy', '=', 'visits.nisn_niy')
+        //                     ->select(DB::raw('count(*)'))
+        //                     ->where(DB::raw('year(visits.date)'), '=', $this_year)
+        //                     ->where('users.role', '=', 'murid')
+        //                     ->groupBy(DB::raw('week(visits.date)'))
+        //                     ->get();
+
+        // $weekly_teacher = DB::table('visits') 
+        //                     ->join('users', 'users.nisn_niy', '=', 'visits.nisn_niy')
+        //                     ->select(DB::raw('count(*)'))
+        //                     ->where(DB::raw('year(visits.date)'), '=', $this_year)
+        //                     ->where('users.role', '=', 'guru/staf')
+        //                     ->groupBy(DB::raw('week(visits.date)'))
+        //                     ->get();
+        // dd($monthly_student);
+        return view('report.graphicVisitReport', compact('monthly_student', 'monthly_teacher', 'this_year'));
+    }
+
+    public function getAddForm(Request $request){
+        $id = $request->get('id');
+        $data = User::find($id);
+        return response()->json(array(
+            'status'=>'OK',
+            'msg'=>view('visit.getAddForm', compact('data'))->render()
+        ), 200);
+    }
+
+    public function listVisit(){
+        $data = DB::table('visits')
+                ->join('users','users.id','=','visits.users_id')
+                ->leftJoin('students','users.id','=','students.users_id')
+                ->leftJoin('class','class.id','=','students.class_id')
+                ->select('visits.*','users.id','users.name','class.name as class', 'users.role')
+                ->get();
+
+        // dd($data);
+        return view('report.visitList', compact('data'));
+    }
+
+    public function addVisit(Request $request){
+        $validator = \Validator::make($request->all(), [
+            'desc' => 'required',
+        ],
+        [
+            'desc.required' => 'Keperluan di perpustakaan harus diisikan',
+        ]);
+        
+        if (!$validator->passes())
+        {
+            return response()->json(['status'=>0, 'errors'=>$validator->errors()->toArray()]);
+        }else{
+            try{
+            $users_id = $request->get('id');
+            $desc = $request->get('desc');
+
+            // dd($users_id);
+
+            // mendapatkan datetime skrg, sudah GMT+7 ganti di config->app.php->timezone, locale, faker_locale
+            $visit_time = date('Y-m-d');
+                
+            $data = new Visit();
+            $data->users_id = $users_id;
+            $data->visit_time = $visit_time;
+            $data->description = $desc;
+            $data->save();
+
+            $request->session()->flash('status','Data kunjungan baru berhasil disimpan');
+
+            }catch (\PDOException $e) {
+                $request->session()->flash('error', 'Gagal menambah data baru, silahkan coba lagi');
+            }
+        }
+    }
+
+    public function printVisitReport(Request $request){
+        $start = $request->get('start_date');
+        $end = $request->get('end_date');
+        // dd($start, $end);
+        
+        $today = strftime('%d %B %Y');
+        $data = DB::table('visits')
+                ->join('users','users.id','=','visits.users_id')
+                ->leftJoin('students','users.id','=','students.users_id')
+                ->leftJoin('class','class.id','=','students.class_id')
+                ->select('visits.*','users.id','users.name','class.name as class', 'users.role')
+                ->whereBetween('visits.visit_time', [$start,$end])
+                ->orderBy('visits.visit_time','asc')
+                ->get();
+        // dd($data);
+        $start = strftime('%d %B %Y', strtotime($start));
+        $end = strftime('%d %B %Y', strtotime($end));
+        return view('report.printVisitList', compact('data', 'start', 'end', 'today'));
     }
 }

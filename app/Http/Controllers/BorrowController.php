@@ -172,4 +172,22 @@ class BorrowController extends Controller
     {
         //
     }
+
+    public function graphic(){
+        $this_year = date('Y');
+
+        $monthly_borrow = [];
+        for($i = 1; $i <= 12; $i++){
+            $count = DB::table('borrows') 
+                            ->select(DB::raw('count(*) as count'))
+                            ->where(DB::raw('year(borrow_date)'), '=', $this_year)
+                            ->where(DB::raw('month(borrow_date)'),'=', $i)
+                            ->get();
+            $monthly_borrow[$i] = $count[0]->count;
+        }
+
+        // dd($monthly_borrow);
+   
+        return view('report.graphicBorrowReport', compact('monthly_borrow', 'this_year'));
+    }
 }

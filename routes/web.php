@@ -57,9 +57,15 @@ Route::post('daftar-kelas/updateData','ClassesController@updateData')->name('daf
 //Borrow + borrow transaction
 //Admin Akses
 Route::resource('daftar-peminjaman', 'BorrowController');
+Route::get('/grafik-peminjaman','BorrowController@graphic');
 
 // Visit
 Route::resource('kunjungan', 'VisitController');
+Route::get('/grafik-pengunjung','VisitController@graphic');
+Route::post('/kunjungan/getAddForm','VisitController@getAddForm')->name('kunjungan.getAddForm');
+Route::post('/tambah-kunjungan','VisitController@addVisit')->name('kunjungan.addVisit');
+Route::get('/laporan-kunjungan','VisitController@listVisit');
+Route::get('/cetak-laporan-kunjungan','VisitController@printVisitReport');
 
 // Student + Teacher + suggestion
 Route::resource('daftar-murid', 'StudentController');

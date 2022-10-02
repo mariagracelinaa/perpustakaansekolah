@@ -75,12 +75,13 @@
                   </li>
                   <li><a><i class="fa fa-desktop"></i> Data Administrasi <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
+                      <li><a href="{{url('/kunjungan')}}">Buku Tamu</a></li>
+                      <li><a href="{{url('/laporan-kunjungan')}}">Daftar Kunjungan</a></li>
                       <li><a href="{{url('/daftar-pesanan')}}">Daftar Pemesanan Buku</a></li>
                       <li><a href="{{url('/daftar-usulan-buku')}}">Daftar Usulan Buku</a></li>
-                      <li><a href="">Buku Tamu</a></li>
-                      <li><a href="{{url('/kunjungan')}}">Laporan Pengunjung</a></li>
                       <li><a href="{{url('/daftar-penghapusan-buku')}}">Laporan Penghapusan</a></li>
-                      <li><a href="">Laporan Peminjaman</a></li>
+                      <li><a href="{{url('/grafik-pengunjung')}}">Laporan Grafik Pengunjung</a></li>
+                      <li><a href="{{url('/grafik-peminjaman')}}">Laporan Grafik Peminjaman</a></li>
                     </ul>
                   </li>
                 </ul>
