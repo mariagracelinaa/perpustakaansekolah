@@ -15,6 +15,6 @@ class Borrow extends Model
 
     public function items(){
         return $this->belongsToMany('App\Item','borrow_transaction','borrows_id','register_num')
-                    ->withPivot('return_date', 'fine');
+                    ->withPivot('return_date', 'fine','status');
     }
 }

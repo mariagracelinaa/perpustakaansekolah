@@ -63,7 +63,7 @@
                                     <td>{{$u->title}}</td>
                                     <td>{{$u->author}}</td>
                                     <td>{{$u->publisher}}</td>
-                                    <td>{{$u->date}}</td>
+                                    <td>{{ Carbon\Carbon::parse($u->date)->format('d-m-Y') }}</td>
                                     <td>
                                     @if($u->status == 'proses review')
                                         Proses Review

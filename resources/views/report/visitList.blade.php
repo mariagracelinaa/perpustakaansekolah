@@ -41,7 +41,7 @@
                                     Guru/Staf
                                 @endif
                             </td>
-                            <td>{{$d->visit_time}}</td>
+                            <td>{{ Carbon\Carbon::parse($d->visit_time)->format('d-m-Y') }}</td>
                             <td>{{$d->description}}</td>
                           </tr>
                         @endforeach

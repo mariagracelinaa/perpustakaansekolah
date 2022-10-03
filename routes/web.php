@@ -57,7 +57,12 @@ Route::post('daftar-kelas/updateData','ClassesController@updateData')->name('daf
 //Borrow + borrow transaction
 //Admin Akses
 Route::resource('daftar-peminjaman', 'BorrowController');
+// Route::post('daftar-peminjaman-filter', 'BorrowController@filter');
+Route::get('/sirkulasi-buku','BorrowController@listUser');
+Route::post('/daftar-peminjaman/getDetail','BorrowController@getDetail')->name('daftar-peminjaman.getDetail');
 Route::get('/grafik-peminjaman','BorrowController@graphic');
+Route::get('sirkulasi-detail/{id}','BorrowController@detailCirculation');
+Route::post('/return','BorrowController@bookReturn');
 
 // Visit
 Route::resource('kunjungan', 'VisitController');

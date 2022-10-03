@@ -12,6 +12,7 @@
     <!-- Bootstrap -->
     <link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
     <link href="{{asset('assets/vendors/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <!-- Font Awesome -->
     <link href="{{asset('assets/vendors/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
     <!-- NProgress -->
@@ -69,8 +70,8 @@
                   </li>
                   <li><a><i class="fa fa-list" aria-hidden="true"></i> Data Peminjaman <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="">Tambah Peminjaman</a></li>
-                      <li><a href="">Daftar Peminjaman</a></li>
+                      <li><a href="{{url('/sirkulasi-buku')}}">Layanan Sirkulasi Buku</a></li>
+                      <li><a href="{{url('/daftar-peminjaman')}}">Daftar Peminjaman</a></li>
                     </ul>
                   </li>
                   <li><a><i class="fa fa-desktop"></i> Data Administrasi <span class="fa fa-chevron-down"></span></a>
@@ -131,6 +132,7 @@
                       </button>
                         <strong>Sukses!</strong> {{session('status')}}
                     </div>
+                    
                 @elseif(session('error')) 
                     <div class="alert alert-danger alert-dismissible" role="alert">
                       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
@@ -139,7 +141,6 @@
                     </div>
                 @endif
                 {{-- Alert End --}}
-            
                 @yield('content')
             </div>
         </div>

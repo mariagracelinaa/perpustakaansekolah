@@ -27,7 +27,7 @@
             </div>
             <div class="form-group">
                 <label>Tanggal Usulan</label>
-                <input type="text" class="form-control" placeholder="Isikan kota penerbit" name="date" value="{{$data->date}}" readonly>
+                <input type="text" class="form-control" placeholder="Isikan kota penerbit" name="date" value="{{ Carbon\Carbon::parse($data->date)->format('d-m-Y') }}" readonly>
             </div>
             <div class="form-group">
                 <label for="eStatus">Pilih Lokasi Rak Buku:</label>

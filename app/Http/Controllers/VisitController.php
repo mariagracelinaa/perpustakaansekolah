@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Visit;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use DB;
 
 class VisitController extends Controller
@@ -202,7 +203,7 @@ class VisitController extends Controller
         $end = $request->get('end_date');
         // dd($start, $end);
         
-        $today = strftime('%d %B %Y');
+        $today = Carbon::now()->format('d F Y');
         $data = DB::table('visits')
                 ->join('users','users.id','=','visits.users_id')
                 ->leftJoin('students','users.id','=','students.users_id')

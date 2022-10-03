@@ -18,13 +18,34 @@ class BorrowController extends Controller
      */
     public function index()
     {
-        $result = Borrow::all();
-
-        // $borrow_trans = $result[0]->items->title;
-
-        // dd($result);
-        // return view('biblio.borrow');
+        $result = DB::table('borrows')
+                ->join('users','users.id','=','borrows.users_id')
+                ->select('borrows.*','users.name')
+                ->get();
+        return view('borrow.index', compact('result'));
     }
+
+    // public function filter(Request $request){
+    //     $start = $request->get('start');
+    //     $end = $request->get('end');
+
+    //     // $start = '2022-10-03';
+    //     // $end = '2022-10-04';
+    //     if($start != null && $end != null){
+    //         $result = DB::table('borrows')
+    //             ->join('users','users.id','=','borrows.users_id')
+    //             ->select('borrows.*','users.name')
+    //             ->whereBetween('borrows.borrow_date', [$start,$end])
+    //             ->get();
+    //     }else{
+    //         $result = DB::table('borrows')
+    //             ->join('users','users.id','=','borrows.users_id')
+    //             ->select('borrows.*','users.name')
+    //             ->get();
+    //     }
+        
+    //     echo json_encode($result);
+    // }
 
     /**
      * Show the form for creating a new resource.
@@ -173,6 +194,18 @@ class BorrowController extends Controller
         //
     }
 
+    public function getDetail(Request $request){
+        $id = $request->get('id');
+        $data = DB::table('borrow_transaction')
+                ->where('borrows_id','=',$id)
+                ->get();
+        // dd($data);
+        return response()->json(array(
+            'status'=>'OK',
+            'msg'=>view('borrow.getDetailBorrowTransaction', compact('data'))->render()
+        ), 200);
+    }
+
     public function graphic(){
         $this_year = date('Y');
 
@@ -189,5 +222,92 @@ class BorrowController extends Controller
         // dd($monthly_borrow);
    
         return view('report.graphicBorrowReport', compact('monthly_borrow', 'this_year'));
+    }
+
+    public function listUser(){
+        $data = DB::table('users')
+                ->leftJoin('students','users.id','=','students.users_id')
+                ->leftJoin('teachers','users.id','=','teachers.users_id')
+                ->leftJoin('class','class.id','=','students.class_id')
+                ->select('users.id','students.nisn','teachers.niy','users.name','class.name as class', 'users.role')
+                ->orderBy('users.name', 'asc')
+                ->get();
+
+        // dd($data);
+        return view('borrow.circulation', compact('data'));
+    }
+
+    public function detailCirculation($users_id){
+        $user = DB::table('users')
+                ->leftJoin('teachers','users.id','=','teachers.users_id')
+                ->leftJoin('students','users.id','=','students.users_id')
+                ->leftJoin('class','class.id','=','students.class_id')
+                ->select('users.name','students.nisn','teachers.niy','class.name as class')
+                ->where('users.id','=',$users_id)
+                ->get();
+
+        $data = DB::table('borrows')
+                ->join('borrow_transaction','borrows.id','=','borrow_transaction.borrows_id')
+                ->join('items','items.register_num', '=', 'borrow_transaction.register_num')
+                ->join('biblios', 'biblios.id', '=', 'items.biblios_id')
+                ->join('users','users.id', '=', 'borrows.users_id')
+                ->select('borrows.id','borrows.borrow_date', 'borrows.due_date' ,'borrow_transaction.return_date', 'borrow_transaction.fine', 'borrow_transaction.status', 'items.register_num', 'biblios.title')
+                ->where('users.id', '=', $users_id)
+                ->get();
+
+        // dd($data);
+        return view('borrow.detailCirculation', compact('data','user'));
+    }
+
+    public function bookReturn(Request $request){
+        try{
+            $borrows_id = $request->get('id');
+            $register_num = $request->get('reg_num');
+            $fine = 0;
+
+            $return_date = date('Y-m-d');
+
+            $borrow_trans = DB::table('borrow_transaction')
+                            ->join('borrows','borrows.id','=','borrow_transaction.borrows_id')
+                            ->select('borrow_transaction.*', 'borrows.due_date')
+                            ->where('borrows.id','=', $borrows_id)
+                            ->where('borrow_transaction.register_num','=',$register_num)
+                            ->get();
+                            
+            // Cek denda / tidak
+            if($return_date > $borrow_trans[0]->due_date){
+                $return_date = Carbon::parse($return_date);
+                $due_date =Carbon::parse($borrow_trans[0]->due_date);
+                $interval = $return_date->diffInDays($due_date);
+
+                $fine = $interval * 500;
+            }
+
+            // update tabel -> kembalikan buku
+            $update_borrow_trans = DB::table('borrow_transaction')
+                            ->where('borrows_id','=', $borrows_id)
+                            ->where('register_num','=',$register_num)
+                            ->update(['status'=> 'sudah kembali','fine'=>$fine,'return_date'=>$return_date]);
+
+            $update_item = DB::table('items')
+                        ->where('register_num','=',$register_num)
+                        ->update(['status'=> 'tersedia']);
+
+            $get_total_fines = DB::table('borrow_transaction')
+                        ->select(DB::raw('SUM(fine) as total_fine'))
+                        ->where('borrows_id','=', $borrows_id)
+                        ->get();
+
+            // dd($get_total_fines[0]->total_fine);
+            $update_borrow = DB::table('borrows')
+                        ->where('id','=', $borrows_id)
+                        ->update(['total_fine'=>$get_total_fines[0]->total_fine]);
+
+            // dd($return_date);
+            $request->session()->flash('status','Buku berhasil dikembalikan');
+        }catch (\PDOException $e) {
+            $request->session()->flash('error', 'Buku gagal dikembalikan, silahkan coba lagi');
+        }  
+        
     }
 }

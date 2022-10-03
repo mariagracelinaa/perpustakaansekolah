@@ -29,7 +29,7 @@
                     <td style="width: 5%;">{{ $no++ }}</td>
                     <td>{{$bk->name}}</td>
                     <td>{{$bk->title}}</td>
-                    <td>{{$bk->booking_date}}</td>
+                    <td>{{ Carbon\Carbon::parse($bk->booking_date)->format('d-m-Y') }}</td>
                   </tr>
                 @endforeach
               </tbody>

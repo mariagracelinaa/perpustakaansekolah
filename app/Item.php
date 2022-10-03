@@ -20,7 +20,7 @@ class Item extends Model
 
     public function borrows(){
         return $this->belongsToMany('App\Borrow','borrow_transaction','register_num','borrows_id')
-                    ->withPivot('return_date', 'fine');
+                    ->withPivot('return_date', 'fine','status');
     }
     
 }
