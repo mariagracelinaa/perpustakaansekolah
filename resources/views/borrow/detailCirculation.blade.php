@@ -57,7 +57,15 @@
                                         <td>{{$d->register_num}}</td>
                                         <td>{{$d->title}}</td>
                                         <td>{{ Carbon\Carbon::parse($d->borrow_date)->format('d-m-Y') }}</td>
-                                        <td>{{ Carbon\Carbon::parse($d->due_date)->format('d-m-Y') }}</td>
+                                        @if( date('Y-m-d') > $d->due_date && $d->status == 'belum kembali')
+                                            <td style="background-color: red">
+                                                {{ Carbon\Carbon::parse($d->due_date)->format('d-m-Y') }}
+                                            </td>
+                                        @else
+                                            <td>
+                                                {{ Carbon\Carbon::parse($d->due_date)->format('d-m-Y') }}
+                                            </td>
+                                        @endif
                                         <td>
                                             @if ($d->return_date != null)
                                                 {{ Carbon\Carbon::parse($d->return_date)->format('d-m-Y') }}
@@ -79,10 +87,14 @@
                                                     <a class="btn" data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
                                                     <ul class="dropdown-menu">
                                                         <li>
-                                                            <a class="btn" onclick="bookReturn({{$d->id}},'{{$d->register_num}}')"><i class="bi bi-arrow-return-right" aria-hidden="true"></i> Kembali</a></li>
-                                                        <li>
-                                                        <a href="#modalDelete" data-toggle="modal" class="btn"><i class="bi bi-file-plus" aria-hidden="true"></i> Perpanjang</a>
-                                                    </li>
+                                                            <a class="btn" onclick="bookReturn({{$d->id}},'{{$d->register_num}}')"><i class="bi bi-arrow-return-right" aria-hidden="true"></i> Kembali</a>
+                                                        </li>
+                                                        @if ( date('Y-m-d') <= $d->due_date )
+                                                            <li>
+                                                                <a class="btn" onclick="bookExtension({{$d->id}},'{{$d->register_num}}')"><i class="bi bi-file-plus" aria-hidden="true"></i> Perpanjang</a>
+                                                            </li>
+                                                        @endif
+                                                        
                                                     </ul>
                                                 </div>
                                             </td>
@@ -108,6 +120,21 @@
         $.ajax({
             type:'POST',
             url:'{{url("/return")}}',
+            data:{
+                    '_token': '<?php echo csrf_token() ?>',
+                    'id':id,
+                    'reg_num': register_num
+                },
+            success:function(data) {
+                location.reload();
+            }
+        });
+    }
+
+    function bookExtension(id, register_num) {
+        $.ajax({
+            type:'POST',
+            url:'{{url("/extension")}}',
             data:{
                     '_token': '<?php echo csrf_token() ?>',
                     'id':id,

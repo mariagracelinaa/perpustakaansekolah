@@ -63,6 +63,7 @@ Route::post('/daftar-peminjaman/getDetail','BorrowController@getDetail')->name('
 Route::get('/grafik-peminjaman','BorrowController@graphic');
 Route::get('sirkulasi-detail/{id}','BorrowController@detailCirculation');
 Route::post('/return','BorrowController@bookReturn');
+Route::post('/extension','BorrowController@bookExtension');
 
 // Visit
 Route::resource('kunjungan', 'VisitController');

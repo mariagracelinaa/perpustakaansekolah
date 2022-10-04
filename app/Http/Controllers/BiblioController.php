@@ -132,9 +132,9 @@ class BiblioController extends Controller
                         }        
                     }
                 }
-                return redirect()->route('daftar-buku.index')->with('status','Data buku baru berhasil disimpan');
+                return session()->flash('status','Data buku baru berhasil disimpan');
             }catch (\PDOException $e) {
-                return redirect()->route('daftar-buku.index')->with('error', 'Gagal menambah data baru, silahkan coba lagi');
+                return session()->flash('error', 'Gagal menambah data baru, silahkan coba lagi');
             }
         }
     }

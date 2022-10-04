@@ -265,8 +265,10 @@ class BorrowController extends Controller
             $register_num = $request->get('reg_num');
             $fine = 0;
 
-            $return_date = date('Y-m-d');
+            // Tanggal hari ini (return_date)
+            $return_date =  Carbon::now()->format('Y-m-d');
 
+            // Ambil data peminjaman dengan id peminjaman dan nomor register buku yang akan dikembalikan
             $borrow_trans = DB::table('borrow_transaction')
                             ->join('borrows','borrows.id','=','borrow_transaction.borrows_id')
                             ->select('borrow_transaction.*', 'borrows.due_date')
@@ -289,16 +291,19 @@ class BorrowController extends Controller
                             ->where('register_num','=',$register_num)
                             ->update(['status'=> 'sudah kembali','fine'=>$fine,'return_date'=>$return_date]);
 
+            // update tabel -> status item buku di tabel items
             $update_item = DB::table('items')
                         ->where('register_num','=',$register_num)
                         ->update(['status'=> 'tersedia']);
 
+            
             $get_total_fines = DB::table('borrow_transaction')
                         ->select(DB::raw('SUM(fine) as total_fine'))
                         ->where('borrows_id','=', $borrows_id)
                         ->get();
 
             // dd($get_total_fines[0]->total_fine);
+            // update tabel -> total denda di tabel borrows
             $update_borrow = DB::table('borrows')
                         ->where('id','=', $borrows_id)
                         ->update(['total_fine'=>$get_total_fines[0]->total_fine]);
@@ -308,6 +313,113 @@ class BorrowController extends Controller
         }catch (\PDOException $e) {
             $request->session()->flash('error', 'Buku gagal dikembalikan, silahkan coba lagi');
         }  
-        
+    }
+
+    public function bookExtension(Request $request){
+        try{
+            $borrows_id = $request->get('id');
+            $register_num = $request->get('reg_num');
+            // ambil data booking dari nomor registrasi buku yang akan diperpanjang
+            $check_booking = DB::table('items')
+                            ->join('biblios','biblios.id','=','items.biblios_id')
+                            ->join('bookings','biblios.id','=','bookings.biblios_id')
+                            ->select('bookings.*')
+                            ->where('items.register_num','=', $register_num)
+                            ->get();
+
+            // dd($check_booking);
+            // Jika ada di daftar booking
+            if(!$check_booking->isEmpty()){
+                // cek stok item buku kosong atau tidak
+                // Jika kosong maka tidak bisa perpanjang
+                $check_count_item = DB::table('items')
+                                    ->select(DB::raw('COUNT(*) as count'))
+                                    ->where('biblios_id','=',$check_booking[0]->biblios_id)
+                                    ->where('status','=','tersedia')
+                                    ->where('is_deleted','=',0)
+                                    ->get();
+                
+                if($check_count_item[0]->count == 0){
+                    $request->session()->flash('error', 'Buku gagal diperpanjang, stok buku di perpustakaan sedang tidak ada dan buku sedang ada di daftar pesanan pengguna lain');
+                }else{
+                    // panggil function untuk masukkan data perpanjangan
+                    $this->extendTask($borrows_id, $register_num);
+                }
+            }else{
+                // panggil function untuk masukkan data perpanjangan
+                $this->extendTask($borrows_id, $register_num);
+            }
+
+        }catch (\PDOException $e) {
+            $request->session()->flash('error', 'Buku gagal diperpanjang, silahkan coba lagi');
+        }   
+    }
+
+    public function extendTask($borrows_id, $register_num){
+        // dd("Masuk Function extendTask");
+        try{
+            $fine = 0;
+
+            // dd($borrows_id, $register_num);
+
+            // Tanggal hari ini (return_date)
+            $return_date =  Carbon::now()->format('Y-m-d');
+
+            // Ambil data peminjaman dengan id peminjaman dan nomor register buku yang akan dikembalikan
+            $borrow_trans = DB::table('borrow_transaction')
+                            ->join('borrows','borrows.id','=','borrow_transaction.borrows_id')
+                            ->select('borrow_transaction.*', 'borrows.due_date', 'borrows.users_id as users_id')
+                            ->where('borrows.id','=', $borrows_id)
+                            ->where('borrow_transaction.register_num','=',$register_num)
+                            ->get();    
+            
+            // Cek denda / tidak
+            if($return_date > $borrow_trans[0]->due_date){
+                $return_date = Carbon::parse($return_date);
+                $due_date =Carbon::parse($borrow_trans[0]->due_date);
+                $interval = $return_date->diffInDays($due_date);
+
+                $fine = $interval * 500;
+            }
+
+            // update tabel -> kembalikan buku
+            $update_borrow_trans = DB::table('borrow_transaction')
+                            ->where('borrows_id','=', $borrows_id)
+                            ->where('register_num','=',$register_num)
+                            ->update(['status'=> 'sudah kembali','fine'=>$fine,'return_date'=>$return_date]);
+            
+            $get_total_fines = DB::table('borrow_transaction')
+                        ->select(DB::raw('SUM(fine) as total_fine'))
+                        ->where('borrows_id','=', $borrows_id)
+                        ->get();
+
+            // update tabel -> total denda di tabel borrows
+            $update_borrow = DB::table('borrows')
+                        ->where('id','=', $borrows_id)
+                        ->update(['total_fine'=>$get_total_fines[0]->total_fine]);
+
+            // Catat perpanjangan sebagai transaksi peminjaman baru
+            // Simpan tabel borrows
+            $borrow_date = $return_date;
+            $due_date = Carbon::now()->addDays(3)->format('Y-m-d');
+
+            // dd($borrow_date,$due_date);
+            $borrow = new Borrow();
+            $borrow->users_id = $borrow_trans[0]->users_id;
+            $borrow->borrow_date = $borrow_date;
+            $borrow->due_date = $due_date;
+            $borrow->total_fine = 0;
+            $borrow->save();
+
+            if($borrow){
+                // Simpan tabel borrow_transaction
+                $auth_biblio = DB::table('borrow_transaction')
+                                ->insert(['borrows_id' => $borrow->id, 'register_num' => $register_num]);
+            }
+            // dd($return_date);
+            return session()->flash('status','Buku berhasil diperpanjang');
+        }catch (\PDOException $e) {
+            return session()->flash('error', 'Buku gagal diperpanjang, silahkan coba lagi');
+        }
     }
 }
