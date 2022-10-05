@@ -154,6 +154,7 @@ class VisitController extends Controller
                 ->join('users','users.id','=','visits.users_id')
                 ->leftJoin('class','class.id','=','users.class_id')
                 ->select('visits.*','users.*','class.name as class')
+                ->orderBy('visits.id', 'asc')
                 ->get();
 
         // dd($data);

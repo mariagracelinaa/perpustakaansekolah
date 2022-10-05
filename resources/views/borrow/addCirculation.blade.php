@@ -113,7 +113,7 @@
             enctype: 'multipart/form-data',
             processData: false,
             success:function(data) {
-              
+                location.reload();
             }
         }); 
     }
