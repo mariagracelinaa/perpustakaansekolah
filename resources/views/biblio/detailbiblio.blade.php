@@ -47,6 +47,10 @@
                 <td> : {{$data->first_purchase}}</td>
             </tr>
             <tr>
+                <td>Sinopsis </td>
+                <td> : {{$data->synopsis}}</td>
+            </tr>
+            <tr>
                 <td>Kelas DDC </td>
                 <td> : {{$data->ddc}}</td>
             </tr>

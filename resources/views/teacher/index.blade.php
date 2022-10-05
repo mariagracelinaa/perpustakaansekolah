@@ -33,15 +33,15 @@
                   <tr>
                     <td style="width: 5%;">{{ $no++ }}</td>
                     <td>{{$tc->niy}}</td>
-                    <td>{{$tc->users->name}}</td>
-                    <td>{{$tc->users->email}}</td>
+                    <td>{{$tc->name}}</td>
+                    <td>{{$tc->email}}</td>
                     <td style="width: 5%;">
                         <div class="container">
                             <a class="btn" data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
                             <ul class="dropdown-menu">
                                 <li><a href="#modalEdit" data-toggle="modal" class="btn" onclick="getEditForm({{$tc->id}})"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Ubah</a></li>
                                 <li>
-                                <a class="btn" onclick="if(confirm('Apakah anda yakin menghapus data {{$tc->users->name}}'))"><i class="fa fa-trash-o" aria-hidden="true"></i> Hapus</a>
+                                <a class="btn" onclick="if(confirm('Apakah anda yakin menghapus data {{$tc->name}}'))"><i class="fa fa-trash-o" aria-hidden="true"></i> Hapus</a>
                                 </li>
                             </ul>
                         </div> 

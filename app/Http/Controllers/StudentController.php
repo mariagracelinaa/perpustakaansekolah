@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Student;
+use DB;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -14,8 +15,13 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $data = Student::all();
-        // dd($data[0]->users->name);
+        $data = DB::table('users')
+                ->join('class', 'users.class_id','=','class.id')
+                ->select('users.id','users.nisn','users.name','users.email', 'class.name as class')
+                ->where('role','=','murid')
+                ->get();
+
+        // dd($data);
         return view('student.index', compact('data'));
     }
 

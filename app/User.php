@@ -49,16 +49,6 @@ class User extends Authenticatable
         return $this->hasMany('App\Suggestion', 'users_id', 'id');
     }
 
-    public function students()
-    {
-        return $this->hasOne('App\Student');
-    }
-
-    public function teachers()
-    {
-        return $this->hasOne('App\Teacher');
-    }
-
     public function biblios(){
         return $this->belongsToMany('App\Biblio','bookings','users_id','biblios_id')
                     ->withPivot('booking_date');

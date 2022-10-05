@@ -34,16 +34,16 @@
                   <tr>
                     <td style="width: 5%;">{{ $no++ }}</td>
                     <td>{{$std->nisn}}</td>
-                    <td>{{$std->users->name}}</td>
-                    <td>{{$std->class->name}}</td>
-                    <td>{{$std->users->email}}</td>
+                    <td>{{$std->name}}</td>
+                    <td>{{$std->class}}</td>
+                    <td>{{$std->email}}</td>
                     <td style="width: 5%;">
                         <div class="container">
                             <a class="btn" data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
                             <ul class="dropdown-menu">
                                 <li><a href="#modalEdit" data-toggle="modal" class="btn" onclick="getEditForm({{$std->id}})"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Ubah</a></li>
                                 <li>
-                                <a class="btn" onclick="if(confirm('Apakah anda yakin menghapus data {{$std->users->name}}'))"><i class="fa fa-trash-o" aria-hidden="true"></i> Hapus</a>
+                                <a class="btn" onclick="if(confirm('Apakah anda yakin menghapus data {{$std->name}}'))"><i class="fa fa-trash-o" aria-hidden="true"></i> Hapus</a>
                                 </li>
                             </ul>
                         </div> 

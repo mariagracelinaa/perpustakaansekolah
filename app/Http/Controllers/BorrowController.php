@@ -65,51 +65,59 @@ class BorrowController extends Controller
      */
     public function store(Request $request)
     {
-
-        $user = '0009224157';
-        $register_num = '4/3/Per-C/Hd/2022';
-        $biblios_id = Item::where('register_num',$register_num)->get();
-        // dd($biblios_id[0]->biblios_id);
-
-        // cek apakah id biblio yang mau dipinjam ada di daftar pesan
-        $check_booking = DB::table('bookings')->select()->where('biblios_id', '=', $biblios_id[0]->biblios_id)->orderBy('booking_date', 'asc')->get();
-        // dd($check_booking);
-        if(count($check_booking) > 0){
-            //jika ada
-            // dd('Masuk ke if ada booking');
-            //simpen id user yang pinjem ke array
-            $arr_id = [];
-            for($i = 0; $i < count($check_booking); $i++){
-                $arr_id[] = $check_booking[$i]->nisn_niy;
-            }
-
-            // cek apakah user yang mau pinjam = yang sudah pesan di daftar pesanan yang terlebih dahulu pesan
-            if($user == $arr_id[0]){
-                dd('user sama dgn yang pesan pertama');
-                
-                // catat peminjaman, lalu hapus data bookings dengan biblios_id & nisn_niy yang ada
-            }
-            else{
-                // kirim alert kalau ada di daftar pesanan
-                // setelah di konfirm sama admin
-                // 
-                // 
-                // 
-
-                // cek apa ada di array peminjam, kalau iya nanti catat peminjaman, lalu hapus data bookings dengan biblios_id & nisn_niy yang ada
-                if(in_array($user, $arr_id)){
-                    dd('user ada didaftar pemesan tapi bukan yang paling dulu');
-                }
-                // kalau gaada di list peminjam
-                else{
-                    // catat peminjaman
-                    dd('user tidak ada di daftar pesan sama sekali');
-                }
-            }
-        }else{
-            //Catat peminjaman
-            dd('Masuk ke else, catat peminjaman langsung');
+        $users_id = $request->get('users_id');
+        $listBook = $request->get('listBook');
+        
+        //looping penyimpanan peminjaman buku
+        for($i = 0; $i < count($listBook); $i++){
+            // $auth_biblio = DB::table('authors_biblios')
+            //             ->insert(['authors_id' => $arr_id[$j], 'biblios_id' => $biblio->id, 'primary_author' => 1]);      
         }
+
+        // $user = '0009224157';
+        // $register_num = '4/3/Per-C/Hd/2022';
+        // $biblios_id = Item::where('register_num',$register_num)->get();
+        // // dd($biblios_id[0]->biblios_id);
+
+        // // cek apakah id biblio yang mau dipinjam ada di daftar pesan
+        // $check_booking = DB::table('bookings')->select()->where('biblios_id', '=', $biblios_id[0]->biblios_id)->orderBy('booking_date', 'asc')->get();
+        // // dd($check_booking);
+        // if(count($check_booking) > 0){
+        //     //jika ada
+        //     // dd('Masuk ke if ada booking');
+        //     //simpen id user yang pinjem ke array
+        //     $arr_id = [];
+        //     for($i = 0; $i < count($check_booking); $i++){
+        //         $arr_id[] = $check_booking[$i]->nisn_niy;
+        //     }
+
+        //     // cek apakah user yang mau pinjam = yang sudah pesan di daftar pesanan yang terlebih dahulu pesan
+        //     if($user == $arr_id[0]){
+        //         dd('user sama dgn yang pesan pertama');
+                
+        //         // catat peminjaman, lalu hapus data bookings dengan biblios_id & nisn_niy yang ada
+        //     }
+        //     else{
+        //         // kirim alert kalau ada di daftar pesanan
+        //         // setelah di konfirm sama admin
+        //         // 
+        //         // 
+        //         // 
+
+        //         // cek apa ada di array peminjam, kalau iya nanti catat peminjaman, lalu hapus data bookings dengan biblios_id & nisn_niy yang ada
+        //         if(in_array($user, $arr_id)){
+        //             dd('user ada didaftar pemesan tapi bukan yang paling dulu');
+        //         }
+        //         // kalau gaada di list peminjam
+        //         else{
+        //             // catat peminjaman
+        //             dd('user tidak ada di daftar pesan sama sekali');
+        //         }
+        //     }
+        // }else{
+        //     //Catat peminjaman
+        //     dd('Masuk ke else, catat peminjaman langsung');
+        // }
 
 
 
@@ -226,10 +234,8 @@ class BorrowController extends Controller
 
     public function listUser(){
         $data = DB::table('users')
-                ->leftJoin('students','users.id','=','students.users_id')
-                ->leftJoin('teachers','users.id','=','teachers.users_id')
-                ->leftJoin('class','class.id','=','students.class_id')
-                ->select('users.id','students.nisn','teachers.niy','users.name','class.name as class', 'users.role')
+                ->leftJoin('class','class.id','=','users.class_id')
+                ->select('users.id','users.nisn','users.niy','users.name','class.name as class', 'users.role')
                 ->orderBy('users.name', 'asc')
                 ->get();
 
@@ -237,12 +243,22 @@ class BorrowController extends Controller
         return view('borrow.circulation', compact('data'));
     }
 
+    // untuk dihalaman tambah sirkulasi buku/peminjaman
+    public function detailAddCirculation($users_id){
+        $user = DB::table('users')
+                ->leftJoin('class','class.id','=','users.class_id')
+                ->select('users.id as users_id','users.name','users.nisn','users.niy','class.name as class')
+                ->where('users.id','=',$users_id)
+                ->get();
+
+        // dd($user);
+        return view('borrow.addCirculation', compact('user'));
+    }
+
     public function detailCirculation($users_id){
         $user = DB::table('users')
-                ->leftJoin('teachers','users.id','=','teachers.users_id')
-                ->leftJoin('students','users.id','=','students.users_id')
-                ->leftJoin('class','class.id','=','students.class_id')
-                ->select('users.name','students.nisn','teachers.niy','class.name as class')
+                ->leftJoin('class','class.id','=','users.class_id')
+                ->select('users.id as users_id','users.name','users.nisn','users.niy','class.name as class')
                 ->where('users.id','=',$users_id)
                 ->get();
 

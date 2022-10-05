@@ -141,6 +141,37 @@ class ItemController extends Controller
         ), 200);
     }
 
+    // Laporan penghapusan buku (Tabel deletions)
+    public function deletion(){
+        $data = DB::table('items')
+                ->join('biblios', 'items.biblios_id','=','biblios.id')
+                ->select('biblios.title', 'items.*')
+                ->where('is_deleted','=',1)
+                ->get();
+        // dd($data);
+
+        return view('report.deleteReport', compact('data'));
+    }
+
+    // Cetak laporan penghapusan buku
+    public function printDeleteReport(Request $request){
+        $start = $request->get('start_date');
+        $end = $request->get('end_date');
+        
+        $today = strftime('%d %B %Y');
+        $data = DB::table('items')
+                ->join('biblios', 'items.biblios_id','=','biblios.id')
+                ->select('biblios.title', 'items.*')
+                ->select('items.*', 'biblios.title')
+                ->whereBetween('delete_date', [$start,$end])
+                ->where('is_deleted','=',1)
+                ->get();
+        // dd($data);
+        $start = strftime('%d %B %Y', strtotime($start));
+        $end = strftime('%d %B %Y', strtotime($end));
+        return view('report.printDeleteReport', compact('data', 'start', 'end', 'today'));
+    }
+
     public function deleteData(Request $request){
         try{
             // dd($request);
@@ -148,16 +179,22 @@ class ItemController extends Controller
             $desc = $request->get('desc');
             $date = date('Y-m-d');
 
-            $delete = DB::table('deletions')->insert(['register_num' => $register_num, 'deletion_date' => $date, 'description' => $desc]);
-            if($delete){
-                DB::table('items')
-                  ->where('register_num', $register_num)
-                  ->update(['is_deleted' => 1]);
+            $data = DB::table('items')
+                    ->where('register_num', $register_num)
+                    ->update(['is_deleted' => 1, 'delete_date' => $date, 'delete_description' => $desc]);
 
-                $request->session()->flash('status','Data item buku berhasil dihapus');
-            }else{
-                $request->session()->flash('error', 'Gagal menghapus item buku, silahkan coba lagi');
-            }
+            // $delete = DB::table('deletions')->insert(['register_num' => $register_num, 'deletion_date' => $date, 'description' => $desc]);
+            // if($delete){
+            //     DB::table('items')
+            //       ->where('register_num', $register_num)
+            //       ->update(['is_deleted' => 1]);
+
+            //     $request->session()->flash('status','Data item buku berhasil dihapus');
+            // }else{
+            //     $request->session()->flash('error', 'Gagal menghapus item buku, silahkan coba lagi');
+            // }
+
+            $request->session()->flash('status','Data item buku berhasil dihapus');
 
         }catch (\PDOException $e) {
             $request->session()->flash('error', 'Gagal menghapus item buku, silahkan coba lagi');

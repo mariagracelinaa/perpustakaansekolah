@@ -25,6 +25,7 @@
                                 <th>Penulis</th>
                                 <th>Penerbit</th>
                                 <th>Tanggal Usulan</th>
+                                <th>Alasan Mengusulkan</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
@@ -39,6 +40,13 @@
                                 <td>{{$u->author}}</td>
                                 <td>{{$u->publisher}}</td>
                                 <td>{{ Carbon\Carbon::parse($u->date)->format('d-m-Y') }}</td>
+                                <td>
+                                    @if($u->description == null)
+                                        -
+                                    @else
+                                        {{$u->description}}
+                                    @endif
+                                </td>
                                 <td>
                                     @if($u->status == 'proses review')
                                         Proses Review

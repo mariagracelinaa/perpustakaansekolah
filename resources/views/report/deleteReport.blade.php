@@ -43,8 +43,8 @@
                         @endif
                     </td>
                     <td style="text-align: right">{{number_format($del->price)}}</td>
-                    <td>{{ Carbon\Carbon::parse($del->deletion_date)->format('d-m-Y') }}</td>
-                    <td>{{$del->description}}</td>
+                    <td>{{ Carbon\Carbon::parse($del->delete_date)->format('d-m-Y') }}</td>
+                    <td>{{$del->delete_description}}</td>
                   </tr>
                   @php
                       $i++;

@@ -148,7 +148,7 @@
                 {{-- Combobox DDC --}}
                 <div class="form-group">
                   <label for="ddc">Pilih kelas DDC:</label>
-                  <select name="ddc" id="ddc">
+                  <select style="width: 100%; height:30px" name="ddc" id="ddc">
                     <option value="000">000 - Karya Umum</option>
                     <option value="100">100 - Filsafat</option>
                     <option value="200">200 - Agama</option>
@@ -192,8 +192,8 @@
                   <span class="text-danger error-text height_error"></span>
                 </div>
                 <div class="form-group">
-                  <label for="location">Pilih Lokasi Rak Buku:</label>
-                  <select name="location" id="location">
+                  <label for="location">Pilih Lokasi Rak Buku:</label><br>
+                  <select style="width: 100%; height:30px" name="location" id="location">
                     <option value="rak 000">Rak 000 - Karya Umum</option>
                     <option value="rak 100">Rak 100 - Filsafat</option>
                     <option value="rak 200">Rak 200 - Agama</option>
@@ -206,6 +206,11 @@
                     <option value="rak 900">Rak 900 - Sejarah dan Geografi</option>
                   </select>
                   <span class="text-danger error-text location_error"></span>
+                </div>
+                <div class="form-group">
+                  <label>Sinopsis Buku</label><br>
+                  <textarea name="synopsis" id="synopsis" rows="10" style="width: 100%" placeholder="Tuliskan sinopsis buku"></textarea>
+                  <span class="text-danger error-text synopsis_error"></span>
                 </div>
             </div>
         </div>

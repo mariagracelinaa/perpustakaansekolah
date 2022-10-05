@@ -42,8 +42,8 @@ Route::post('/daftar-item/getEditForm', 'ItemController@getEditForm')->name('daf
 Route::post('daftar-item/updateData','ItemController@updateData')->name('daftar-item.updateData');
 Route::post('daftar-item/getDeleteForm','ItemController@getDeleteForm')->name('daftar-item.getDeleteForm');
 Route::post('daftar-item/deleteData','ItemController@deleteData')->name('daftar-item.deleteData');
-Route::get('daftar-penghapusan-buku','BiblioController@deletion');
-Route::get('/cetak-laporan-penghapusan','BiblioController@printDeleteReport')->name('daftar-penghapusan-buku.printDeleteReport');
+Route::get('daftar-penghapusan-buku','ItemController@deletion');
+Route::get('/cetak-laporan-penghapusan','ItemController@printDeleteReport')->name('daftar-penghapusan-buku.printDeleteReport');
 Route::get('/daftar-pesanan','BiblioController@bookingList');
 
 //User Akses
@@ -64,6 +64,7 @@ Route::get('/grafik-peminjaman','BorrowController@graphic');
 Route::get('sirkulasi-detail/{id}','BorrowController@detailCirculation');
 Route::post('/return','BorrowController@bookReturn');
 Route::post('/extension','BorrowController@bookExtension');
+Route::get('/tambah-sirkulasi-buku/{id}','BorrowController@detailAddCirculation');
 
 // Visit
 Route::resource('kunjungan', 'VisitController');

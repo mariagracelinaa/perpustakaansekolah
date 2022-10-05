@@ -20,6 +20,7 @@
                   <th>Nama Pemesan</th>
                   <th>Judul Buku</th>
                   <th>Tanggal Pemesanan</th>
+                  <th>Deskripsi</th>
                 </tr>
               </thead>
               <tbody>
@@ -30,6 +31,13 @@
                     <td>{{$bk->name}}</td>
                     <td>{{$bk->title}}</td>
                     <td>{{ Carbon\Carbon::parse($bk->booking_date)->format('d-m-Y') }}</td>
+                    <td>
+                      @if ($bk->description == null)
+                          -
+                      @else
+                          {{$bk->description}}
+                      @endif
+                    </td>
                   </tr>
                 @endforeach
               </tbody>

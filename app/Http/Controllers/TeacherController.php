@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Teacher;
 use Illuminate\Http\Request;
+use DB;
 
 class TeacherController extends Controller
 {
@@ -14,7 +15,11 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        $data = Teacher::all();
+        $data = DB::table('users')
+                ->select('users.id','users.niy','users.name','users.email')
+                ->where('role','=','guru/staf')
+                ->get();
+
         return view('teacher.index', compact('data'));
     }
 

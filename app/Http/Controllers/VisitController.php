@@ -19,10 +19,8 @@ class VisitController extends Controller
     {
 
         $data = DB::table('users')
-                ->leftJoin('students','users.id','=','students.users_id')
-                ->leftJoin('teachers','users.id','=','teachers.users_id')
-                ->leftJoin('class','class.id','=','students.class_id')
-                ->select('users.id','students.nisn','teachers.niy','users.name','class.name as class', 'users.role')
+                ->leftJoin('class','class.id','=','users.class_id')
+                ->select('users.*','class.name as class')
                 ->orderBy('users.name', 'asc')
                 ->get();
 
@@ -154,9 +152,8 @@ class VisitController extends Controller
     public function listVisit(){
         $data = DB::table('visits')
                 ->join('users','users.id','=','visits.users_id')
-                ->leftJoin('students','users.id','=','students.users_id')
-                ->leftJoin('class','class.id','=','students.class_id')
-                ->select('visits.*','users.id','users.name','class.name as class', 'users.role')
+                ->leftJoin('class','class.id','=','users.class_id')
+                ->select('visits.*','users.*','class.name as class')
                 ->get();
 
         // dd($data);
@@ -206,15 +203,12 @@ class VisitController extends Controller
         $today = Carbon::now()->format('d F Y');
         $data = DB::table('visits')
                 ->join('users','users.id','=','visits.users_id')
-                ->leftJoin('students','users.id','=','students.users_id')
-                ->leftJoin('class','class.id','=','students.class_id')
+                ->leftJoin('class','class.id','=','users.class_id')
                 ->select('visits.*','users.id','users.name','class.name as class', 'users.role')
                 ->whereBetween('visits.visit_time', [$start,$end])
                 ->orderBy('visits.visit_time','asc')
                 ->get();
         // dd($data);
-        $start = strftime('%d %B %Y', strtotime($start));
-        $end = strftime('%d %B %Y', strtotime($end));
         return view('report.printVisitList', compact('data', 'start', 'end', 'today'));
     }
 }

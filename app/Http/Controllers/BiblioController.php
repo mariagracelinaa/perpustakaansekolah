@@ -57,6 +57,7 @@ class BiblioController extends Controller
             'page' => 'required',
             'height' => 'required',
             'location' => 'required',
+            'synopsis' => 'required',
         ],
         [
             'title.required' => 'Judul tidak boleh kosong',
@@ -71,6 +72,7 @@ class BiblioController extends Controller
             'page.required' => 'Jumlah halaman tidak boleh kosong',
             'height.required' => 'Tinggi buku tidak boleh kosong',
             'location.required' => 'Lokasi buku tidak boleh kosong',
+            'synopsis.required' => 'Sinopsis buku tidak boleh kosong',
         ]);
         
         if (!$validator->passes())
@@ -117,6 +119,7 @@ class BiblioController extends Controller
                 $biblio->page = $request->get('page');
                 $biblio->book_height = $request->get('height');
                 $biblio->location = $request->get('location');
+                $biblio->synopsis = $request->get('synopsis');
                 // dd($biblio);
                 $biblio->save();
 
@@ -259,6 +262,7 @@ class BiblioController extends Controller
             'page' => 'required',
             'height' => 'required',
             'location' => 'required',
+            'synopsis' => 'required',
         ],
         [
             'title.required' => 'Judul tidak boleh kosong',
@@ -273,6 +277,7 @@ class BiblioController extends Controller
             'page.required' => 'Jumlah halaman tidak boleh kosong',
             'height.required' => 'Tinggi buku tidak boleh kosong',
             'location.required' => 'Lokasi buku tidak boleh kosong',
+            'synopsis.required' => 'Sinopsis buku tidak boleh kosong',
         ]);
         
         if (!$validator->passes())
@@ -317,12 +322,13 @@ class BiblioController extends Controller
                 $page = $request->get('page');
                 $book_height = $request->get('height');
                 $location = $request->get('location');
+                $synopsis = $request->get('synopsis');
 
                 // dd($title, $isbn , $publish_year, $publishers_id, $first_purchase, $ddc, $classification, $image, $edition, $page, $book_height, $location);
 
                 $data = DB::table('biblios')
                         ->where('id', $request->get('id'))
-                        ->update(['title' => $title, 'isbn' => $isbn, 'publishers_id' => $publishers_id,'publish_year' => $publish_year, 'first_purchase' => $first_purchase, 'ddc' => $ddc, 'classification' => $classification, 'image' => $image, 'edition' => $edition, 'page' => $page, 'book_height' => $book_height, 'location' => $location]);
+                        ->update(['title' => $title, 'isbn' => $isbn, 'publishers_id' => $publishers_id,'publish_year' => $publish_year, 'first_purchase' => $first_purchase, 'ddc' => $ddc, 'classification' => $classification, 'image' => $image, 'edition' => $edition, 'page' => $page, 'book_height' => $book_height, 'location' => $location, 'synopsis' => $synopsis]);
 
                 $delete = DB::table('authors_biblios')->where('biblios_id', '=', $request->get('id'))->delete();
 
@@ -344,40 +350,11 @@ class BiblioController extends Controller
         }
     }
 
-    // Laporan penghapusan buku (Tabel deletions)
-    public function deletion(){
-        $data = DB::table('deletions')
-                ->join('items', 'items.register_num','=','deletions.register_num')
-                ->join('biblios', 'items.biblios_id','=','biblios.id')
-                ->select('deletions.*', 'biblios.title', 'items.source', 'items.price')
-                ->get();
-        // dd($data);
-        return view('report.deleteReport', compact('data'));
-    }
-
-    // Cetak laporan penghapusan buku
-    public function printDeleteReport(Request $request){
-        $start = $request->get('start_date');
-        $end = $request->get('end_date');
-        
-        $today = strftime('%d %B %Y');
-        $data = DB::table('deletions')
-                ->join('items', 'items.register_num','=','deletions.register_num')
-                ->join('biblios', 'items.biblios_id','=','biblios.id')
-                ->select('deletions.*', 'biblios.title', 'items.source', 'items.price')
-                ->whereBetween('deletion_date', [$start,$end])
-                ->get();
-        // dd($data);
-        $start = strftime('%d %B %Y', strtotime($start));
-        $end = strftime('%d %B %Y', strtotime($end));
-        return view('report.printDeleteReport', compact('data', 'start', 'end', 'today'));
-    }
-
     public function bookingList(){
         $data = DB::table('bookings')
                 ->join('biblios', 'biblios.id','=','bookings.biblios_id')
                 ->join('users','users.id','=','bookings.users_id')
-                ->select('users.name', 'biblios.title', 'bookings.booking_date')
+                ->select('users.name', 'biblios.title', 'bookings.booking_date','bookings.description')
                 ->orderBy('booking_date','ASC')
                 ->get();
         // dd($data);

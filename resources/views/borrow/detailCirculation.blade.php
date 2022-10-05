@@ -27,7 +27,7 @@
                 <div class="x_title">
                   <h2>Histori Peminjaman</small></h2>
                   <ul class="nav navbar-right panel_toolbox">
-                    <button href="#modalCreate" data-toggle="modal" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Peminjaman</button>
+                    <a href="/tambah-sirkulasi-buku/{{$user[0]->users_id}}" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Peminjaman</a>
                   </ul>
                   <div class="clearfix"></div>
                 </div>

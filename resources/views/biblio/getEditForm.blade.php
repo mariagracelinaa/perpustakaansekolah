@@ -95,7 +95,7 @@
             {{-- Combobox DDC --}}
             <div class="form-group">
                 <label for="ddc">Pilih kelas DDC:</label>
-                <select name="ddc" id="ddc">
+                <select style="width: 100%; height:30px" name="ddc" id="ddc">
                     @if($data->ddc == "000")
                         <option value="000" selected >000 - Karya Umum</option>
                     @else
@@ -191,7 +191,7 @@
             </div>
             <div class="form-group">
                 <label for="location">Pilih Lokasi Rak Buku:</label>
-                <select name="location" id="location">
+                <select style="width: 100%; height:30px" name="location" id="location">
                     @if($data->location == "rak 000")
                         <option value="rak 000" selected >Rak 000 - Karya Umum</option>
                     @else
@@ -253,6 +253,11 @@
                     @endif
                 </select>
                 <span class="text-danger eError-text location_eError"></span>
+                <div class="form-group">
+                    <label>Sinopsis Buku</label><br>
+                    <textarea name="synopsis" id="synopsis" rows="10" style="width: 100%" placeholder="Tuliskan sinopsis buku"></textarea>
+                    <span class="text-danger error-text synopsis_error"></span>
+                  </div>
             </div>
         </div>
     </div>
