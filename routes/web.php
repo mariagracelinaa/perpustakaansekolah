@@ -74,13 +74,19 @@ Route::post('/tambah-kunjungan','VisitController@addVisit')->name('kunjungan.add
 Route::get('/laporan-kunjungan','VisitController@listVisit');
 Route::get('/cetak-laporan-kunjungan','VisitController@printVisitReport');
 
-// Student + Teacher + suggestion
-Route::resource('daftar-murid', 'StudentController');
-Route::resource('daftar-guru', 'TeacherController');
+// User + suggestion
+Route::get('daftar-murid', 'UserController@student');
+Route::get('daftar-guru', 'UserController@teacher');
 Route::resource('daftar-usulan-buku', 'SuggestionController');
 Route::post('/daftar-usulan-buku/getEditForm','SuggestionController@getEditForm')->name('daftar-usulan-buku.getEditForm');
 Route::post('daftar-usulan-buku/updateData','SuggestionController@updateData')->name('daftar-usulan-buku.updateData');
 Route::post('daftar-usulan-buku/deleteDataAdmin','SuggestionController@deleteDataAdmin')->name('suggestions.deleteDataAdmin');
 Route::get('/cetak-usulan','SuggestionController@printSuggestionReport');
+Route::get('/ubah-data-pengguna/{id}', 'UserController@getEditForm');
+Route::post('/aksi-ubah-data', 'UserController@editDataUserAdmin');
 
 
+// Autentifikasi user
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

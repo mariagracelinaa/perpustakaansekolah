@@ -6,10 +6,10 @@
     <div class="col-md-12 col-sm-12 ">
         <div class="x_panel">
           <div class="x_title">
-            <h2>Daftar Murid</small></h2>
+            <h2>Daftar Guru dan Staf</small></h2>
             <ul class="nav navbar-right panel_toolbox">
                 {{-- Tambah data ke halaman register --}}
-              <button href="" data-toggle="modal" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Data</button>    
+              <a href="{{route('register')}}" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Data</a>    
             </ul>
             <div class="clearfix"></div>
           </div>
@@ -21,29 +21,28 @@
               <thead>
                 <tr>
                   <th>No</th>
-                  <th>Nomor NISN</th>
+                  <th>Nomor NIY</th>
                   <th>Nama</th>
-                  <th>Kelas</th>
                   <th>Email</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
               <tbody>
               @php $no = 1; @endphp
-                @foreach ($data as $std)
+                @foreach ($data as $tc)
                   <tr>
                     <td style="width: 5%;">{{ $no++ }}</td>
-                    <td>{{$std->nisn}}</td>
-                    <td>{{$std->name}}</td>
-                    <td>{{$std->class}}</td>
-                    <td>{{$std->email}}</td>
+                    <td>{{$tc->niy}}</td>
+                    <td>{{$tc->name}}</td>
+                    <td>{{$tc->email}}</td>
                     <td style="width: 5%;">
                         <div class="container">
                             <a class="btn" data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
                             <ul class="dropdown-menu">
-                                <li><a href="#modalEdit" data-toggle="modal" class="btn" onclick="getEditForm({{$std->id}})"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Ubah</a></li>
                                 <li>
-                                <a class="btn" onclick="if(confirm('Apakah anda yakin menghapus data {{$std->name}}'))"><i class="fa fa-trash-o" aria-hidden="true"></i> Hapus</a>
+                                  <a href="{{url('/ubah-data-pengguna/'.$tc->id)}}" class="btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Ubah</a></li>
+                                <li>
+                                <a class="btn" onclick="if(confirm('Apakah anda yakin menghapus data {{$tc->name}}'))"><i class="fa fa-trash-o" aria-hidden="true"></i> Hapus</a>
                                 </li>
                             </ul>
                         </div> 

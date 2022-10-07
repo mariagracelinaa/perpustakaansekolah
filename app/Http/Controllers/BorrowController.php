@@ -21,7 +21,7 @@ class BorrowController extends Controller
         $result = DB::table('borrows')
                 ->join('users','users.id','=','borrows.users_id')
                 ->select('borrows.*','users.name')
-                ->orderBy('borrows.id','asc')
+                ->orderBy('borrows.id','desc')
                 ->get();
         return view('borrow.index', compact('result'));
     }

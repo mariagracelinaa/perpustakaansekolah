@@ -39,9 +39,9 @@
                         <ul class="dropdown-menu">
                           <li>
                             <a href="#modalEdit" data-toggle="modal" class="btn" onclick="getEditForm({{$publisher->id}})"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Ubah</a>
-                          <li>
+                          {{-- <li>
                             <a class="btn" onclick="if(confirm('Apakah anda yakin menghapus data {{$publisher->name}}'))"><i class="fa fa-trash-o" aria-hidden="true"></i> Hapus</a>
-                          </li>
+                          </li> --}}
                         </ul>
                       </div>
                     </td>

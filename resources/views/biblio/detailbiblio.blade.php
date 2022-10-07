@@ -48,7 +48,7 @@
             </tr>
             <tr>
                 <td>Sinopsis </td>
-                <td> : {{$data->synopsis}}</td>
+                <td> : {!! nl2br(e($data->synopsis)) !!} </td>
             </tr>
             <tr>
                 <td>Kelas DDC </td>
