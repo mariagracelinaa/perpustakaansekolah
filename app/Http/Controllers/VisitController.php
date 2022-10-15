@@ -94,8 +94,8 @@ class VisitController extends Controller
         //
     }
 
-    public function graphic(){
-        $this_year = date('Y');
+    public function graphic(Request $request){
+        $this_year =  date('Y');
 
         $monthly_student = [];
         $monthly_teacher = [];
@@ -138,6 +138,38 @@ class VisitController extends Controller
         //                     ->get();
         // dd($monthly_student);
         return view('report.graphicVisitReport', compact('monthly_student', 'monthly_teacher', 'this_year'));
+    }
+
+    public function graphicYear(Request $request){
+        $this_year = $request->get('year');
+
+        $monthly_student = "";
+        $monthly_teacher = "";
+        for($i = 1; $i <= 12; $i++){
+            $count_student = DB::table('visits') 
+                            ->join('users', 'users.id', '=', 'visits.users_id')
+                            ->select(DB::raw('count(*) as count'))
+                            ->where(DB::raw('year(visits.visit_time)'), '=', $this_year)
+                            ->where('users.role', '=', 'murid')
+                            ->where(DB::raw('month(visits.visit_time)'),'=', $i)
+                            ->get();
+            $monthly_student .= $count_student[0]->count.",";
+        }
+       
+        for($i = 1; $i <= 12; $i++){
+            $count_teacher = DB::table('visits') 
+                            ->join('users', 'users.id', '=', 'visits.users_id')
+                            ->select(DB::raw('count(*) as count'))
+                            ->where(DB::raw('year(visits.visit_time)'), '=', $this_year)
+                            ->where('users.role', '=', 'guru/staf')
+                            ->where(DB::raw('month(visits.visit_time)'),'=', $i)
+                            ->get();
+            $monthly_teacher .= $count_teacher[0]->count.",";
+        }
+
+        // dd($monthly_student, $monthly_teacher);
+        return response()->json(array('student' => $monthly_student, 'teacher' => $monthly_teacher, 'year' => $this_year));
+        // return view('report.graphicVisitReportFilter', compact('this_year'));
     }
 
     public function getAddForm(Request $request){

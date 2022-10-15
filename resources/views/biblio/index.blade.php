@@ -172,8 +172,6 @@
                 <div class="form-group">
                   <label>Gambar Buku</label>
                   <input type="file" class="form-control" name="image" id="image">
-                  <span class="help-block">
-                    Pilih gambar buku. Jika tidak ada, dapat dilewati</span>
                 </div>
                 {{-- Ini nanti buat upload gambar --}}
                 <div class="form-group">

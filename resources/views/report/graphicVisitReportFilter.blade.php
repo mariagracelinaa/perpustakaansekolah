@@ -24,9 +24,8 @@
                                     </select>
                                 </div>
                                 <h3 style="text-align: center; color: black; margin-top: 20px">
-                                    Grafik Pengunjung Perpustakaan SMA Santo Carolus Surabaya Tahun <span id="year" value="{{$this_year}}">Tahun {{$this_year}}</span>
+                                    Grafik Pengunjung Perpustakaan SMA Santo Carolus Surabaya Tahun {{$this_year}}
                                 </h3>
-                                
                                 <canvas id="visitChart">
                                     {{-- grafik --}}
                                 </canvas>
@@ -61,6 +60,7 @@
     <script>
         $("#year_pick").change(function () {
             var year = $('#year_pick').val();
+
             $.ajax({
                 type:'POST',
                 url:'{{url("/grafik-pengunjung-filter")}}',
@@ -69,12 +69,7 @@
                         'year':year,
                     },
                 success:function(data) {
-                    visitChartChart.data.datasets[0].data = data.teacher.split(',');
-                    visitChartChart.data.datasets[1].data = data.student.split(',');
-                    visitChartChart.update();
-
-                    $('#year').html("Tahun "+data.year);
-                    $('#year').attr('value', data.year);
+                    // location.reload();
                 }
             });
             // alert(year);
@@ -154,9 +149,7 @@
         );
         
         // Save PDF
-       
         function convertToPDF(){
-            var print_year = $('#year').attr('value');
             const cv = document.getElementById('visitChart');
 
             // chart to image
@@ -166,7 +159,7 @@
             let pdf = new jsPDF('landscape');
             pdf.setFontSize(20);
             pdf.addImage(img, 'PNG', 15, 15, 250, 150);
-            pdf.text(30,15 ,'Grafik Pengunjung Perpustakaan SMA Santo Carolus Surabaya Tahun '+print_year);
+            pdf.text(30,15 ,'Grafik Pengunjung Perpustakaan SMA Santo Carolus Surabaya Tahun {{$this_year}}');
             pdf.save('pengunjung_perpustakaan_sma_carolus_sby.pdf');
         }
     </script>

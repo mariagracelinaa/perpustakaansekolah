@@ -9,6 +9,7 @@ use App\Item;
 use App\Author;
 use Illuminate\Http\Request;
 use DB;
+use Carbon\Carbon;
 
 class BiblioController extends Controller
 {
@@ -359,5 +360,52 @@ class BiblioController extends Controller
                 ->get();
         // dd($data);
         return view('booking.index', compact('data'));
+    }
+
+    // ----------------------------------------- FRONT END ------------------------------------------------
+
+    public function front_index(){
+        $result = Biblio::all();
+        $publisher = Publisher::all();
+        $author = Author::all();
+        // dd($result);
+        return view('frontend.index', compact('result', 'publisher', 'author'));
+    }
+
+    public function front_detailBiblio($biblios_id){
+        //Ambil data biblio sesuai ID yang ingin dilihat detailnya
+        $data = Biblio::find($biblios_id);
+
+        //Ambil data author sesuai biblio
+        $listAuthorBiblio = DB::table('authors_biblios')
+                            ->where('biblios_id', $biblios_id)
+                            ->orderBy('primary_author', 'desc')
+                            ->get();
+
+        $author_name = [];
+
+        //Masukin nama author berdasarkan id yang ada
+        for($i = 0; $i < count($listAuthorBiblio); $i++){
+            $name = DB::table('authors')
+                ->select()
+                ->where('id', '=', $listAuthorBiblio[$i]->authors_id)
+                ->get();
+
+            $author_name[$i] = $name[0]->name;  
+        } 
+        //Ambil semua item dari biblio yang dimaksud
+        $items = $data->items;
+
+        // dd($data);
+        return view('frontend.detail', compact('data','items', 'author_name'));
+    }
+
+    public function front_newBook(){
+        $current_year = date('Y');
+        $last_year = $current_year - 1;
+
+
+        $data = DB::table('biblios')->select()->where('first_purchase','=',$current_year)->orWhere('first_purchase','=', $last_year)->get();
+        return view('frontend.newbook', compact('data'));
     }
 }
