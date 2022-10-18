@@ -124,7 +124,7 @@
 
         <!-- page content -->
         <div class="right_col" role="main">
-            <div class="container">
+            <div class="container" style="height: 100%">
                 {{-- Alert start --}}
                 @if(session('status'))  
                     <div class="alert alert-success alert-dismissible" role="alert">
@@ -145,8 +145,6 @@
             </div>
         </div>
         <!-- /page content -->
-        
-        
       </div>
     </div>
 
