@@ -369,7 +369,7 @@ class BiblioController extends Controller
         $publisher = Publisher::all();
         $author = Author::all();
         // dd($result);
-        return view('frontend.index', compact('result', 'publisher', 'author'));
+        return view('layouts.front', compact('result', 'publisher', 'author'));
     }
 
     public function front_detailBiblio($biblios_id){

@@ -35,6 +35,12 @@ class LoginController extends Controller
             case 'admin':
                 return '/daftar-buku';
                 break;
+            case 'guru/staf';
+                return '/';
+                break;
+            case 'murid';
+                return '/';
+                break;
             default:
                 return '/beranda';
                 break;
@@ -52,6 +58,6 @@ class LoginController extends Controller
 
     public function logout(Request $request) {
         Auth::logout();
-        return redirect('/login');
+        return redirect('/');
       }
 }
