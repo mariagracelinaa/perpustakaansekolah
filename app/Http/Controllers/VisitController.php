@@ -17,7 +17,7 @@ class VisitController extends Controller
      */
     public function index()
     {
-
+        $this->authorize('check-admin');
         $data = DB::table('users')
                 ->leftJoin('class','class.id','=','users.class_id')
                 ->select('users.*','class.name as class')
@@ -95,6 +95,7 @@ class VisitController extends Controller
     }
 
     public function graphic(Request $request){
+        $this->authorize('check-admin');
         $this_year =  date('Y');
 
         $monthly_student = [];
@@ -141,6 +142,7 @@ class VisitController extends Controller
     }
 
     public function graphicYear(Request $request){
+        $this->authorize('check-admin');
         $this_year = $request->get('year');
 
         $monthly_student = "";
@@ -182,6 +184,7 @@ class VisitController extends Controller
     }
 
     public function listVisit(){
+        $this->authorize('check-admin');
         $data = DB::table('visits')
                 ->join('users','users.id','=','visits.users_id')
                 ->leftJoin('class','class.id','=','users.class_id')
@@ -194,6 +197,7 @@ class VisitController extends Controller
     }
 
     public function addVisit(Request $request){
+        $this->authorize('check-admin');
         $validator = \Validator::make($request->all(), [
             'desc' => 'required',
         ],
@@ -229,6 +233,7 @@ class VisitController extends Controller
     }
 
     public function printVisitReport(Request $request){
+        $this->authorize('check-admin');
         $start = $request->get('start_date');
         $end = $request->get('end_date');
         // dd($start, $end);

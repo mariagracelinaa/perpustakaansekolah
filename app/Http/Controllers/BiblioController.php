@@ -20,6 +20,7 @@ class BiblioController extends Controller
      */
     public function index()
     {
+        $this->authorize('check-admin');
         $result = Biblio::all();
         $publisher = Publisher::all();
         $author = Author::all();
@@ -44,6 +45,7 @@ class BiblioController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('check-admin');
         // dd($request);
         $validator = \Validator::make($request->all(), [
             'title' => 'required',
@@ -188,6 +190,7 @@ class BiblioController extends Controller
     }
 
     public function detailBiblio($biblios_id){
+        $this->authorize('check-admin');
         //Ambil data biblio sesuai ID yang ingin dilihat detailnya
         $data = Biblio::find($biblios_id);
 
@@ -250,6 +253,7 @@ class BiblioController extends Controller
     }
 
     public function updateData(Request $request){
+        $this->authorize('check-admin');
         $validator = \Validator::make($request->all(), [
             'title' => 'required',
             'isbn' => 'required',
@@ -352,6 +356,7 @@ class BiblioController extends Controller
     }
 
     public function bookingList(){
+        $this->authorize('check-admin');
         $data = DB::table('bookings')
                 ->join('biblios', 'biblios.id','=','bookings.biblios_id')
                 ->join('users','users.id','=','bookings.users_id')
@@ -369,7 +374,7 @@ class BiblioController extends Controller
         $publisher = Publisher::all();
         $author = Author::all();
         // dd($result);
-        return view('layouts.front', compact('result', 'publisher', 'author'));
+        return view('frontend.index', compact('result', 'publisher', 'author'));
     }
 
     public function front_detailBiblio($biblios_id){

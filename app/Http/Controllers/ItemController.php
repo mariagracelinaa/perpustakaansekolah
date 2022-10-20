@@ -17,6 +17,7 @@ class ItemController extends Controller
      */
     public function index()
     {
+        $this->authorize('check-admin');
         $items = Item::where('register_num', '0001/per-C/Hd/2020/1')->first();
         // $items = Item::all();
         dd($items->biblios->title);
@@ -41,6 +42,7 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('check-admin');
         try{
             $biblios_id = $request->get('id');
             
@@ -122,6 +124,7 @@ class ItemController extends Controller
     }
 
     public function getEditForm(Request $request){
+        $this->authorize('check-admin');
         $id = $request->get('id');
         // $id = "12/1/Per-C/Hd/2022";
         $data = Item::where('register_num', $id)->get();
@@ -143,6 +146,7 @@ class ItemController extends Controller
 
     // Laporan penghapusan buku (Tabel deletions)
     public function deletion(){
+        $this->authorize('check-admin');
         $data = DB::table('items')
                 ->join('biblios', 'items.biblios_id','=','biblios.id')
                 ->select('biblios.title', 'items.*')
@@ -155,6 +159,7 @@ class ItemController extends Controller
 
     // Cetak laporan penghapusan buku
     public function printDeleteReport(Request $request){
+        $this->authorize('check-admin');
         $start = $request->get('start_date');
         $end = $request->get('end_date');
         
@@ -173,6 +178,7 @@ class ItemController extends Controller
     }
 
     public function deleteData(Request $request){
+        $this->authorize('check-admin');
         try{
             // dd($request);
             $register_num = $request->get('register_num');
@@ -202,6 +208,7 @@ class ItemController extends Controller
     }
 
     public function updateData(Request $request){
+        $this->authorize('check-admin');
         try{
             $id = $request->get('id');
             $source = $request->get('source');

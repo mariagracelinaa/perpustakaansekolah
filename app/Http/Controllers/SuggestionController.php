@@ -16,6 +16,7 @@ class SuggestionController extends Controller
      */
     public function index()
     {
+        $this->authorize('check-admin');
         $data = Suggestion::where('is_deleted','=',0)->get();
         
         // dd($data);
@@ -32,6 +33,7 @@ class SuggestionController extends Controller
     }
 
     public function updateData(Request $request){
+        $this->authorize('check-admin');
         $id = $request->get('id');
         $status = $request->get('status');
 
@@ -48,6 +50,7 @@ class SuggestionController extends Controller
     }
 
     public function deleteDataAdmin(Request $request){
+        $this->authorize('check-admin');
         $id = $request->get('id');
 
         // dd($status);
@@ -63,6 +66,7 @@ class SuggestionController extends Controller
     }
 
     public function printSuggestionReport(Request $request){
+        $this->authorize('check-admin');
         $start = $request->get('start_date');
         $end = $request->get('end_date');
         

@@ -15,6 +15,7 @@ class ClassesController extends Controller
      */
     public function index()
     {
+        $this->authorize('check-admin');
         $result = Classes::all();
 
         $count = DB::table('class')
@@ -48,6 +49,7 @@ class ClassesController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('check-admin');
         try{
             $data = new Classes();
             $data->name = $request->get('name');
@@ -114,6 +116,7 @@ class ClassesController extends Controller
     }
 
     public function updateData(Request $request){
+        $this->authorize('check-admin');
         $id = $request->get('id');
         $name = $request->get('name');
         try{

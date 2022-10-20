@@ -94,4 +94,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/ubah-data-pengguna/{id}', 'UserController@getEditForm');
     Route::post('/aksi-ubah-data', 'UserController@editDataUserAdmin');
 
+    // User akses
+    Route::get('/profil/{id}', 'UserController@getProfileUser');
+    Route::post('/editPassword', 'UserController@editPasswordUser');
 });

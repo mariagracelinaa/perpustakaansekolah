@@ -18,6 +18,7 @@ class BorrowController extends Controller
      */
     public function index()
     {
+        $this->authorize('check-admin');
         $result = DB::table('borrows')
                 ->join('users','users.id','=','borrows.users_id')
                 ->select('borrows.*','users.name')
@@ -66,6 +67,7 @@ class BorrowController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('check-admin');
         $users_id = $request->get('users_id');
         $listBook = $request->get('listBook');
 
@@ -187,6 +189,7 @@ class BorrowController extends Controller
     }
 
     public function getDetail(Request $request){
+        $this->authorize('check-admin');
         $id = $request->get('id');
         $data = DB::table('borrow_transaction')
                 ->where('borrows_id','=',$id)
@@ -199,6 +202,7 @@ class BorrowController extends Controller
     }
 
     public function graphic(){
+        $this->authorize('check-admin');
         $this_year = date('Y');
 
         $monthly_borrow = [];
@@ -217,6 +221,7 @@ class BorrowController extends Controller
     }
 
     public function listUser(){
+        $this->authorize('check-admin');
         $data = DB::table('users')
                 ->leftJoin('class','class.id','=','users.class_id')
                 ->select('users.id','users.nisn','users.niy','users.name','class.name as class', 'users.role')
@@ -229,6 +234,7 @@ class BorrowController extends Controller
 
     // untuk dihalaman tambah sirkulasi buku/peminjaman
     public function detailAddCirculation($users_id){
+        $this->authorize('check-admin');
         $user = DB::table('users')
                 ->leftJoin('class','class.id','=','users.class_id')
                 ->select('users.id as users_id','users.name','users.nisn','users.niy','class.name as class')
@@ -240,6 +246,7 @@ class BorrowController extends Controller
     }
 
     public function detailCirculation($users_id){
+        $this->authorize('check-admin');
         $user = DB::table('users')
                 ->leftJoin('class','class.id','=','users.class_id')
                 ->select('users.id as users_id','users.name','users.nisn','users.niy','class.name as class')
@@ -261,6 +268,7 @@ class BorrowController extends Controller
     }
 
     public function bookReturn(Request $request){
+        $this->authorize('check-admin');
         try{
             $borrows_id = $request->get('id');
             $register_num = $request->get('reg_num');
@@ -317,6 +325,7 @@ class BorrowController extends Controller
     }
 
     public function bookExtension(Request $request){
+        $this->authorize('check-admin');
         try{
             $borrows_id = $request->get('id');
             $register_num = $request->get('reg_num');
@@ -358,6 +367,7 @@ class BorrowController extends Controller
 
     public function extendTask($borrows_id, $register_num){
         // dd("Masuk Function extendTask");
+        $this->authorize('check-admin');
         try{
             $fine = 0;
 

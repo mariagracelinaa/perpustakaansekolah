@@ -15,6 +15,7 @@ class PublisherController extends Controller
      */
     public function index()
     {
+        $this->authorize('check-admin');
         $result = Publisher::all();
         return view('publisher.index', compact('result'));
     }
@@ -37,6 +38,7 @@ class PublisherController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('check-admin');
         try{
             $data = new Publisher();
             $data->name = $request->get('name');
@@ -114,6 +116,7 @@ class PublisherController extends Controller
     }
 
     public function updateData(Request $request){
+        $this->authorize('check-admin');
         $id = $request->get('id');
         $name = $request->get('name');
         $city = $request->get('city');
