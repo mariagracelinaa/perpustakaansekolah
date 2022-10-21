@@ -16,15 +16,18 @@
                             <div class="card-box table-responsive">
                                 <div>
                                     <select name="year_pick" id="year_pick" style="width: 200px; height:30px">
-                                        <option value="0">-- Pilih Tahun --</option>
                                         {{ $cur_year = date('Y') }}
                                         @for ($year = $cur_year-10; $year <= $cur_year+10; $year++)
-                                            <option value="{{ $year }}">{{ $year }}</option>
+                                            @if ($cur_year == $year)
+                                                <option value="{{ $year }}" selected>{{ $year }}</option>
+                                            @else
+                                                <option value="{{ $year }}">{{ $year }}</option>
+                                            @endif
                                         @endfor
                                     </select>
                                 </div>
                                 <h3 style="text-align: center; color: black; margin-top: 20px">
-                                    Grafik Pengunjung Perpustakaan SMA Santo Carolus Surabaya Tahun <span id="year" value="{{$this_year}}">Tahun {{$this_year}}</span>
+                                    Grafik Pengunjung Perpustakaan SMA Santo Carolus Surabaya Tahun <span id="year" value="{{$this_year}}">{{$this_year}}</span>
                                 </h3>
                                 
                                 <canvas id="visitChart">

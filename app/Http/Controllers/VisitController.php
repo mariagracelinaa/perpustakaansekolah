@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Visit;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Carbon;
 use DB;
 
@@ -248,5 +249,46 @@ class VisitController extends Controller
                 ->get();
         // dd($data);
         return view('report.printVisitList', compact('data', 'start', 'end', 'today'));
+    }
+
+    // ----------------------------------------- FRONT END ------------------------------------------------
+    protected function validatorVisit(array $data)
+    {
+        return Validator::make($data, [
+            'desc' => 'required',
+        ],
+        [
+            'desc.required' => 'Keperluan di perpustakaan harus diisikan',
+        ]);
+    }
+    public function visitUserAdd(Request $request){
+        $this->authorize('check-user');
+        $this->validatorVisit($request->all())->validate();
+        
+        // dd($request->get('id'), $request->get('desc'));
+        try{
+            $users_id = $request->get('id');
+            $desc = $request->get('desc');
+
+            // dd($users_id);
+
+            // mendapatkan datetime skrg, sudah GMT+7 ganti di config->app.php->timezone, locale, faker_locale
+            $visit_time = date('Y-m-d');
+                
+            $data = new Visit();
+            $data->users_id = $users_id;
+            $data->visit_time = $visit_time;
+            $data->description = $desc;
+            $data->save();
+
+            return redirect('/')->with('status','Data kunjungan baru berhasil disimpan');
+
+        }catch (\PDOException $e) {
+            return redirect('/')->with('error', 'Gagal menambah data baru, silahkan coba lagi');
+        }
+    }
+
+    public function getVisitForm(){
+        return view('frontend.checkin');
     }
 }

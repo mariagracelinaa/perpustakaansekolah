@@ -8,6 +8,7 @@ use App\Biblio;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use DB;
+use Illuminate\Support\Facades\Gate;
 
 class BorrowController extends Controller
 {
@@ -220,6 +221,25 @@ class BorrowController extends Controller
         return view('report.graphicBorrowReport', compact('monthly_borrow', 'this_year'));
     }
 
+    public function graphicYear(Request $request){
+        $this->authorize('check-admin');
+        $this_year = $request->get('year');
+
+        $monthly_borrow = "";
+        for($i = 1; $i <= 12; $i++){
+            $count = DB::table('borrows') 
+                            ->select(DB::raw('count(*) as count'))
+                            ->where(DB::raw('year(borrow_date)'), '=', $this_year)
+                            ->where(DB::raw('month(borrow_date)'),'=', $i)
+                            ->get();
+            $monthly_borrow .= $count[0]->count.",";
+        }
+
+        // dd($monthly_borrow);
+   
+        return response()->json(array('borrow' => $monthly_borrow, 'year' => $this_year));
+    }
+
     public function listUser(){
         $this->authorize('check-admin');
         $data = DB::table('users')
@@ -367,7 +387,6 @@ class BorrowController extends Controller
 
     public function extendTask($borrows_id, $register_num){
         // dd("Masuk Function extendTask");
-        $this->authorize('check-admin');
         try{
             $fine = 0;
 
@@ -432,5 +451,63 @@ class BorrowController extends Controller
         }catch (\PDOException $e) {
             return session()->flash('error', 'Buku gagal diperpanjang, silahkan coba lagi');
         }
+    }
+
+    // ----------------------------------------- FRONT END ------------------------------------------------
+    public function myBorrow($id){
+        $data = DB::table('borrows')
+                ->join('borrow_transaction','borrows.id','=','borrow_transaction.borrows_id')
+                ->join('items','items.register_num', '=', 'borrow_transaction.register_num')
+                ->join('biblios', 'biblios.id', '=', 'items.biblios_id')
+                ->join('users','users.id', '=', 'borrows.users_id')
+                ->select('borrows.id','borrows.borrow_date', 'borrows.due_date' ,'borrow_transaction.return_date', 'borrow_transaction.fine', 'borrow_transaction.status', 'items.register_num', 'biblios.title')
+                ->where('users.id', '=', $id)
+                ->orderBy('borrows.id', 'desc')
+                ->get();
+
+        return view('frontend.myBorrow', compact('data'));
+    }
+
+    public function bookExtensionUser(Request $request){
+        $this->authorize('check-user');
+        try{
+            // dd("masuk perpnjang");
+            $borrows_id = $request->get('id');
+            $register_num = $request->get('reg_num');
+            // dd($borrows_id, $register_num);
+            // ambil data booking dari nomor registrasi buku yang akan diperpanjang
+            $check_booking = DB::table('items')
+                            ->join('biblios','biblios.id','=','items.biblios_id')
+                            ->join('bookings','biblios.id','=','bookings.biblios_id')
+                            ->select('bookings.*')
+                            ->where('items.register_num','=', $register_num)
+                            ->get();
+
+            // dd($check_booking);
+            // // Jika ada di daftar booking
+            if(!$check_booking->isEmpty()){
+                // cek stok item buku kosong atau tidak
+                // Jika kosong maka tidak bisa perpanjang
+                $check_count_item = DB::table('items')
+                                    ->select(DB::raw('COUNT(*) as count'))
+                                    ->where('biblios_id','=',$check_booking[0]->biblios_id)
+                                    ->where('status','=','tersedia')
+                                    ->where('is_deleted','=',0)
+                                    ->get();
+                
+                if($check_count_item[0]->count == 0){
+                    $request->session()->flash('error', 'Buku gagal diperpanjang, stok buku di perpustakaan sedang tidak ada dan buku sedang ada di daftar pesanan pengguna lain');
+                }else{
+                    // panggil function untuk masukkan data perpanjangan
+                    $this->extendTask($borrows_id, $register_num);
+                }
+            }else{
+                // panggil function untuk masukkan data perpanjangan
+                $this->extendTask($borrows_id, $register_num);
+            }
+
+        }catch (\PDOException $e) {
+            $request->session()->flash('error', 'Buku gagal diperpanjang, silahkan coba lagi');
+        } 
     }
 }

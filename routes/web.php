@@ -18,7 +18,7 @@ Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
 // Autentifikasi user
 Auth::routes();
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/', 'HomeController@index')->name('home');
 Route::get('/', 'BiblioController@front_index')->name('index');
 Route::get('detail-buku/{id}','BiblioController@front_detailBiblio')->name('detail-buku');
 Route::get('buku-baru','BiblioController@front_newBook');
@@ -65,7 +65,7 @@ Route::middleware(['auth'])->group(function(){
     //Borrow + borrow transaction
     //Admin Akses
     Route::resource('daftar-peminjaman', 'BorrowController');
-    // Route::post('daftar-peminjaman-filter', 'BorrowController@filter');
+    Route::post('/grafik-pinjaman-filter', 'BorrowController@graphicYear');
     Route::get('/sirkulasi-buku','BorrowController@listUser');
     Route::post('/daftar-peminjaman/getDetail','BorrowController@getDetail')->name('daftar-peminjaman.getDetail');
     Route::get('/grafik-peminjaman','BorrowController@graphic');
@@ -74,7 +74,12 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/extension','BorrowController@bookExtension');
     Route::get('/tambah-sirkulasi-buku/{id}','BorrowController@detailAddCirculation');
 
+    // User Akses
+    Route::get('/daftar-pinjaman/{id}', 'BorrowController@myBorrow');
+    Route::post('/extension-user','BorrowController@bookExtensionUser');
+
     // Visit
+    // Admin
     Route::resource('kunjungan', 'VisitController');
     Route::get('/grafik-pengunjung','VisitController@graphic');
     Route::post('/grafik-pengunjung-filter','VisitController@graphicYear');
@@ -82,6 +87,9 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/tambah-kunjungan','VisitController@addVisit')->name('kunjungan.addVisit');
     Route::get('/laporan-kunjungan','VisitController@listVisit');
     Route::get('/cetak-laporan-kunjungan','VisitController@printVisitReport');
+    // User
+    Route::get('/form-masuk','VisitController@getVisitForm');
+    Route::post('/masuk-perpustakaan-catat','VisitController@visitUserAdd');
 
     // User + suggestion
     Route::get('daftar-murid', 'UserController@student');
@@ -97,4 +105,12 @@ Route::middleware(['auth'])->group(function(){
     // User akses
     Route::get('/profil/{id}', 'UserController@getProfileUser');
     Route::post('/editPassword', 'UserController@editPasswordUser');
+
+    Route::get('/form-usulan','SuggestionController@getSugesstionForm');
+    Route::get('/usulan-saya/{id}','SuggestionController@mySuggestion');
+    Route::post('/usulan-catat','SuggestionController@addSuggestionUser');
+    Route::get('/daftar-usulan', 'SuggestionController@front_index');
+    Route::get('/ubah-usulan/{id}', 'SuggestionController@getEditFormUser');
+    Route::post('/ubah-usulan-catat', 'SuggestionController@editSuggestion');
+    Route::get('/hapus-usulan/{id}', 'SuggestionController@deleteSuggestionUser');
 });

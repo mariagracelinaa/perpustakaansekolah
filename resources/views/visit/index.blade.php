@@ -50,7 +50,7 @@
                             Guru/Staf
                         @endif
                     </td>
-                    <td style="width: 17%;">
+                    <td style="width: 18%; ">
                         <ul class="nav navbar-right panel_toolbox">
                             <button href='#modalAdd' data-toggle="modal" type="button" class="btn btn-primary" onclick="getAddForm({{$d->id}})"><i class="fa fa-plus"></i> Tambah Kunjungan</button>    
                         </ul>

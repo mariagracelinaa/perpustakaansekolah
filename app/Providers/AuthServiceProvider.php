@@ -30,7 +30,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('check-user', function($user){
-            return($user->role== 'murid' || $user->role== 'guru/staf');
+            return($user->role == 'murid' || $user->role == 'guru/staf');
         });
     }
 }

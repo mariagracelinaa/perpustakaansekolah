@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Biblio;
+use App\Author;
+use App\Publisher;
 
 class HomeController extends Controller
 {
@@ -23,6 +26,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $result = Biblio::all();
+        $publisher = Publisher::all();
+        $author = Author::all();
+        // dd($result);
+        return view('frontend.index', compact('result', 'publisher', 'author'));
     }
 }

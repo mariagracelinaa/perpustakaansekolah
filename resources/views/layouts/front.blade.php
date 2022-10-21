@@ -11,6 +11,12 @@
     <!-- Favicon -->
     <link href="{{asset('assets/img/favicon.ico')}}" rel="icon">
 
+    <!-- Bootstrap -->
+    <link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <link href="{{asset('assets/vendors/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+    <!-- Datatables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,23 +35,21 @@
 
     <!-- Template Stylesheet -->
     <link href="{{asset('assets/css/style.css')}}" rel="stylesheet">
+
+    <style>
+        @media (min-width:800px){
+            .mySuggestPhone  { display: none }
+            .mySuggestDesktop {display: inline}
+        }
+
+        @media (max-width:799px){
+            .mySuggestPhone  { display: inline;}
+            .mySuggestDesktop { display: none;}
+        }
+    </style>
 </head>
 
 <body>
-    {{-- Alert start --}}
-    @if(session('status'))  
-        <div class="alert alert-success alert-dismissible" role="alert">
-        </button>
-            <strong>Sukses!</strong> {{session('status')}}
-        </div>
-        
-    @elseif(session('error')) 
-        <div class="alert alert-danger alert-dismissible" role="alert">
-        </button>
-            <strong>Gagal!</strong> {{session('error')}}
-        </div>
-    @endif
-    {{-- Alert End --}}
     <!-- Spinner Start -->
     <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
@@ -65,21 +69,22 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a href="index.html" class="nav-item nav-link active">Beranda</a>
+                <a href="/" class="nav-item nav-link">Beranda</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Layanan</a>
                     <div class="dropdown-menu fade-down m-0">
+                        <a href="" class="dropdown-item">Buku Baru</a>
                         <a href="" class="dropdown-item">Koleksi Buku</a>
                         <a href="" class="dropdown-item">Cari Rekomendasi Buku</a>
                     </div>
                 </div>
                 @if (Auth::user())
-                    <a href="contact.html" class="nav-item nav-link">Buku Tamu</a>
+                    <a href="/form-masuk" class="nav-item nav-link">Buku Tamu</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-user" aria-hidden="true"></i> {{Auth::user()->name}}</a>
                         <div class="dropdown-menu fade-down m-0">
-                            <a href="" class="dropdown-item">Pinjaman Saya</a>
-                            <a href="" class="dropdown-item">Beri Usulan</a>
+                            <a href="{{url('/daftar-pinjaman/'.Auth::user()->id)}}" class="dropdown-item">Pinjaman Saya</a>
+                            <a href="/daftar-usulan" class="dropdown-item">Usulan Buku</a>
                             <a href="{{url('/profil/'.Auth::user()->id)}}" class="dropdown-item">Profil</a>
                             <a href="{{url('logout')}}" class="dropdown-item">Keluar</a>
                         </div>
@@ -92,7 +97,21 @@
         </div>
     </nav>
     <!-- Navbar End -->
-
+    
+    {{-- Alert start --}}
+    @if(session('status'))  
+        <div class="alert alert-success alert-dismissible" role="alert">
+        </button>
+            <strong>Sukses!</strong> {{session('status')}}
+        </div>
+        
+    @elseif(session('error')) 
+        <div class="alert alert-danger alert-dismissible" role="alert">
+        </button>
+            <strong>Gagal!</strong> {{session('error')}}
+        </div>
+    @endif
+    {{-- Alert End --}}
 
     @yield('content')
         
@@ -157,9 +176,23 @@
     <script src="{{asset('assets/lib/easing/easing.min.js')}}"></script>
     <script src="{{asset('assets/lib/waypoints/waypoints.min.js')}}"></script>
     <script src="{{asset('assets/lib/owlcarousel/owl.carousel.min.js')}}"></script>
+    <!-- Bootstrap -->
+    <script src="{{asset('assets/vendors/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
+
+    <!-- Datatables -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
 
     <!-- Template Javascript -->
     <script src="{{asset('assets/js/main.js')}}"></script>
+    <script>
+        $('#custometable').DataTable( {
+            language: {
+            url : '//cdn.datatables.net/plug-ins/1.12.1/i18n/id.json'
+            },
+            "lengthMenu" : [[10,25,50, -1], [10,25,50,"Semua"]],
+            "ordering": false
+        });
+    </script>
     @yield('javascript')
 </body>
 

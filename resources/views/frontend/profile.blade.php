@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="right_col" role="main" style="margin-top: 50px">
-    <div class="container" style="height: 100%">
+    <div class="container" style="max-width: 70%">
         <form role="form" method="POST" action="{{url('/editPassword')}}">
             @csrf
             <input type="hidden" name="id" value="{{$data->id}}">
