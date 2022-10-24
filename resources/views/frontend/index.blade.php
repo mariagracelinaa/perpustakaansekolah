@@ -262,6 +262,7 @@
                     </div>
                 </a>
             @endforeach
+            <a href="/koleksi-buku" style="text-align: right; font-size: 20px">Lihat Semua Koleksi >></a>
         </div>
     </div>
 </div>

@@ -24,12 +24,11 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+
+    //  Menampilkan semua daftar buku di frontend
     public function index()
     {
-        $result = Biblio::all();
-        $publisher = Publisher::all();
-        $author = Author::all();
-        // dd($result);
-        return view('frontend.index', compact('result', 'publisher', 'author'));
+        $data = Biblio::select()->orderBy('id','desc')->get();
+        return view('frontend.allbook', compact('data'));
     }
 }

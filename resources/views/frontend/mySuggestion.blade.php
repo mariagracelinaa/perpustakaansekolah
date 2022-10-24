@@ -1,6 +1,6 @@
 @extends('layouts.front')
 @section('content')
-<div class="container" style="margin-top: 50px"> 
+<div class="container" style="margin-top: 50px; width: 70%; justify-content: center;"> 
     <div class="row">
         <div class="col-md-12 col-sm-12 ">
             <div class="x_panel">
@@ -14,7 +14,7 @@
                 <div class="x_content">
                     <div class="row">
                         {{-- desktop view --}}
-                        <div class="col-sm-12 mySuggestDesktop" style="margin-top: 20px">
+                        <div class="col-sm-12 displayDesktop" style="margin-top: 20px">
                           <div class="card-body table-responsive">
                             <table id="custometable" class="table" style="width:100%;border: 0;">
                                 <thead>
@@ -36,7 +36,7 @@
                                         <td>{{$d->title}}</td>
                                         <td>{{$d->author}}</td>
                                         <td>{{$d->publisher}}</td>
-                                        <td>{{ Carbon\Carbon::parse($d->date)->format('d F Y') }}</td>
+                                        <td>{{ Carbon\Carbon::parse($d->date)->isoFormat('D MMMM Y') }}</td>
                                         <td>
                                             @if($d->status == 'proses review')
                                                 Proses Review
@@ -70,7 +70,7 @@
                         </div>
 
                         {{-- Phone view --}}
-                        <div class="col-sm-12 mySuggestPhone" style="margin: 20px">
+                        <div class="col-sm-12 displayPhone" style="margin: 20px">
                             @if(!$data->isEmpty())
                                 <div class="card-body table-responsive">
                                     @foreach ($data as $d)
@@ -88,7 +88,7 @@
                                                     Selesai
                                                 @endif
                                             </h6>
-                                            <p>Tanggal Pengusulan: {{ Carbon\Carbon::parse($d->date)->format('d F Y') }}</p>
+                                            <p>Tanggal Pengusulan: {{ Carbon\Carbon::parse($d->date)->isoFormat('D MMMM Y') }}</p>
                                             <a href="/ubah-usulan/{{$d->id}}" class="card-link">Ubah</a>
                                             <a href="/hapus-usulan/{{$d->id}}" class="card-link">Hapus</a>
                                             </div>

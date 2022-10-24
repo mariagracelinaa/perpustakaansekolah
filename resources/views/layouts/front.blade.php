@@ -38,13 +38,14 @@
 
     <style>
         @media (min-width:800px){
-            .mySuggestPhone  { display: none }
-            .mySuggestDesktop {display: inline}
+            .displayPhone  { display: none }
+            .displayDesktop {display: inline}
+            .container_width { width: 70%; }
         }
 
         @media (max-width:799px){
-            .mySuggestPhone  { display: inline;}
-            .mySuggestDesktop { display: none;}
+            .displayPhone  { display: inline;}
+            .displayDesktop { display: none;}
         }
 
         @media (min-width: 767px){
@@ -52,6 +53,16 @@
                 width:400px; 
                 height:540px
             }
+        }
+
+        .table-detail-book {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .table-detail-book td, .table-detail-book th {
+            border: 1px solid black;
+            padding: 8px;
         }
     </style>
 </head>
@@ -78,10 +89,10 @@
             <div class="navbar-nav ms-auto p-4 p-lg-0">
                 <a href="/" class="nav-item nav-link">Beranda</a>
                 <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Layanan</a>
+                    <a href="/" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Layanan</a>
                     <div class="dropdown-menu fade-down m-0">
                         <a href="" class="dropdown-item">Buku Baru</a>
-                        <a href="" class="dropdown-item">Koleksi Buku</a>
+                        <a href="/koleksi-buku" class="dropdown-item">Koleksi Buku</a>
                         <a href="" class="dropdown-item">Cari Rekomendasi Buku</a>
                     </div>
                 </div>
@@ -91,6 +102,7 @@
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-user" aria-hidden="true"></i> {{Auth::user()->name}}</a>
                         <div class="dropdown-menu fade-down m-0">
                             <a href="{{url('/daftar-pinjaman/'.Auth::user()->id)}}" class="dropdown-item">Pinjaman Saya</a>
+                            <a href="{{url('/daftar-pesanan/'.Auth::user()->id)}}" class="dropdown-item">Pesanan Saya</a>
                             <a href="/daftar-usulan" class="dropdown-item">Usulan Buku</a>
                             <a href="{{url('/profil/'.Auth::user()->id)}}" class="dropdown-item">Profil</a>
                             <a href="{{url('logout')}}" class="dropdown-item">Keluar</a>

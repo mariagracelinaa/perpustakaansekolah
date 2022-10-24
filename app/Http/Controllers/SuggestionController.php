@@ -231,9 +231,9 @@ class SuggestionController extends Controller
                     ->where('id', $request->get('id'))
                     ->update(['title' => $request->get('title'),'author' => $request->get('author'), 'publisher' => $request->get('publisher'), "description" => $request->get('desc')]);
 
-            return redirect()->back()->with('status','Data usulan baru berhasil disimpan');
+            return redirect('/usulan-saya/'.$request->get('users_id'))->with('status','Data usulan baru berhasil disimpan');
         }catch (\PDOException $e) {
-            return redirect()->back()->with('error', 'Gagal menambah data usulan buku, silahkan coba lagi');
+            return redirect('/usulan-saya/'.$request->get('users_id'))->with('error', 'Gagal menambah data usulan buku, silahkan coba lagi');
         }
     }
 

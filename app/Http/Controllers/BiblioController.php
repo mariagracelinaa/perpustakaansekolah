@@ -420,12 +420,14 @@ class BiblioController extends Controller
     }
 
     public function formBooking($id){
+        $this->authorize('check-user');
         $title = DB::table('biblios')->select('title')->where('id','=',$id)->get();
         // dd($id, $title);
         return view('frontend.formBooking', compact('id','title'));
     }
 
     public function addBooking(Request $request){
+        $this->authorize('check-user');
         // dd($request->get('id'), $request->get('biblios_id'), $request->get('desc'));
         try{
             DB::table('bookings')->insert(
@@ -436,5 +438,31 @@ class BiblioController extends Controller
         }catch (\PDOException $e) {
             return redirect('/detail-buku/'.$request->get('biblios_id'))->with('error', 'Gagal memesan buku, silahkan coba lagi');
         }
+    }
+
+    public function myBooking($id){
+        $this->authorize('check-user');
+        $data = DB::table('bookings')
+                ->join('biblios', 'biblios.id','=','bookings.biblios_id')
+                ->select('biblios.id','biblios.title', 'bookings.booking_date','bookings.description')
+                ->where('users_id','=',$id)
+                ->orderBy('booking_date','ASC')
+                ->get();
+        return view('frontend.myBooking', compact('data'));
+    }
+
+    public function deleteMyBooking(Request $request){
+        $this->authorize('check-user');
+        $users_id = $request->get('id');
+        $biblios_id = $request->get('biblios_id');
+        // dd($users_id, $biblios_id);
+
+        try{
+            DB::table('bookings')->where('users_id', '=', $users_id)->where('biblios_id','=',$biblios_id)->delete();
+            return session()->flash('status','Berhasil menghapus pemesanan buku');
+        }catch (\PDOException $e) {
+            return session()->flash('error', 'Gagal menghapus pemesanan buku, silahkan coba lagi');
+        }
+        
     }
 }

@@ -1,6 +1,6 @@
 @extends('layouts.front')
 @section('content')
-<div class="container" style="margin-top: 50px"> 
+<div class="container" style="margin-top: 50px; width: 70%; justify-content: center;"> 
     <div class="row">
         <div class="col-md-12 col-sm-12 ">
             <div class="x_panel">
@@ -11,7 +11,7 @@
                 <div class="x_content">
                     <div class="row">
                         {{-- desktop view --}}
-                        <div class="col-sm-12 mySuggestDesktop" style="margin-top: 20px">
+                        <div class="col-sm-12 displayDesktop" style="margin-top: 20px">
                           <div class="card-body table-responsive">
                             <table id="custometable" class="table" style="width:100%;border: 0;">
                                 <thead>
@@ -32,19 +32,19 @@
                                     <tr>
                                         <td style="width: 5%;">{{ $no++ }}</td>
                                         <td>{{$d->title}}</td>
-                                        <td>{{ Carbon\Carbon::parse($d->borrow_date)->format('d F Y') }}</td>
+                                        <td>{{ Carbon\Carbon::parse($d->borrow_date)->isoFormat('D MMMM Y') }}</td>
                                         @if( date('Y-m-d') > $d->due_date && $d->status == 'belum kembali')
                                             <td style="background-color: red">
-                                                {{ Carbon\Carbon::parse($d->due_date)->format('d F Y') }}
+                                                {{ Carbon\Carbon::parse($d->due_date)->isoFormat('D MMMM Y') }}
                                             </td>
                                         @else
                                             <td>
-                                                {{ Carbon\Carbon::parse($d->due_date)->format('d F Y') }}
+                                                {{ Carbon\Carbon::parse($d->due_date)->isoFormat('D MMMM Y') }}
                                             </td>
                                         @endif
                                         <td>
                                             @if ($d->return_date != null)
-                                                {{ Carbon\Carbon::parse($d->return_date)->format('d F Y') }}
+                                                {{ Carbon\Carbon::parse($d->return_date)->isoFormat('D MMMM Y') }}
                                             @else
                                                 -
                                             @endif
@@ -77,7 +77,7 @@
                         </div>
 
                         {{-- Phone view --}}
-                        <div class="col-sm-12 mySuggestPhone" style="margin: 20px">
+                        <div class="col-sm-12 displayPhone" style="margin: 20px">
                             @if(!$data->isEmpty())
                                 <div class="card-body table-responsive" >
                                     @foreach ($data as $d)
@@ -92,9 +92,9 @@
                                                 @endif
                                             </h6>
                                             @if ( date('Y-m-d') > $d->due_date && $d->status == 'belum kembali')
-                                                <p style="color: red">Tanggal Batas Kembali: {{ Carbon\Carbon::parse($d->due_date)->format('d F Y') }}</p>
+                                                <p style="color: red">Tanggal Batas Kembali: {{ Carbon\Carbon::parse($d->due_date)->isoFormat('D MMMM Y') }}</p>
                                             @else
-                                                <p>Tanggal Batas Kembali: {{ Carbon\Carbon::parse($d->due_date)->format('d F Y') }}</p>
+                                                <p>Tanggal Batas Kembali: {{ Carbon\Carbon::parse($d->due_date)->isoFormat('D MMMM Y') }}</p>
                                             @endif
 
                                             @if ( date('Y-m-d') <= $d->due_date && $d->status == 'belum kembali')

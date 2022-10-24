@@ -6,6 +6,7 @@
         <form role="form" method="POST" action="{{url('/ubah-usulan-catat')}}">
             @csrf
             <input type="hidden" name="id" value="{{$data->id}}">
+            <input type="hidden" name="users_id" value="{{Auth::user()->id}}">
             <div class="form-group">
                 <label>Judul Buku</label>
                 <input type="text" name="title" id="title" rows="2" class="form-control @error('title') is-invalid @enderror" style="width: 100%" value="{{$data->title}}" autofocus>

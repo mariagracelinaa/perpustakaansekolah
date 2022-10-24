@@ -18,7 +18,7 @@ Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
 // Autentifikasi user
 Auth::routes();
-// Route::get('/', 'HomeController@index')->name('home');
+Route::get('/koleksi-buku', 'HomeController@index')->name('home');
 Route::get('/', 'BiblioController@front_index')->name('index');
 Route::get('/detail-buku/{id}','BiblioController@front_detailBiblio')->name('detail-buku');
 Route::get('/buku-baru','BiblioController@front_newBook');
@@ -57,6 +57,8 @@ Route::middleware(['auth'])->group(function(){
     //User Akses
     Route::get('/pesan-buku/{id}','BiblioController@formBooking');
     Route::post('/pesanan-catat', 'BiblioController@addBooking');
+    Route::get('/daftar-pesanan/{id}','BiblioController@myBooking');
+    Route::post('/hapus-pesanan','BiblioController@deleteMyBooking');
 
     //Class
     //Admin Akses

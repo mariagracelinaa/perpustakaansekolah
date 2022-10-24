@@ -66,6 +66,8 @@ class BorrowController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    //  Catat Peminjaman
     public function store(Request $request)
     {
         $this->authorize('check-admin');
