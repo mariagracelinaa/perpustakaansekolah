@@ -149,7 +149,7 @@
             </div>
           </div>
         </div>
-      </div>
+    </div>
 
 {{-- Modal start Add--}}
 <div class="modal fade" id="modalCreate" tabindex="-1" role="basic" aria-hidden="true">
@@ -189,13 +189,13 @@
                 </div>
                 <div class="form-group">
                     <label>Harga</label>
-                    <input name="price" type="number" class="form-control" placeholder="Isikan harga buku" name="price">
+                    <input name="price" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Isikan harga buku" name="price">
                     <span class="help-block">
                     Tulis harga buku. Jika sumber buku adalah hadiah, maka isikan 0</span>
                 </div>
                 <div class="form-group">
                     <label>Tahun Pengadaan</label>
-                    <input name="year" type="number" class="form-control" placeholder="Isikan tahun pengadaan item buku" name="year">
+                    <input name="year" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Isikan tahun pengadaan item buku" name="year">
                     <span class="help-block">
                     Tulis tahun pengadaan item buku. Contoh: 2010</span>
                 </div>
@@ -241,7 +241,6 @@
     </div>
   </div>
   {{-- Modal end delete --}}
-    
 @endsection
 
 @section('javascript')

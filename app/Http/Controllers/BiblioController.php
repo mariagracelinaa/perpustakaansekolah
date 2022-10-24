@@ -370,11 +370,9 @@ class BiblioController extends Controller
     // ----------------------------------------- FRONT END ------------------------------------------------
 
     public function front_index(){
-        $result = Biblio::all();
-        $publisher = Publisher::all();
-        $author = Author::all();
+        $result = Biblio::select()->orderBy('id','desc')->limit(4)->get();
         // dd($result);
-        return view('frontend.index', compact('result', 'publisher', 'author'));
+        return view('frontend.index', compact('result'));
     }
 
     public function front_detailBiblio($biblios_id){
@@ -401,8 +399,15 @@ class BiblioController extends Controller
         //Ambil semua item dari biblio yang dimaksud
         $items = $data->items;
 
-        // dd($data);
-        return view('frontend.detail', compact('data','items', 'author_name'));
+        $count = DB::table('items')
+                ->where('biblios_id','=', $biblios_id)
+                ->where('status','=','tersedia')
+                ->where('is_deleted','=',0)
+                ->select(DB::raw('COUNT(*) as count'))
+                ->get();
+
+        // dd($count);
+        return view('frontend.detail', compact('data','items', 'author_name','count'));
     }
 
     public function front_newBook(){
@@ -412,5 +417,24 @@ class BiblioController extends Controller
 
         $data = DB::table('biblios')->select()->where('first_purchase','=',$current_year)->orWhere('first_purchase','=', $last_year)->get();
         return view('frontend.newbook', compact('data'));
+    }
+
+    public function formBooking($id){
+        $title = DB::table('biblios')->select('title')->where('id','=',$id)->get();
+        // dd($id, $title);
+        return view('frontend.formBooking', compact('id','title'));
+    }
+
+    public function addBooking(Request $request){
+        // dd($request->get('id'), $request->get('biblios_id'), $request->get('desc'));
+        try{
+            DB::table('bookings')->insert(
+                ['biblios_id' => $request->get('biblios_id') , 'users_id' => $request->get('id'), 'description' => $request->get('desc')]
+            );
+
+            return redirect('/detail-buku/'.$request->get('biblios_id'))->with('status','Berhasil memesan buku');
+        }catch (\PDOException $e) {
+            return redirect('/detail-buku/'.$request->get('biblios_id'))->with('error', 'Gagal memesan buku, silahkan coba lagi');
+        }
     }
 }

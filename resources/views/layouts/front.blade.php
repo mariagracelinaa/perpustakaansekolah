@@ -46,6 +46,13 @@
             .mySuggestPhone  { display: inline;}
             .mySuggestDesktop { display: none;}
         }
+
+        @media (min-width: 767px){
+            .cover-book {
+                width:400px; 
+                height:540px
+            }
+        }
     </style>
 </head>
 
@@ -91,7 +98,7 @@
                     </div>
                 @endif
                 @if (!Auth::user())
-                    <a href="login" class="nav-item nav-link">Masuk</a>
+                    <a href="/login" class="nav-item nav-link">Masuk</a>
                  @endif
             </div>
         </div>
