@@ -19,6 +19,9 @@ Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 // Autentifikasi user
 Auth::routes();
 Route::get('/koleksi-buku', 'HomeController@index')->name('home');
+Route::post('/koleksi-buku-filter', 'HomeController@index_filter');
+Route::post('/koleksi-buku-kategori-filter', 'HomeController@index_filter_cathegory');
+Route::get('/koleksi-buku-kategori/{ddc}', 'HomeController@book_cathegory');
 Route::get('/', 'BiblioController@front_index')->name('index');
 Route::get('/detail-buku/{id}','BiblioController@front_detailBiblio')->name('detail-buku');
 Route::get('/buku-baru','BiblioController@front_newBook');

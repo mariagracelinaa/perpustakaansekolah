@@ -46,7 +46,7 @@
 <div class="container-xxl py-5">
     <div class="container">
         <div class="row g-4">
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+            <a class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s" href="{{url('/koleksi-buku-kategori/000')}}" style="text-decoration:none; color: black">
                 <div class="service-item text-center pt-3">
                     <div class="p-4">
                         <img src="{{asset('assets/img/computer.png')}}" height="50px" mb-4>
@@ -54,8 +54,8 @@
                         <p>Ilmu perpustakaan, ensiklopedia umum, penerbitan dan surat kabar</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+            </a>
+            <a class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s" href="{{url('/koleksi-buku-kategori/100')}}" style="text-decoration:none; color: black">
                 <div class="service-item text-center pt-3">
                     <div class="p-4">
                         <img src="{{asset('assets/img/logic.png')}}" height="50px" mb-4>
@@ -63,8 +63,8 @@
                         <p>Psikologi, etika, logika, filsafat modern, metafisika</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
+            </a>
+            <a class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s" href="{{url('/koleksi-buku-kategori/200')}}" style="text-decoration:none; color: black">
                 <div class="service-item text-center pt-3">
                     <div class="p-4">
                         <img src="{{asset('assets/img/church.png')}}" height="50px" mb-4>
@@ -72,8 +72,8 @@
                         <p>Alkitab, teologi kristen, moral kristiani</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+            </a>
+            <a class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s" href="{{url('/koleksi-buku-kategori/300')}}" style="text-decoration:none; color: black">
                 <div class="service-item text-center pt-3">
                     <div class="p-4">
                         <img src="{{asset('assets/img/social-media.png')}}" height="50px" mb-4>
@@ -81,8 +81,8 @@
                         <p>Ilmu ekonomi, masalah sosial, pendidikan</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+            </a>
+            <a class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s" href="{{url('/koleksi-buku-kategori/400')}}" style="text-decoration:none; color: black">
                 <div class="service-item text-center pt-3">
                     <div class="p-4">
                         <img src="{{asset('assets/img/translation.png')}}" height="50px" mb-4>
@@ -90,8 +90,8 @@
                         <p>Bahasa indonesia, bahasa inggris,bahasa lainnya</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+            </a>
+            <a class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s" href="{{url('/koleksi-buku-kategori/500')}}" style="text-decoration:none; color: black">
                 <div class="service-item text-center pt-3">
                     <div class="p-4">
                         <img src="{{asset('assets/img/microscope.png')}}" height="50px" mb-4>
@@ -99,8 +99,8 @@
                         <p>Matematika, fisika, ilmu kehidupan, ilmu tumbuhan</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+            </a>
+            <a class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s" href="{{url('/koleksi-buku-kategori/600')}}" style="text-decoration:none; color: black">
                 <div class="service-item text-center pt-3">
                     <div class="p-4">
                         <img src="{{asset('assets/img/paper.png')}}" height="50px" mb-4>
@@ -108,8 +108,8 @@
                         <p>Pertanian, kesejahteraan rumah tangga, manajemen</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+            </a>
+            <a class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s" href="{{url('/koleksi-buku-kategori/700')}}" style="text-decoration:none; color: black">
                 <div class="service-item text-center pt-3">
                     <div class="p-4">
                         {{-- <i class="fa fa-3x fa-book-open text-primary mb-4"></i> --}}
@@ -118,8 +118,8 @@
                         <p>Menggambar, seni lukis, seni musik, olahraga</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+            </a>
+            <a class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s" href="{{url('/koleksi-buku-kategori/800')}}" style="text-decoration:none; color: black">
                 <div class="service-item text-center pt-3">
                     <div class="p-4">
                         {{-- <i class="fa fa-3x fa-book-open text-primary mb-4"></i> --}}
@@ -128,8 +128,8 @@
                         <p>Kesusastraan indonesia, kesusastraan inggris</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+            </a>
+            <a class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s" href="{{url('/koleksi-buku-kategori/900')}}" style="text-decoration:none; color: black">
                 <div class="service-item text-center pt-3">
                     <div class="p-4">
                         <img src="{{asset('assets/img/globe-earth.png')}}" height="50px" mb-4>
@@ -137,7 +137,7 @@
                         <p>Geografi umum, biografi, sejarah umum dunia</p>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 </div>
@@ -267,5 +267,4 @@
     </div>
 </div>
 <!-- Book End -->
-
 @endsection

@@ -147,6 +147,10 @@
                                     <td style="width:150px; height:200px; vertical-align:top;" colspan="2"><img src="{{asset('images/'.$data->image)}}" width="100%"></td>
                                 </tr>
                                 <tr>
+                                    <td style="width: 15%">Judul </td>
+                                    <td> : {{$data->title}}</td>
+                                </tr>
+                                <tr>
                                     <td style="width: 15%">ISBN </td>
                                     <td> : {{$data->isbn}}</td>
                                 </tr>

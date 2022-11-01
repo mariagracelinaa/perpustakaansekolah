@@ -415,7 +415,8 @@ class BiblioController extends Controller
         $last_year = $current_year - 1;
 
 
-        $data = DB::table('biblios')->select()->where('first_purchase','=',$current_year)->orWhere('first_purchase','=', $last_year)->get();
+        $data = DB::table('biblios')->select()->where('first_purchase','=',$current_year)->orWhere('first_purchase','=', $last_year)->orderBy('id','desc')->get();
+        // dd($data);
         return view('frontend.newbook', compact('data'));
     }
 

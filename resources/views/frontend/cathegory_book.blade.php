@@ -69,13 +69,14 @@
                                         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                                             <h6 class="section-title bg-white text-center text-primary px-3">Koleksi</h6>
                                             <h1 class="mb-5">Koleksi Buku</h1>
-                                            <div class="input-icons">
+                                            {{-- <div class="input-icons">
                                                 <i class="fa fa-search icon"></i>
                                             <input type="text" class="input-field" id="search" name="search" placeholder="Cari Judul Buku" style="width:250px; height:40px;" >
-                                            </div>
+                                            </div> --}}
                                         </div><br>
                                         <div class="row g-4" id="book_list">
                                             @foreach ( $data as $d)
+                                                <input type="hidden" id="ddc" name="ddc" value="{{$d->ddc}}">
                                                 <a href="/detail-buku/{{$d->id}}" class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                                                     <div class="team-item bg-light">
                                                         <div class="overflow-hidden">
@@ -112,19 +113,21 @@
 
     $("#search").keyup(function() {
         var search = $('#search').val();
+        var ddc = $('#ddc').val();
 
         $.ajax({
             type:'POST',
-            url:'{{url("/koleksi-buku-filter")}}',
+            url:'{{url("/koleksi-buku-kategori-filter")}}',
             data:{
                 '_token': '<?php echo csrf_token() ?>',
                 'search': search,
+                'ddc' : ddc,
                 },
             success:function(data) {
                 $('#book_list').html('');
                 $.each(data.data, function(key, value) {
                     $("#book_list").append(
-                        "<a href='/detail-buku/"+ value.id +"' class='col-lg-3 col-md-6 wow fadeInUp' data-wow-delay='0.1s'><div class='team-item bg-light'><div class='overflow-hidden'><img class='img-fluid' src='images/"+value.image+"' id='cover-book'></div><div class='text-center p-4'><h5 class='mb-0'>" + value.title + "</h5>{{-- <small>Penulis</small> --}}</div></div></a>");
+                        "<a href='/detail-buku/"+ value.id +"' class='col-lg-3 col-md-6 wow fadeInUp' data-wow-delay='0.1s'><div class='team-item bg-light'><div class='overflow-hidden'><img class='img-fluid' src='images/"+value.image+"' id='cover-book'></div><div class='text-center p-4'><h5 class='mb-0'>" + value.title + "</h5></div></div></a>");
                 });
             }
         });
