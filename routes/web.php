@@ -25,6 +25,7 @@ Route::get('/koleksi-buku-kategori/{ddc}', 'HomeController@book_cathegory');
 Route::get('/', 'BiblioController@front_index')->name('index');
 Route::get('/detail-buku/{id}','BiblioController@front_detailBiblio')->name('detail-buku');
 Route::get('/buku-baru','BiblioController@front_newBook');
+Route::get('/rekomendasi-buku', 'BiblioController@topsis');
 
 
 Route::middleware(['auth'])->group(function(){

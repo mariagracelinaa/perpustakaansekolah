@@ -215,6 +215,8 @@ class ItemController extends Controller
             $price = $request->get('price');
             $year = $request->get('year');
 
+            // dd($id, $year, $price, $source);
+
             $fix = substr($id, 0, 10);
 
             $source_code = "";
@@ -231,6 +233,7 @@ class ItemController extends Controller
                     ->where('register_num', $id)
                     ->update(['source' => $source, 'price' => $price, 'purchase_year' => $year, 'register_num' => $register_num]);
 
+            // dd($data);
             $request->session()->flash('status','Data item buku berhasil diubah');
         }catch (\PDOException $e) {
             $request->session()->flash('error', 'Gagal mengubah data item buku, silahkan coba lagi');

@@ -466,4 +466,224 @@ class BiblioController extends Controller
         }
         
     }
+
+    public function topsis(Request $request){
+        // Bobot dari user
+        $bobot_k1 = 4;
+        $bobot_k2 = 4;
+        $bobot_k3 = 5;
+        $bobot_k4 = 3;
+
+        // Query untuk ambil data buku dari db sesuai kategori DDC user
+        $book = DB::table('biblios')
+                ->select()
+                ->where('ddc','=','000')
+                ->get();
+        // dd($book);
+        
+        // ---------------------------------------------------- Decision Matrix ------------------------------------------------------
+        // Query untuk cari jumlah buku terpinjam -> K1
+        // id biblios jadi index
+        $arr_count_borrow = [];
+        foreach($book as $bk){
+            // dd($bk->id);
+            $count_borrow = DB::table('borrow_transaction')
+                            ->join('items', 'items.register_num', '=', 'borrow_transaction.register_num')
+                            ->select(DB::raw('COUNT(*) as count'))
+                            ->where('items.biblios_id','=', $bk->id)
+                            ->get();
+            $arr_count_borrow[$bk->id] = $count_borrow[0];
+        }
+        // dd($arr_count_borrow);
+
+        // Query jumlah halaman buku -> K2
+        $arr_count_page = [];
+        foreach($book as $bk){
+            // dd($bk->id);
+            $count_page = DB::table('biblios')
+                            ->select('biblios.page')
+                            ->where('biblios.id','=', $bk->id)
+                            ->get();
+            $arr_count_page[$bk->id] = $count_page[0];
+        }
+        // dd($arr_count_page);
+
+        // Query tahun terbit buku -> K3
+        $arr_publish_year = [];
+        foreach($book as $bk){
+            // dd($bk->id);
+            $publish_year = DB::table('biblios')
+                            ->select('biblios.publish_year')
+                            ->where('biblios.id','=', $bk->id)
+                            ->get();
+            $arr_publish_year[$bk->id] = $publish_year[0];
+        }
+        // dd($arr_publish_year);
+
+        // Query usia buku di perpustakaan -> K4
+        $arr_age = [];
+        foreach($book as $bk){
+            // dd($bk->id);
+            $age = DB::table('biblios')
+                            ->select(DB::raw('YEAR(CURDATE()) - biblios.first_purchase AS age'))
+                            ->where('biblios.id','=', $bk->id)
+                            ->get();
+            $arr_age[$bk->id] = $age[0];
+        }
+        // dd($arr_age);
+
+        // ---------------------------------------------------- Matrix R ------------------------------------------------------
+        // Setiap decision matrix dipangkat 2
+        $pow_count_borrow = [];
+        $pow_count_page = [];
+        $pow_publish_year = [];
+        $pow_age = [];
+        foreach($book as $bk){
+            $pow_count_borrow[$bk->id] = $arr_count_borrow[$bk->id]->count * $arr_count_borrow[$bk->id]->count;
+            $pow_count_page[$bk->id] = $arr_count_page[$bk->id]->page * $arr_count_page[$bk->id]->page;
+            $pow_publish_year[$bk->id] = $arr_publish_year[$bk->id]->publish_year * $arr_publish_year[$bk->id]->publish_year;
+            $pow_age[$bk->id] = $arr_age[$bk->id]->age * $arr_age[$bk->id]->age;
+        }
+        // dd($arr_publish_year);
+
+        //Total semua nilai buku disetiap kriteria
+        $k1 = 0;
+        $k2 = 0;
+        $k3 = 0;
+        $k4 = 0;
+
+        foreach($pow_count_borrow as $acb){
+            $k1 = $k1 + $acb;
+        }
+        
+        foreach($pow_count_page as $acp){
+            $k2 = $k2 + $acp;
+        }
+
+        foreach($pow_publish_year as $apy){
+            $k3 = $k3 + $apy;
+        }
+
+        foreach($pow_age as $aa){
+            $k4 = $k4 + $aa;
+        }
+
+        // Akar total dari tiap kriteria yang ada
+        $k1 = sqrt($k1);
+        $k2 = sqrt($k2);
+        $k3 = sqrt($k3);
+        $k4 = sqrt($k4);
+
+        // dd($k1, $k2, $k3, $k4);
+
+        // Bagi nilai awal matrix dengan hasil akar
+        $matrix_r_k1 = [];
+        $matrix_r_k2 = [];
+        $matrix_r_k3 = [];
+        $matrix_r_k4 = [];
+        foreach($book as $bk){
+            $matrix_r_k1[$bk->id] = $arr_count_borrow[$bk->id]->count / $k1;
+            $matrix_r_k2[$bk->id] = $arr_count_page[$bk->id]->page / $k2;
+            $matrix_r_k3[$bk->id] = $arr_publish_year[$bk->id]->publish_year / $k3;
+            $matrix_r_k4[$bk->id] = $arr_age[$bk->id]->age / $k4;
+        }
+
+        // dd($matrix_r_k3);
+
+        // ---------------------------------------------------- Matrix V ------------------------------------------------------
+        // Kalikan bobot dari user tiap kriteria dengan matrix R
+        $matrix_v_k1 = [];
+        $matrix_v_k2 = [];
+        $matrix_v_k3 = [];
+        $matrix_v_k4 = [];
+        foreach($book as $bk){
+            $matrix_v_k1[$bk->id] = $matrix_r_k1[$bk->id] * $bobot_k1;
+            $matrix_v_k2[$bk->id] = $matrix_r_k2[$bk->id] * $bobot_k2;
+            $matrix_v_k3[$bk->id] = $matrix_r_k3[$bk->id] * $bobot_k3; 
+            $matrix_v_k4[$bk->id] = $matrix_r_k4[$bk->id] * $bobot_k4;
+        }
+
+        // dd($matrix_v_k1, $matrix_v_k2, $matrix_v_k3, $matrix_v_k4);
+
+        // ---------------------------------------------------- Menentukan A* dan A' ------------------------------------------------------
+        // A* (Solusi ideal positif) tiap kriteria
+        // K1 -> Benefit (MAX), K2 -> Cost (MIN), K3 -> Benefit (MAX), K4 -> Cost (MIN)
+        $solusi_ideal_positif_1 = max($matrix_v_k1);
+        $solusi_ideal_positif_2 = min($matrix_v_k2);
+        $solusi_ideal_positif_3 = max($matrix_v_k3);
+        $solusi_ideal_positif_4 = min($matrix_v_k4);
+
+        // A' (Solusi ideal negatif) tiap kriteria
+        // K1 -> Benefit (MIN), K2 -> Cost (MAX), K3 -> Benefit (MIN), K4 -> Cost (MAX)
+        $solusi_ideal_negatif_1 = min($matrix_v_k1);
+        $solusi_ideal_negatif_2 = max($matrix_v_k2);
+        $solusi_ideal_negatif_3 = min($matrix_v_k3);
+        $solusi_ideal_negatif_4 = max($matrix_v_k4);
+
+        // dd($solusi_ideal_positif_1, $solusi_ideal_positif_2, $solusi_ideal_positif_3, $solusi_ideal_positif_4);
+        // dd($solusi_ideal_negatif_1, $solusi_ideal_negatif_2, $solusi_ideal_negatif_3, $solusi_ideal_negatif_4);
+
+        // ---------------------------------------------------- Menentukan S* dan S' ------------------------------------------------------
+        // S* (Jarak Solusi ideal positif) tiap kriteria
+        $arr_jarak_solusi_ideal_positif_1 = [];
+        $arr_jarak_solusi_ideal_positif_2 = [];
+        $arr_jarak_solusi_ideal_positif_3 = [];
+        $arr_jarak_solusi_ideal_positif_4 = [];
+        $jarak_solusi_ideal_positif = [];
+        foreach($book as $bk){
+            $arr_jarak_solusi_ideal_positif_1[$bk->id] = ($matrix_v_k1[$bk->id]-$solusi_ideal_positif_1)*($matrix_v_k1[$bk->id]-$solusi_ideal_positif_1);
+            $arr_jarak_solusi_ideal_positif_2[$bk->id] = ($matrix_v_k2[$bk->id]-$solusi_ideal_positif_2)*($matrix_v_k2[$bk->id]-$solusi_ideal_positif_2);
+            $arr_jarak_solusi_ideal_positif_3[$bk->id] = ($matrix_v_k3[$bk->id]-$solusi_ideal_positif_3)*($matrix_v_k3[$bk->id]-$solusi_ideal_positif_3); 
+            $arr_jarak_solusi_ideal_positif_4[$bk->id] = ($matrix_v_k4[$bk->id]-$solusi_ideal_positif_4)*($matrix_v_k4[$bk->id]-$solusi_ideal_positif_4);
+        }
+        // dd($arr_jarak_solusi_ideal_positif_1, $arr_jarak_solusi_ideal_positif_2, $arr_jarak_solusi_ideal_positif_3, $arr_jarak_solusi_ideal_positif_4);
+
+        // jumlah smua kriteria tiap buku lalu diakar
+        foreach($book as $bk){
+            $count = $arr_jarak_solusi_ideal_positif_1[$bk->id] + $arr_jarak_solusi_ideal_positif_2[$bk->id] + $arr_jarak_solusi_ideal_positif_3[$bk->id] + $arr_jarak_solusi_ideal_positif_4[$bk->id];
+
+            $jarak_solusi_ideal_positif[$bk->id] = sqrt($count);
+        }
+
+        // dd($jarak_solusi_ideal_positif);
+
+        // S' (Jarak Solusi ideal negatif) tiap kriteria
+        $arr_jarak_solusi_ideal_negatif_1 = [];
+        $arr_jarak_solusi_ideal_negatif_2 = [];
+        $arr_jarak_solusi_ideal_negatif_3 = [];
+        $arr_jarak_solusi_ideal_negatif_4 = [];
+        $jarak_solusi_ideal_negatif = [];
+        foreach($book as $bk){
+            $arr_jarak_solusi_ideal_negatif_1[$bk->id] = ($matrix_v_k1[$bk->id]-$solusi_ideal_negatif_1)*($matrix_v_k1[$bk->id]-$solusi_ideal_negatif_1);
+            $arr_jarak_solusi_ideal_negatif_2[$bk->id] = ($matrix_v_k2[$bk->id]-$solusi_ideal_negatif_2)*($matrix_v_k2[$bk->id]-$solusi_ideal_negatif_2);
+            $arr_jarak_solusi_ideal_negatif_3[$bk->id] = ($matrix_v_k3[$bk->id]-$solusi_ideal_negatif_3)*($matrix_v_k3[$bk->id]-$solusi_ideal_negatif_3); 
+            $arr_jarak_solusi_ideal_negatif_4[$bk->id] = ($matrix_v_k4[$bk->id]-$solusi_ideal_negatif_4)*($matrix_v_k4[$bk->id]-$solusi_ideal_negatif_4);
+        }
+
+        // dd($arr_jarak_solusi_ideal_negatif_1, $arr_jarak_solusi_ideal_negatif_2, $arr_jarak_solusi_ideal_negatif_3, $arr_jarak_solusi_ideal_negatif_4);
+
+        // jumlah smua kriteria tiap buku lalu diakar
+        foreach($book as $bk){
+            $count = $arr_jarak_solusi_ideal_negatif_1[$bk->id] + $arr_jarak_solusi_ideal_negatif_2[$bk->id] + $arr_jarak_solusi_ideal_negatif_3[$bk->id] + $arr_jarak_solusi_ideal_negatif_4[$bk->id];
+
+            $jarak_solusi_ideal_negatif[$bk->id] = sqrt($count);
+        }
+
+        // dd($jarak_solusi_ideal_negatif);
+
+        // ---------------------------------------- menghitung kedekatan relatif (C) tiap buku -------------------------------------------
+        $arr_kedekatan_relatif = [];
+        foreach($book as $bk){
+            $arr_kedekatan_relatif[$bk->id] = $jarak_solusi_ideal_negatif[$bk->id]/($jarak_solusi_ideal_positif[$bk->id] + $jarak_solusi_ideal_negatif[$bk->id]);
+        }
+
+        // dd($arr_kedekatan_relatif);
+
+        // -------------------------------- Urutkan C dari terbesar/yang paling dekat dengan 1 ------------------------------------
+        $arr_topsis = []; 
+        $arr_topsis = collect($arr_kedekatan_relatif);
+        $arr_topsis = $arr_topsis->sortDesc();
+        $arr_topsis->values()->all();
+        dd($arr_topsis);
+    }
 }

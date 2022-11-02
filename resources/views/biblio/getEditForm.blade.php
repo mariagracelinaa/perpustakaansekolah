@@ -171,7 +171,6 @@
                 <img src= "{{asset('images/'.$data->image)}}" height="150px">
                 <p>{{$data->image}}</p>
                 <input type="file" class="form-control" name="image" id="image">
-                <span class="help-block">Pilih gambar buku. Jika tidak ada, dapat dilewati</span>
             </div>
             {{-- Ini nanti buat upload gambar --}}
             <div class="form-group">
