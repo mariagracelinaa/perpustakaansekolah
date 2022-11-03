@@ -467,17 +467,23 @@ class BiblioController extends Controller
         
     }
 
+    public function formTopsis(){
+        return view('frontend.formTopsis');
+    }
+
     public function topsis(Request $request){
+        // dd($request->get('cathegory'), $request->get('radio_borrow'),$request->get('radio_page'),$request->get('radio_publish'), $request->get('radio_age'));
+
         // Bobot dari user
-        $bobot_k1 = 4;
-        $bobot_k2 = 4;
-        $bobot_k3 = 5;
-        $bobot_k4 = 3;
+        $bobot_k1 = $request->get('radio_borrow');
+        $bobot_k2 = $request->get('radio_page');
+        $bobot_k3 = $request->get('radio_publish');
+        $bobot_k4 = $request->get('radio_age');
 
         // Query untuk ambil data buku dari db sesuai kategori DDC user
         $book = DB::table('biblios')
                 ->select()
-                ->where('ddc','=','000')
+                ->where('ddc','=',$request->get('cathegory'))
                 ->get();
         // dd($book);
         
@@ -684,6 +690,17 @@ class BiblioController extends Controller
         $arr_topsis = collect($arr_kedekatan_relatif);
         $arr_topsis = $arr_topsis->sortDesc();
         $arr_topsis->values()->all();
-        dd($arr_topsis);
+        // dd($arr_topsis);
+
+        // Simpan data buku sesuai urutas hasil TOPSIS lalu kirim ke view untuk ditampilkan
+        $data = [];
+        $i = 0;
+        foreach($arr_topsis as $key => $val){
+            $data[$i] = DB::table('biblios')->select('id','title', 'image')->where('id','=', $key)->get();
+            $i++;
+        }
+
+        // dd($data[1][0]);
+        return view('frontend.recommendation', compact('data'));
     }
 }

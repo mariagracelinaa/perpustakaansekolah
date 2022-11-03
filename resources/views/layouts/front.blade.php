@@ -93,7 +93,7 @@
                     <div class="dropdown-menu fade-down m-0">
                         <a href="/buku-baru" class="dropdown-item">Buku Baru</a>
                         <a href="/koleksi-buku" class="dropdown-item">Koleksi Buku</a>
-                        <a href="" class="dropdown-item">Cari Rekomendasi Buku</a>
+                        <a href="/form-rekomendasi" class="dropdown-item">Cari Rekomendasi Buku</a>
                     </div>
                 </div>
                 @if (Auth::user())
