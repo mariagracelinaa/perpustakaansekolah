@@ -12,7 +12,7 @@
         <div class="form-body">
             <div class="form-group">
                 <label for="exampleInputEmail1">Nomor ID Buku</label>
-                <input name="id" type="text" class="form-control" value="{{$data[0]->biblios->id}}" readonly >
+                <input id="biblios_id" type="text" class="form-control" value="{{$data[0]->biblios->id}}" readonly >
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail1">Judul Buku</label>

@@ -131,6 +131,7 @@
                       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
                       </button>
                         <strong>Sukses!</strong> {{session('status')}}
+                        {{Session::forget('status') }}
                     </div>
                     
                 @elseif(session('error')) 
@@ -138,6 +139,7 @@
                       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
                       </button>
                         <strong>Gagal!</strong> {{session('error')}}
+                        {{Session::forget('error') }}
                     </div>
                 @endif
                 {{-- Alert End --}}

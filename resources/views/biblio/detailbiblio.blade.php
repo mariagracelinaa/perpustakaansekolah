@@ -264,18 +264,24 @@
         var eSource=$('#eSource').val();
         var ePrice =$('#ePrice').val();
         var eYear = $('#eYear').val();
+        var biblios_id = $('#biblios_id').val();
         $.ajax({
             type:'POST',
             url:'{{route("daftar-item.updateData")}}',
             data:{
                   '_token': '<?php echo csrf_token() ?>',
-                  'id':id,
+                  'reg_num':id,
                   'source':eSource,
                   'price':ePrice,
                   'year' : eYear
                 },
             success:function(data) {
               location.reload();
+                // if(data.status == 'success'){
+                //     alert('Data item buku berhasil diubah');
+                // }else{
+                //     alert('gagal');
+                // }
             }
         });
       }

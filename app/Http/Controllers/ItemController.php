@@ -210,33 +210,36 @@ class ItemController extends Controller
     public function updateData(Request $request){
         $this->authorize('check-admin');
         try{
-            $id = $request->get('id');
-            $source = $request->get('source');
-            $price = $request->get('price');
-            $year = $request->get('year');
+            // $id = $request->get('id');
+            // $source = $request->get('source');
+            // $price = $request->get('price');
+            // $year = $request->get('year');
 
             // dd($id, $year, $price, $source);
 
-            $fix = substr($id, 0, 10);
+            $fix = substr($request->get('reg_num'), 0, 10);
 
             $source_code = "";
-            if($source == "pembelian"){
+            if($request->get('source') == "pembelian"){
                 $source_code = "Pb";
             }else{
                 $source_code = "Hd";
             }
             // dd($fix);
-            $register_num = $fix.$source_code."/".$year;
+            $register_num = $fix.$source_code."/".$request->get('year');
             // dd($register_num);
 
-            $data = DB::table('items')
-                    ->where('register_num', $id)
-                    ->update(['source' => $source, 'price' => $price, 'purchase_year' => $year, 'register_num' => $register_num]);
+            // $data = DB::table('items')
+            //         ->where('register_num', $id)
+            //         ->update(['source' => $source, 'price' => $price, 'purchase_year' => $year, 'register_num' => $register_num]);
+
+            $data = Item::where('register_num', $request->get('reg_num'))
+                    ->update(['source' => $request->get('source'), 'price' => $request->get('price'), 'purchase_year' => $request->get('year'), 'register_num' => $register_num]);
 
             // dd($data);
             $request->session()->flash('status','Data item buku berhasil diubah');
         }catch (\PDOException $e) {
-            $request->session()->flash('error', 'Gagal mengubah data item buku, silahkan coba lagi');
+            $request->session()->flash('error', 'Data item buku gagal diubah, silahkan coba lagi');
         }  
     }
 }
