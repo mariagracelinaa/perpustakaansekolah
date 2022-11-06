@@ -2,6 +2,7 @@
 
 @section('content')
 <h2>Detail Pengguna</h2>
+    <input type="hidden" id="allow_borrow" value="{{ $allow}}">
     <table>
         <tbody>
             <tr>
@@ -84,14 +85,33 @@
 <script type="text/javascript">
     $(document).ready(function(){
         var i=1; 
-        var count = 0;
+        var count = 1;
+        var allow = $('#allow_borrow').val();
         $('#add').click(function(){ 
             var reg_num=$('#reg_num').val();
-            if(count < 3){
-                $('#dynamic_field').append('<tr id="row'+i+'"><td><input type="hidden" name="listBook[]" value="'+reg_num+'">'+ reg_num +'</td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td></tr>'); 
-                i++;
-                count++;
-            }
+            // ke db cek reg_num sedang dipinjam atau tidak, kalau tidak bisa ditambah di list
+            $.ajax({
+                type:'POST',
+                url:'{{url("/check-sebelum-tambah")}}',
+                data:{
+                        '_token': '<?php echo csrf_token() ?>',
+                        'reg_num': reg_num
+                    },
+                success:function(data) {
+                    // location.reload();
+                    // jika tidak ada di daftar peminjaman berjalan maka tampilkan listBook
+                    if(data.count == 0){
+                        // alert('muncul listBook');
+                        if(count <= allow){
+                            $('#dynamic_field').append('<tr id="row'+i+'"><td><input type="hidden" name="listBook[]" value="'+reg_num+'">'+ reg_num +'</td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td></tr>'); 
+                            i++;
+                            count++;
+                        }
+                    }else{
+                        alert('Buku ada di daftar peminjaman yang sedang berjalan');
+                    }
+                }
+            });
         }); 
         
         $(document).on('click', '.btn_remove', function(){    

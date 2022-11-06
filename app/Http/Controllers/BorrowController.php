@@ -146,6 +146,22 @@ class BorrowController extends Controller
         } 
     }
 
+    public function check_before_add_circulation(Request $request){
+        // cek apakah item buku yang akan dipinjam ternyata masih ada di daftar pinjaman atau tidak (Mungkin petugas lupa mencatat pengembalian)
+        $check = DB::table('borrow_transaction')
+                    ->select(DB::raw('COUNT(*) as count'))
+                    ->where('register_num','=', $request->get('reg_num'))
+                    ->where('status','=','belum kembali')
+                    ->get();
+        if($check[0]->count != 0){
+            // dd('buku ada di dalam daftar peminjaman yang masih berjalan, selesaikan dahulu');
+            return response()->json(array('count' => $check[0]->count));
+        }else{
+            // dd('bisa catat peminjamannya');
+            return response()->json(array('count' => $check[0]->count));
+        }
+    }
+
     /**
      * Display the specified resource.
      *
@@ -263,8 +279,14 @@ class BorrowController extends Controller
                 ->where('users.id','=',$users_id)
                 ->get();
 
-        // dd($user);
-        return view('borrow.addCirculation', compact('user'));
+        $allow = DB::table('borrow_transaction')
+                ->join('borrows','borrows.id','=','borrow_transaction.borrows_id')
+                ->select(DB::raw('COUNT(*) as allow'))
+                ->where('borrows.users_id','=', $users_id)
+                ->where('borrow_transaction.status','=','belum kembali')
+                ->get();
+        $allow = 3-$allow[0]->allow;
+        return view('borrow.addCirculation', compact('user','allow'));
     }
 
     public function detailCirculation($users_id){

@@ -74,6 +74,7 @@ Route::middleware(['auth'])->group(function(){
     //Borrow + borrow transaction
     //Admin Akses
     Route::resource('daftar-peminjaman', 'BorrowController');
+    Route::post('/check-sebelum-tambah','BorrowController@check_before_add_circulation');
     Route::post('/grafik-pinjaman-filter', 'BorrowController@graphicYear');
     Route::get('/sirkulasi-buku','BorrowController@listUser');
     Route::post('/daftar-peminjaman/getDetail','BorrowController@getDetail')->name('daftar-peminjaman.getDetail');
