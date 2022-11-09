@@ -39,17 +39,30 @@ class PublisherController extends Controller
     public function store(Request $request)
     {
         $this->authorize('check-admin');
-        try{
-            $data = new Publisher();
-            $data->name = $request->get('name');
-            $data->city = $request->get('city');
-            $data->save();
-
-            return redirect()->route('daftar-penerbit.index')->with('status','Data penerbit baru berhasil disimpan');
-        }catch (\PDOException $e) {
-            return redirect()->route('daftar-penerbit.index')->with('error', 'Gagal menambah data baru, silahkan coba lagi');
-        }
-       
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required',
+            'city' => 'required'
+        ],
+        [
+            'name.required' => 'Nama penerbit tidak boleh kosong',
+            'city.required' => 'Kota penerbit tidak boleh kosong',
+        ]);
+        
+        if (!$validator->passes())
+        {
+            return response()->json(['status'=>0, 'errors'=>$validator->errors()->toArray()]);
+        }else{
+            try{
+                $data = new Publisher();
+                $data->name = $request->get('name');
+                $data->city = $request->get('city');
+                $data->save();
+    
+                return redirect()->route('daftar-penerbit.index')->with('status','Data penerbit baru berhasil disimpan');
+            }catch (\PDOException $e) {
+                return redirect()->route('daftar-penerbit.index')->with('error', 'Gagal menambah data baru, silahkan coba lagi');
+            }
+        }   
     }
 
     /**

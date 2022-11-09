@@ -15,17 +15,17 @@
                 <input id="id" type="text" class="form-control" placeholder="Isikan judul buku" name="id" value="{{$data->id}}" readonly>
             </div>
             <div class="form-group">
-                <label for="exampleInputEmail1">Judul Buku</label>
+                <label for="exampleInputEmail1">Judul Buku</label><span style="color: red"> *</span>
                 <input id="title" type="text" class="form-control" placeholder="Tulis judul buku dengan lengkap" name="title" value="{{$data->title}}">
                 <span class="text-danger eError-text title_eError"></span>
             </div>
             <div class="form-group">
-                <label>Nomor ISBN</label>
+                <label>Nomor ISBN</label><span style="color: red"> *</span>
                 <input id="isbn" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Tulis nomor ISBN 10 atau 13" name="isbn" value="{{$data->isbn}}">
                 <span class="text-danger eError-text isbn_eError"></span>
             </div>
             <div class="form-group">
-              <label>Penerbit</label><br>
+              <label>Penerbit</label><span style="color: red"> *</span><br>
               <input id="publisher" name="listPublisher" list="listPublisher" placeholder="Tulis nama penerbit" value="{{$data->publishers->name}}">
                 <datalist id="listPublisher">
                     <select id="selectedPublisher">
@@ -37,7 +37,7 @@
                 <span class="text-danger eError-text listPublisher_eError"></span>
             </div>
             <div class="form-group">
-              <label>Penulis</label><br>
+              <label>Penulis</label><span style="color: red"> *</span><br>
               @php
                   $i = 0;
               @endphp
@@ -83,12 +83,12 @@
               <span class="text-danger eError-text listAuthor_eError"></span>
             </div>
             <div class="form-group">
-                <label>Tahun Terbit</label>
+                <label>Tahun Terbit</label><span style="color: red"> *</span>
                 <input id="publish_year" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Tulis tahun terbit buku" name="publish_year" value="{{$data->publish_year}}">
                 <span class="text-danger eError-text publish_year_eError"></span>
             </div>
             <div class="form-group">
-                <label>Tahun Pengadaan</label>
+                <label>Tahun Pengadaan</label><span style="color: red"> *</span>
                 <input id="first_purchase" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Tulis tahun pengadaan buku di perpustakaan pertama kali" name="first_purchase" value="{{$data->first_purchase}}">
                 <span class="text-danger eError-text first_purchase_eError"></span>
             </div>
@@ -160,13 +160,13 @@
             </div>
             {{-- Combobox DDC --}}
             <div class="form-group">
-                <label>Nomor Panggil</label>
+                <label>Nomor Panggil</label><span style="color: red"> *</span>
                 <input id="classification" type="text" class="form-control" placeholder="Tulis nomor panggil buku dengan lengkap. Contoh: 813 Sus r" name="classification" value="{{$data->classification}}">
                 <span class="text-danger eError-text classification_eError"></span>
             </div>
             {{-- Ini nanti buat upload gambar --}}
             <div class="form-group">
-                <label>Gambar Buku</label>
+                <label>Gambar Buku</label><span style="color: red"> *</span>
                 <br>
                 <img src= "{{asset('images/'.$data->image)}}" height="150px">
                 <p>{{$data->image}}</p>
@@ -174,17 +174,17 @@
             </div>
             {{-- Ini nanti buat upload gambar --}}
             <div class="form-group">
-                <label>Edisi</label>
+                <label>Edisi</label><span style="color: red"> *</span>
                 <input id="edition" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Tulis edisi buku. Jika tidak ada, tuliskan 1" name="edition" value="{{$data->edition}}">
                 <span class="text-danger eError-text edition_eError"></span>
             </div>
             <div class="form-group">
-                <label>Jumlah Halaman</label>
+                <label>Jumlah Halaman</label><span style="color: red"> *</span>
                 <input id="page" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Isikan jumlah halaman buku" name="page" value="{{$data->page}}">
                 <span class="text-danger eError-text page_eError"></span>
             </div>
             <div class="form-group">
-                <label>Tinggi Buku</label>
+                <label>Tinggi Buku</label><span style="color: red"> *</span>
                 <input id="height" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Isikan tinggi buku" name="height" value="{{$data->book_height}}">
                 <span class="text-danger eError-text height_eError"></span>
             </div>
@@ -253,7 +253,7 @@
                 </select>
                 <span class="text-danger eError-text location_eError"></span>
                 <div class="form-group">
-                    <label>Sinopsis Buku</label><br>
+                    <label>Sinopsis Buku</label><span style="color: red"> *</span><br>
                     <textarea name="synopsis" id="synopsis" rows="10" style="width: 100%" placeholder="Tuliskan sinopsis buku">{{$data->synopsis}}</textarea>
                     <span class="text-danger error-text synopsis_error"></span>
                   </div>

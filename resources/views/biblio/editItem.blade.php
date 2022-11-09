@@ -47,7 +47,7 @@
                 Tulis harga buku. Jika sumber buku adalah hadiah, maka isikan 0</span>
             </div>
             <div class="form-group">
-                <label>Tahun Pengadaan</label>
+                <label>Tahun Pengadaan</label><span style="color: red"> *</span>
                 <input id="eYear" name="year" type="number" class="form-control" placeholder="Isikan tahun pengadaan item buku" name="year" value="{{$data[0]->purchase_year}}">
                 <span class="help-block">
                 Tulis tahun pengadaan item buku. Contoh: 2010</span>

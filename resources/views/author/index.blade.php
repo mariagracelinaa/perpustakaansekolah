@@ -57,7 +57,7 @@
   <div class="modal-dialog">
     <div class="modal-content" >
       {{-- Form start --}}
-      <form role="form" method="POST" action="{{url('daftar-penulis')}}">
+      <form role="form" method="POST" id="add_author">
         <div class="modal-header">
           <button type="button" class="close" 
             data-dismiss="modal" aria-hidden="true"></button>
@@ -68,15 +68,14 @@
             @csrf
             <div class="form-body">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Nama Penulis</label>
+                    <label>Nama Penulis</label><span style="color: red"> *</span>
                     <input type="text" class="form-control" placeholder="Isikan nama penerbit" name="name">
-                    <span class="help-block">
-                    Tulis nama penulis dengan lengkap</span>
+                    <span class="text-danger error-text name_error"></span>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-info">Simpan</button>
+          <button type="button" class="btn btn-info" onclick="submitAdd()">Simpan</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
          </div>
       </form>
@@ -128,11 +127,43 @@
                 '_token': '<?php echo csrf_token() ?>',
                 'id':id,
                 'name':eName
-              },
-          success:function(data) {
-            location.reload();
-          }
+            },
+            success:function(data) {
+              if(data.status == 0){
+                $.each(data.errors, function(prefix, val){
+                  $('span.'+ prefix +'_error').text(val[0]);
+                });
+              }else{
+                location.reload();
+              }
+            }
       });
     }
+  
+    function submitAdd(){
+    var formData = new FormData($("#add_author")[0]);
+      $.ajax({
+            url: "{{url('daftar-penulis')}}",
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            processData: false,
+            beforeSend:function(){
+              $(document).find('span.error-text').text('');
+            },
+            success:function(data) {
+              if(data.status == 0){
+                $.each(data.errors, function(prefix, val){
+                  $('span.'+ prefix +'_error').text(val[0]);
+                });
+              }else{
+                location.reload();
+              }
+            }
+        }); 
+  }
 </script>
 @endsection

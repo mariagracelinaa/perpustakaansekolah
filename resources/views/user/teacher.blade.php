@@ -42,7 +42,7 @@
                                 <li>
                                   <a href="{{url('/ubah-data-pengguna/'.$tc->id)}}" class="btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Ubah</a></li>
                                 <li>
-                                <a class="btn" onclick="if(confirm('Apakah anda yakin menghapus data {{$tc->name}}'))"><i class="fa fa-trash-o" aria-hidden="true"></i> Hapus</a>
+                                  <a href="{{url('/non-aktif-user/'.$tc->id)}}" class="btn" onclick="return confirm('Apakah anda yakin mengubah status aktif akun {{$tc->name}} ?')"><i class="fa fa-power-off" aria-hidden="true"></i> Non Aktifkan</a>
                                 </li>
                             </ul>
                         </div> 

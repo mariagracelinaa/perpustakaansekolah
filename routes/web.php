@@ -114,6 +114,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/cetak-usulan','SuggestionController@printSuggestionReport');
     Route::get('/ubah-data-pengguna/{id}', 'UserController@getEditForm');
     Route::post('/aksi-ubah-data', 'UserController@editDataUserAdmin');
+    Route::get('/non-aktif-user/{id}','UserController@is_active');
 
     // User akses
     Route::get('/profil/{id}', 'UserController@getProfileUser');

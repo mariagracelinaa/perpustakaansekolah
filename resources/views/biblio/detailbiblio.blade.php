@@ -156,7 +156,7 @@
     <div class="modal-dialog">
       <div class="modal-content" >
         {{-- Form start --}}
-        <form role="form" method="POST" action="{{route('daftar-item.store')}}">
+        <form role="form" method="POST" id="add_item">
           <div class="modal-header">
             <button type="button" class="close" 
               data-dismiss="modal" aria-hidden="true"></button>
@@ -194,15 +194,14 @@
                     Tulis harga buku. Jika sumber buku adalah hadiah, maka isikan 0</span>
                 </div>
                 <div class="form-group">
-                    <label>Tahun Pengadaan</label>
-                    <input name="year" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Isikan tahun pengadaan item buku" name="year">
-                    <span class="help-block">
-                    Tulis tahun pengadaan item buku. Contoh: 2010</span>
+                    <label>Tahun Pengadaan</label><span style="color: red"> *</span>
+                    <input name="year" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Isikan tahun pengadaan item buku. Contoh: 2010" name="year">
+                    <span class="text-danger error-text year_error"></span>
                 </div>
             </div>  
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-info">Simpan</button>
+            <button type="button" class="btn btn-info" onclick="submitAdd()">Simpan</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
            </div>
         </form>
@@ -300,7 +299,7 @@
         });
     }
 
-  function deleteData(id)
+    function deleteData(id)
     {
         var formData = new FormData($("#delete_item")[0]);
         $.ajax({
@@ -312,11 +311,37 @@
             contentType: false,
             enctype: 'multipart/form-data',
             processData: false,
-        success:function(data) {
-            location.reload();
-            // window.location.href = "{{route('daftar-buku.index')}}";
-        }
-    });
+            success:function(data) {
+                location.reload();
+                // window.location.href = "{{route('daftar-buku.index')}}";
+            }
+        });
     }
+
+    function submitAdd(){
+    var formData = new FormData($("#add_item")[0]);
+      $.ajax({
+            url: "{{route('daftar-item.store')}}",
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            processData: false,
+            beforeSend:function(){
+              $(document).find('span.error-text').text('');
+            },
+            success:function(data) {
+              if(data.status == 0){
+                $.each(data.errors, function(prefix, val){
+                  $('span.'+ prefix +'_error').text(val[0]);
+                });
+              }else{
+                location.reload();
+              }
+            }
+        }); 
+  }
   </script>
 @endsection

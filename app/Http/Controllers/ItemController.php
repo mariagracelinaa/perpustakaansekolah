@@ -43,38 +43,50 @@ class ItemController extends Controller
     public function store(Request $request)
     {
         $this->authorize('check-admin');
-        try{
-            $biblios_id = $request->get('id');
-            
-            $price = $request->get('price');
+        $validator = \Validator::make($request->all(), [
+            'year' => 'required',
+        ],
+        [
+            'year.required' => 'Tahun pengadaan tidak boleh kosong',
+        ]);
 
-            //Kode sumber
-            $source_code = "";
-            if($request->get('source') == "pembelian"){
-                $source_code = "Pb";
-            }else{
-                $source_code = "Hd";
-            }
-
-            $source = $request->get('source');
-
-            // Mendapatkan jumlah item pada id biblio tertentu
-            $count = Item::where('biblios_id', $biblios_id)->count();
-            $count++;
-
-            // Cari tgl hr ini date('Y-m-d H:i:s');
-            $year = $request->get('year');
-
-            $register_num = $biblios_id."/".$count."/"."Per-C/".$source_code."/".$year;
+        if (!$validator->passes())
+        {
+            return response()->json(['status'=>0, 'errors'=>$validator->errors()->toArray()]);
+        }else{
+            try{
+                $biblios_id = $request->get('id');
+                
+                $price = $request->get('price');
     
-            // dd($data);
-            DB::table('items')->insert(['register_num' => $register_num, 'biblios_id' => $biblios_id, 'source' => $source, 'purchase_year' => $year , 'price' => $price, 'status' => 'tersedia', 'is_deleted' => 0]);
-            
-            return redirect()->route('daftar-buku-detail', ['id' => $biblios_id])->with('status','Data item buku baru berhasil disimpan');
-            // return redirect()->url('daftar-buku-detail/{{$biblios_id}}')->with('status','Data item buku baru berhasil disimpan');
-            // return redirect()->route('daftar-buku-detail/{{$biblios_id}}')->with('status','Data item buku baru berhasil disimpan');
-        }catch (\PDOException $e) {
-            return redirect()->route('daftar-buku-detail', ['id' => $biblios_id])->with('error', 'Gagal menambah data baru, silahkan coba lagi');
+                //Kode sumber
+                $source_code = "";
+                if($request->get('source') == "pembelian"){
+                    $source_code = "Pb";
+                }else{
+                    $source_code = "Hd";
+                }
+    
+                $source = $request->get('source');
+    
+                // Mendapatkan jumlah item pada id biblio tertentu
+                $count = Item::where('biblios_id', $biblios_id)->count();
+                $count++;
+    
+                // Cari tgl hr ini date('Y-m-d H:i:s');
+                $year = $request->get('year');
+    
+                $register_num = $biblios_id."/".$count."/"."Per-C/".$source_code."/".$year;
+        
+                // dd($data);
+                DB::table('items')->insert(['register_num' => $register_num, 'biblios_id' => $biblios_id, 'source' => $source, 'purchase_year' => $year , 'price' => $price, 'status' => 'tersedia', 'is_deleted' => 0]);
+                
+                return redirect()->route('daftar-buku-detail', ['id' => $biblios_id])->with('status','Data item buku baru berhasil disimpan');
+                // return redirect()->url('daftar-buku-detail/{{$biblios_id}}')->with('status','Data item buku baru berhasil disimpan');
+                // return redirect()->route('daftar-buku-detail/{{$biblios_id}}')->with('status','Data item buku baru berhasil disimpan');
+            }catch (\PDOException $e) {
+                return redirect()->route('daftar-buku-detail', ['id' => $biblios_id])->with('error', 'Gagal menambah data baru, silahkan coba lagi');
+            }
         }
     }
 

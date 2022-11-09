@@ -62,7 +62,7 @@
                             <label class="col-md-4 col-form-label text-md-right">{{ __('Kelas') }}</label>
 
                             <div class="col-md-6">
-                                <select id="role" type="text" class="form-control @error('class_id') is-invalid @enderror" name="class_id" value="{{ old('class_id') }}" required autocomplete="class_id">
+                                <select id="class" type="text" class="form-control @error('class_id') is-invalid @enderror" name="class_id" value="{{ old('class_id') }}" required autocomplete="class_id" disabled>
                                     <option value=0>--- Pilih ---</option>
                                     @foreach ($result as $r)
                                         <option value="{{$r->id}}">{{$r->name}}</option>
@@ -126,4 +126,16 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('javascript')
+<script>
+    $("#role").change(function () {
+        if($("#role").val() == "murid"){
+            $("#class").removeAttr("disabled");
+        }else{
+            $("#class").attr('disabled', 'disabled');
+        }
+    });
+</script>
 @endsection

@@ -91,18 +91,18 @@
             <div class="alert alert-danger" style="display:none"></div>
             <div class="form-body">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Judul Buku</label>
+                    <label for="exampleInputEmail1">Judul Buku</label><span style="color: red"> *</span>
                     <input id="title" type="text" class="form-control" placeholder="Tulis judul buku dengan lengkap" name="title">
                     <span class="text-danger error-text title_error"></span>
                 </div>
                 <div class="form-group">
-                    <label>Nomor ISBN</label>
+                    <label>Nomor ISBN</label><span style="color: red"> *</span>
                     <input id="isbn" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Tulis nomor ISBN 10 atau 13" name="isbn">
                     <span class="text-danger error-text isbn_error"></span>
                 </div>
                 {{-- Penerbit, nanti dibuat bisa search --}}
                 <div class="form-group">
-                  <label>Penerbit</label><br>
+                  <label>Penerbit</label><span style="color: red"> *</span><br>
                   <input id="publisher" name="listPublisher" list="listPublisher" placeholder="Tulis nama penerbit">
                     <datalist id="listPublisher">
                       <select id="selectedPublisher">
@@ -115,7 +115,8 @@
                 {{-- Penerbit, nanti dibuat bisa search --}}
                 {{-- Penulis, nanti dibuat bisa search --}}
                 <div class="form-group">
-                  <label>Penulis</label><br>
+                  <label>Penulis</label><span style="color: red"> *</span><br>
+                  <span class="text-danger error-text listAuthor_error"></span>
                   <table class="table" id="dynamic_field">
                     <tr>
                       <td>
@@ -126,7 +127,6 @@
                             <option idp="{{$aut->id}}" value="{{$aut->name}}">
                           @endforeach
                         </datalist>
-                        <span class="text-danger error-text listAuthor_error"></span>
                       </td>
                       <td>
                         <button type="button" name="add" id="add" class="btn btn-light"><i class="fa fa-plus"></i> Tambah Penulis</button>
@@ -136,12 +136,12 @@
                 </div>
                 {{-- Penulis, nanti dibuat bisa search --}}
                 <div class="form-group">
-                  <label>Tahun Terbit</label>
+                  <label>Tahun Terbit</label><span style="color: red"> *</span>
                   <input id="publish_year" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Tulis tahun terbit buku" name="publish_year">
                   <span class="text-danger error-text publish_year_error"></span>
                 </div>
                 <div class="form-group">
-                  <label>Tahun Pengadaan</label>
+                  <label>Tahun Pengadaan</label><span style="color: red"> *</span>
                   <input id="first_purchase" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Isikan tahun pengadaan buku di perpustakaan pertama kali" name="first_purchase">
                   <span class="text-danger error-text first_purchase_error"></span>
                 </div>
@@ -164,28 +164,28 @@
                 </div>
                 {{-- Combobox DDC --}}
                 <div class="form-group">
-                  <label>Nomor Panggil</label>
+                  <label>Nomor Panggil</label><span style="color: red"> *</span>
                   <input id="classification" type="text" class="form-control" placeholder="Tulis nomor panggil buku dengan lengkap. Contoh: 813 Sus r" name="classification">
                   <span class="text-danger error-text classification_error"></span>
                 </div>
                 {{-- Ini nanti buat upload gambar --}}
                 <div class="form-group">
-                  <label>Gambar Buku</label>
+                  <label>Gambar Buku</label><span style="color: red"> *</span>
                   <input type="file" class="form-control" name="image" id="image">
                 </div>
                 {{-- Ini nanti buat upload gambar --}}
                 <div class="form-group">
-                  <label>Edisi</label>
+                  <label>Edisi</label><span style="color: red"> *</span>
                   <input id="edition" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Tulis edisi buku. Jika tidak ada, tuliskan 1" name="edition">
                   <span class="text-danger error-text edition_error"></span>
                 </div>
                 <div class="form-group">
-                  <label>Jumlah Halaman</label>
+                  <label>Jumlah Halaman</label><span style="color: red"> *</span>
                   <input id="page" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Isikan jumlah halaman buku" name="page">
                   <span class="text-danger error-text page_error"></span>
                 </div>
                 <div class="form-group">
-                  <label>Tinggi Buku</label>
+                  <label>Tinggi Buku</label><span style="color: red"> *</span>
                   <input id="height" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').replace(/^0[^.]/, '0');" class="form-control" placeholder="Isikan tinggi buku" name="height">
                   <span class="text-danger error-text height_error"></span>
                 </div>
@@ -206,7 +206,7 @@
                   <span class="text-danger error-text location_error"></span>
                 </div>
                 <div class="form-group">
-                  <label>Sinopsis Buku</label><br>
+                  <label>Sinopsis Buku</label><span style="color: red"> *</span><br>
                   <textarea name="synopsis" id="synopsis" rows="10" style="width: 100%" placeholder="Tuliskan sinopsis buku"></textarea>
                   <span class="text-danger error-text synopsis_error"></span>
                 </div>

@@ -66,7 +66,7 @@
   <div class="modal-dialog">
     <div class="modal-content" >
       {{-- Form start --}}
-      <form role="form" method="POST" action="{{url('daftar-kelas')}}">
+      <form role="form" method="POST" id="add_class">
         <div class="modal-header">
           <button type="button" class="close" 
             data-dismiss="modal" aria-hidden="true"></button>
@@ -77,15 +77,14 @@
             @csrf
             <div class="form-body">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Nama Ruang Kelas</label>
+                    <label>Nama Ruang Kelas</label><span style="color: red"> *</span>
                     <input type="text" class="form-control" placeholder="Isikan nama ruang kelas" name="name">
-                    <span class="help-block">
-                    Tulis nama ruang kelas, untuk setiap jenjang gunakan angka romawi. Contoh: X-1, XI IPA 3</span>
+                    <span class="text-danger error-text name_error"></span>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-info">Simpan</button>
+          <button type="button" class="btn btn-info" onclick="submitAdd()">Simpan</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
          </div>
       </form>
@@ -128,20 +127,52 @@
     }
 
     function updateData(id)
-      {
-        var eName=$('#eName').val();
-        $.ajax({
-            type:'POST',
-            url:'{{route("daftar-kelas.updateData")}}',
-            data:{
-                  '_token': '<?php echo csrf_token() ?>',
-                  'id':id,
-                  'name':eName
-                },
-            success:function(data) {
+    {
+      var eName=$('#eName').val();
+      $.ajax({
+        type:'POST',
+        url:'{{route("daftar-kelas.updateData")}}',
+        data:{
+          '_token': '<?php echo csrf_token() ?>',
+          'id':id,
+          'eName':eName
+        },
+        success:function(data) {
+          if(data.status == 0){
+            $.each(data.errors, function(prefix, val){
+              $('span.'+ prefix +'_error').text(val[0]);
+            });
+          }else{
+            location.reload();
+          }
+        }
+      });
+    }
+
+    function submitAdd(){
+    var formData = new FormData($("#add_class")[0]);
+      $.ajax({
+          url: "{{url('daftar-kelas')}}",
+          type: 'POST',
+          data: formData,
+          async: false,
+          cache: false,
+          contentType: false,
+          enctype: 'multipart/form-data',
+          processData: false,
+          beforeSend:function(){
+            $(document).find('span.error-text').text('');
+          },
+          success:function(data) {
+            if(data.status == 0){
+              $.each(data.errors, function(prefix, val){
+                $('span.'+ prefix +'_error').text(val[0]);
+              });
+            }else{
               location.reload();
             }
-        });
-      }
+          }
+      }); 
+    }
   </script>
 @endsection

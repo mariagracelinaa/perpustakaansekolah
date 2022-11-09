@@ -61,7 +61,7 @@
   <div class="modal-dialog">
     <div class="modal-content" >
       {{-- Form start --}}
-      <form role="form" method="POST" action="{{url('daftar-penerbit')}}">
+      <form role="form" method="POST" id="add_publisher">
         <div class="modal-header">
           <button type="button" class="close" 
             data-dismiss="modal" aria-hidden="true"></button>
@@ -72,21 +72,19 @@
             @csrf
             <div class="form-body">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Nama Penerbit</label>
+                    <label>Nama Penerbit</label><span style="color: red"> *</span>
                     <input type="text" required class="form-control" placeholder="Isikan nama penerbit" name="name">
-                    <span class="help-block">
-                    Tulis nama penerbit dengan lengkap</span>
+                    <span class="text-danger error-text name_error"></span>
                 </div>
                 <div class="form-group">
-                    <label>Kota Penerbit</label>
+                    <label>Kota Penerbit</label><span style="color: red"> *</span>
                     <input type="text" required class="form-control" placeholder="Isikan kota penerbit" name="city">
-                    <span class="help-block">
-                    Tulis kota penerbit dengan diawali huruf kapital. Contoh: Jakarta</span>
+                    <span class="text-danger error-text city_error"></span>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-info">Simpan</button>
+          <button type="button" class="btn btn-info" onclick="submitAdd()">Simpan</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
          </div>
       </form>
@@ -115,36 +113,62 @@
 @section('javascript')
   <script type="text/javascript">
     function getEditForm(id) {
-    $.ajax({
-        type:'POST',
-        url:'{{route("daftar-penerbit.getEditForm")}}',
-        data:{
-              '_token': '<?php echo csrf_token() ?>',
-              'id':id
-            },
-        success:function(data) {
+      $.ajax({
+          type:'POST',
+          url:'{{route("daftar-penerbit.getEditForm")}}',
+          data:{
+            '_token': '<?php echo csrf_token() ?>',
+            'id':id
+          },
+          success:function(data) {
             $("#modalContent").html(data.msg);
-        }
-    });
+          }
+      });
     }
 
     function updateData(id)
-      {
-        var eName=$('#eName').val();
-        var eCity =$('#eCity').val();
-        $.ajax({
-            type:'POST',
-            url:'{{route("daftar-penerbit.updateData")}}',
-            data:{
-                  '_token': '<?php echo csrf_token() ?>',
-                  'id':id,
-                  'name':eName,
-                  'city':eCity
-                },
+    {
+      var eName=$('#eName').val();
+      var eCity =$('#eCity').val();
+      $.ajax({
+        type:'POST',
+        url:'{{route("daftar-penerbit.updateData")}}',
+        data:{
+          '_token': '<?php echo csrf_token() ?>',
+          'id':id,
+          'name':eName,
+          'city':eCity
+        },
+        success:function(data) {
+          location.reload();
+        }
+      });
+    }
+
+    function submitAdd(){
+    var formData = new FormData($("#add_publisher")[0]);
+      $.ajax({
+            url: "{{url('daftar-penerbit')}}",
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            processData: false,
+            beforeSend:function(){
+              $(document).find('span.error-text').text('');
+            },
             success:function(data) {
-              location.reload();
+              if(data.status == 0){
+                $.each(data.errors, function(prefix, val){
+                  $('span.'+ prefix +'_error').text(val[0]);
+                });
+              }else{
+                location.reload();
+              }
             }
-        });
-      }
+        }); 
+  }
   </script>
 @endsection

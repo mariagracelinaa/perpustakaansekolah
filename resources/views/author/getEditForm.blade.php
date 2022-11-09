@@ -1,5 +1,5 @@
 {{-- Form start --}}
-<form role="form" method="POST" action="{{route('daftar-penulis.update',$data->id)}}">
+<form role="form" method="POST">
     <div class="modal-header">
       <button type="button" class="close" 
         data-dismiss="modal" aria-hidden="true"></button>
@@ -10,15 +10,14 @@
         @method('PUT')
         <div class="form-body">
             <div class="form-group">
-                <label for="exampleInputEmail1">Nama Penulis</label>
+                <label>Nama Penulis</label><span style="color: red"> *</span>
                 <input id="eName" type="text" class="form-control" placeholder="Isikan nama penulis" name="name" value="{{$data->name}}">
-                <span class="help-block">
-                Tulis nama penulis dengan lengkap</span>
+                <span class="text-danger error-text eName_error"></span>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-info" data-dismiss="modal" onclick="updateData({{$data->id}})">Ubah</button>
+      <button type="button" class="btn btn-info" onclick="updateData({{$data->id}})">Ubah</button>
       <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
      </div>
   </form>

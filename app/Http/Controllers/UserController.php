@@ -18,6 +18,7 @@ class UserController extends Controller
                 ->join('class', 'users.class_id','=','class.id')
                 ->select('users.id','users.nisn','users.name','users.email', 'class.name as class')
                 ->where('role','=','murid')
+                ->where('is_active','=',1)
                 ->get();
 
         // dd($data);
@@ -30,9 +31,30 @@ class UserController extends Controller
         $data = DB::table('users')
                 ->select('users.id','users.niy','users.name','users.email')
                 ->where('role','=','guru/staf')
+                ->where('is_active','=',1)
                 ->get();
 
         return view('user.teacher', compact('data'));
+    }
+
+    public function is_active($users_id){
+        $this->authorize('check-admin');
+        $role = DB::table('users')
+                ->select('role')
+                ->where('id', $users_id)
+                ->get();
+
+        $data = DB::table('users')
+                ->where('id', $users_id)
+                ->update(['is_active' => 0]);
+
+        if($role[0]->role == 'murid'){
+            return redirect()->back()->with('status','Data murid berhasil di non aktifkan');
+        }elseif($role == 'guru/staf'){
+            return redirect()->back()->with('status','Data guru/staf berhasil di non aktifkan');
+        }else{
+            return redirect()->back()->with('status','Data murid berhasil di non aktifkan');
+        }
     }
 
     public function getEditForm($users_id){

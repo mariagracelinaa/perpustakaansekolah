@@ -10,16 +10,12 @@
         @method('PUT')
         <div class="form-body">
             <div class="form-group">
-                <label for="exampleInputEmail1">Nama Penerbit</label>
+                <label>Nama Penerbit</label><span style="color: red"> *</span>
                 <input id="eName" type="text" class="form-control" placeholder="Isikan nama penerbit" name="name" value="{{$data->name}}">
-                <span class="help-block">
-                Tulis nama penerbit dengan lengkap</span>
             </div>
             <div class="form-group">
-                <label>Kota Penerbit</label>
+                <label>Kota Penerbit</label><span style="color: red"> *</span>
                 <input id="eCity" type="text" class="form-control" placeholder="Isikan kota penerbit" name="city" value="{{$data->city}}">
-                <span class="help-block">
-                Tulis kota penerbit dengan diawali huruf kapital. Contoh: Jakarta</span>
             </div>
         </div>
     </div>

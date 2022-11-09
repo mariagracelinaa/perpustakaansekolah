@@ -10,15 +10,14 @@
         @method('PUT')
         <div class="form-body">
             <div class="form-group">
-                <label for="exampleInputEmail1">Nama Ruang Kelas</label>
+                <label>Nama Ruang Kelas</label><span style="color: red"> *</span>
                 <input id="eName" type="text" class="form-control" placeholder="Isikan nama ruang kelas" name="name" value="{{$data->name}}">
-                <span class="help-block">
-                Tulis nama ruang kelas, untuk setiap jenjang gunakan angka romawi. Contoh: X-1, XI IPA 3</span>
+                <span class="text-danger error-text eName_error"></span>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-info" data-dismiss="modal" onclick="updateData({{$data->id}})">Ubah</button>
+      <button type="button" class="btn btn-info" onclick="updateData({{$data->id}})">Ubah</button>
       <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
      </div>
   </form>

@@ -9,7 +9,9 @@ use App\Item;
 use App\Author;
 use Illuminate\Http\Request;
 use DB;
+use File;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class BiblioController extends Controller
 {
@@ -112,9 +114,11 @@ class BiblioController extends Controller
                 $biblio->ddc = $request->get('ddc');
                 $biblio->classification = $request->get('classification');
                 
+                $ext = $request->file('image')->extension();
                 $file = $request->file('image');
                 $imgFolder = 'images';
-                $imgFile = $request->file('image')->getClientOriginalName();
+                // $imgFile = $file->getClientOriginalName();
+                $imgFile = $request->get('title').'.'.$ext;
                 $file->move($imgFolder, $imgFile);
                 $biblio->image = $imgFile;
 
@@ -295,6 +299,11 @@ class BiblioController extends Controller
                         ->select()
                         ->where('name', '=', $request->get('listPublisher'))
                         ->get();
+
+                $old_image = DB::table('biblios')
+                            ->select()
+                            ->where('id','=', $request->get('id'))
+                            ->get();
                 
 
                 // Ambil id penulis sesuai nama yang dimasukkan pengguna
@@ -317,9 +326,23 @@ class BiblioController extends Controller
                 $ddc = $request->get('ddc');
                 $classification = $request->get('classification');
                 
+                // Hapus foto lama terlebih dahulu 
+                // dd($old_image[0]->image);
+                // Storage::delete();
+                File::delete(public_path('images/'.$old_image[0]->image));
+
+                // Simpan foto baru
+                // $file = $request->file('image');
+                // $imgFolder = 'images';
+                // $imgFile = $request->file('image')->getClientOriginalName();
+                // $file->move($imgFolder, $imgFile);
+                // $image = $imgFile;
+
+                $ext = $request->file('image')->extension();
                 $file = $request->file('image');
                 $imgFolder = 'images';
-                $imgFile = $request->file('image')->getClientOriginalName();
+                // $imgFile = $file->getClientOriginalName();
+                $imgFile = $title.'.'.$ext;
                 $file->move($imgFolder, $imgFile);
                 $image = $imgFile;
 

@@ -50,14 +50,26 @@ class ClassesController extends Controller
     public function store(Request $request)
     {
         $this->authorize('check-admin');
-        try{
-            $data = new Classes();
-            $data->name = $request->get('name');
-            $data->save();
-
-            return redirect()->route('daftar-kelas.index')->with('status','Data ruang kelas baru berhasil disimpan');
-        }catch (\PDOException $e) {
-            return redirect()->route('daftar-kelas.index')->with('error', 'Gagal menambah data baru, silahkan coba lagi');
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required',
+        ],
+        [
+            'name.required' => 'Nama penerbit tidak boleh kosong',
+        ]);
+        
+        if (!$validator->passes())
+        {
+            return response()->json(['status'=>0, 'errors'=>$validator->errors()->toArray()]);
+        }else{
+            try{
+                $data = new Classes();
+                $data->name = $request->get('name');
+                $data->save();
+    
+                return redirect()->route('daftar-kelas.index')->with('status','Data ruang kelas baru berhasil disimpan');
+            }catch (\PDOException $e) {
+                return redirect()->route('daftar-kelas.index')->with('error', 'Gagal menambah data baru, silahkan coba lagi');
+            }
         }
     }
 
@@ -117,16 +129,28 @@ class ClassesController extends Controller
 
     public function updateData(Request $request){
         $this->authorize('check-admin');
-        $id = $request->get('id');
-        $name = $request->get('name');
-        try{
-            $data = DB::table('class')
-                    ->where('id', $id)
-                    ->update(['name' => $name]);
-                    
-            $request->session()->flash('status','Data ruang kelas berhasil diubah');
-        }catch (\PDOException $e) {
-            $request->session()->flash('error', 'Gagal mengubah data ruang kelas, silahkan coba lagi');
-        }  
+        $validator = \Validator::make($request->all(), [
+            'eName' => 'required',
+        ],
+        [
+            'eName.required' => 'Nama ruang kelas tidak boleh kosong',
+        ]);
+        
+        if (!$validator->passes())
+        {
+            return response()->json(['status'=>0, 'errors'=>$validator->errors()->toArray()]);
+        }else{
+            $id = $request->get('id');
+            $name = $request->get('eName');
+            try{
+                $data = DB::table('class')
+                        ->where('id', $id)
+                        ->update(['name' => $name]);
+                        
+                $request->session()->flash('status','Data ruang kelas berhasil diubah');
+            }catch (\PDOException $e) {
+                $request->session()->flash('error', 'Gagal mengubah data ruang kelas, silahkan coba lagi');
+            }  
+        }
     }
 }

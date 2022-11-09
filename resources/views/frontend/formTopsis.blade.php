@@ -25,6 +25,7 @@
             <div class="form-group">
                 <label>Seberapa penting bagi Anda buku yang direkomendasikan merupakan buku yang telah banyak dipinjam?</label><br>
                 <div style="text-align: center">
+                    <label>Tidak Penting</label>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="radio_borrow" value=1 style="width: 20px; height: 20px">
                         <label class="form-check-label">1</label>
@@ -45,11 +46,13 @@
                         <input class="form-check-input" type="radio" name="radio_borrow" value=5 style="width: 20px; height: 20px">
                         <label class="form-check-label">5</label>
                     </div>
+                    <label>Sangat Penting</label>
                 </div>   
             </div>
             <div class="form-group">
                 <label>Apakah ketebalan buku penting bagi Anda?</label>
                 <div style="text-align: center">
+                    <label>Tidak Penting</label>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="radio_page" value=1 style="width: 20px; height: 20px">
                         <label class="form-check-label">1</label>
@@ -70,11 +73,13 @@
                         <input class="form-check-input" type="radio" name="radio_page" value=5 style="width: 20px; height: 20px">
                         <label class="form-check-label">5</label>
                     </div>
+                    <label>Sangat Penting</label>
                 </div>   
             </div>
             <div class="form-group">
                 <label>Apakah tahun terbitan buku penting bagi Anda?</label>
                 <div style="text-align: center">
+                    <label>Tidak Penting</label>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="radio_publish" value=1 style="width: 20px; height: 20px">
                         <label class="form-check-label">1</label>
@@ -95,11 +100,13 @@
                         <input class="form-check-input" type="radio" name="radio_publish" value=5 style="width: 20px; height: 20px">
                         <label class="form-check-label">5</label>
                     </div>
+                    <label>Sangat Penting</label>
                 </div>   
             </div>
             <div class="form-group">
                 <label>Apakah usia buku di perpustakaan penting bagi Anda?</label>
                 <div style="text-align: center">
+                    <label>Tidak Penting</label>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="radio_age" value=1 style="width: 20px; height: 20px">
                         <label class="form-check-label">1</label>
@@ -120,6 +127,7 @@
                         <input class="form-check-input" type="radio" name="radio_age" value=5 style="width: 20px; height: 20px">
                         <label class="form-check-label">5</label>
                     </div>
+                    <label>Sangat Penting</label>
                 </div>   
             </div>
             <div class="form-group" style="text-align: right">
