@@ -28,6 +28,9 @@ Route::get('/buku-baru','BiblioController@front_newBook');
 Route::post('/rekomendasi-buku', 'BiblioController@topsis');
 Route::get('/form-rekomendasi', 'BiblioController@formTopsis');
 
+// Route::middleware(['isAdmin'])->group(function(){
+//     Route::resource('/register', 'Auth\RegisterController');
+// });
 
 Route::middleware(['auth'])->group(function(){
     // Publisher

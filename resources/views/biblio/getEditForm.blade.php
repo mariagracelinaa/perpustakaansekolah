@@ -254,7 +254,7 @@
                 <span class="text-danger eError-text location_eError"></span>
                 <div class="form-group">
                     <label>Sinopsis Buku</label><br>
-                    <textarea name="synopsis" id="synopsis" rows="10" style="width: 100%" placeholder="Tuliskan sinopsis buku"></textarea>
+                    <textarea name="synopsis" id="synopsis" rows="10" style="width: 100%" placeholder="Tuliskan sinopsis buku">{{$data->synopsis}}</textarea>
                     <span class="text-danger error-text synopsis_error"></span>
                   </div>
             </div>

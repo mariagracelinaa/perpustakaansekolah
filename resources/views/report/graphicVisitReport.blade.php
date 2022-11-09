@@ -157,7 +157,6 @@
         );
         
         // Save PDF
-       
         function convertToPDF(){
             var print_year = $('#year').attr('value');
             const cv = document.getElementById('visitChart');

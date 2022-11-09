@@ -97,9 +97,13 @@
                                             <div class="x_title">
                                             <h2 style="text-align: center">Daftar Item Buku</small></h2>
                                             @if ($count[0]->count == 0)
-                                                <ul class="nav navbar-right panel_toolbox">
-                                                    <a href="/pesan-buku/{{$data->id}}" class="btn btn-primary"><i class="fa fa-plus"></i> Pesan Buku</a>
-                                                </ul>
+                                                @if (Auth::user())
+                                                    <ul class="nav navbar-right panel_toolbox">
+                                                        <a href="/pesan-buku/{{$data->id}}" class="btn btn-primary"><i class="fa fa-plus"></i> Pesan Buku</a>
+                                                    </ul>
+                                                @else
+                                                    <p style="color: red">Anda dapat melakukan pemesanan buku ini dengan masuk menggunakan akun terlebih dahulu</p>
+                                                @endif
                                             @endif
                                             <div class="clearfix"></div>
                                             </div>
@@ -228,9 +232,13 @@
                                             <div class="x_title">
                                             <h2 style="text-align: center">Daftar Item Buku</small></h2>
                                             @if ($count[0]->count == 0)
-                                                <ul class="nav navbar-right panel_toolbox">
-                                                    <a href="/pesan-buku/{{$data->id}}" class="btn btn-primary"><i class="fa fa-plus"></i> Pesan Buku</a>
-                                                </ul>
+                                                @if (Auth::user())
+                                                    <ul class="nav navbar-right panel_toolbox">
+                                                        <a href="/pesan-buku/{{$data->id}}" class="btn btn-primary"><i class="fa fa-plus"></i> Pesan Buku</a>
+                                                    </ul>
+                                                @else
+                                                    <p style="color: red">Anda dapat melakukan pemesanan buku ini dengan masuk menggunakan akun terlebih dahulu</p>
+                                                @endif
                                             @endif
                                             <div class="clearfix"></div>
                                             </div>

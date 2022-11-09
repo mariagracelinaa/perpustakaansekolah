@@ -8,7 +8,7 @@
             {{-- <input type="hidden" name="id" value="{{$data->id}}"> --}}
             <div class="form-group">
               <label>Kategori Buku</label><br>
-              <select name="cathegory" id="cathegory" class="form-control" style="background-color: white">
+              <select name="category" id="category" class="form-control" style="background-color: white">
                 <option value="1000">--- Pilih Kategori ---</option>
                 <option value="000">Karya Umum</option>
                 <option value="100">Filsafat</option>

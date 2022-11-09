@@ -472,9 +472,9 @@ class BiblioController extends Controller
     }
 
     public function topsis(Request $request){
-        // dd($request->get('cathegory'), $request->get('radio_borrow'),$request->get('radio_page'),$request->get('radio_publish'), $request->get('radio_age'));
+        // dd($request->get('category'), $request->get('radio_borrow'),$request->get('radio_page'),$request->get('radio_publish'), $request->get('radio_age'));
 
-        if($request->get('cathegory') == 1000){
+        if($request->get('category') == 1000){
             return redirect()->back()->with('error', 'Kategori buku tidak boleh kosong, pilih salah satu kategori buku yang diinginkan');
         }else{
             // Bobot dari user
@@ -486,7 +486,7 @@ class BiblioController extends Controller
             // Query untuk ambil data buku dari db sesuai kategori DDC user
             $book = DB::table('biblios')
                     ->select()
-                    ->where('ddc','=',$request->get('cathegory'))
+                    ->where('ddc','=',$request->get('category'))
                     ->get();
             // dd($book);
             

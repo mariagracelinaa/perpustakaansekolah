@@ -101,38 +101,27 @@ class BorrowController extends Controller
                         for($j = 0; $j < count($check_booking); $j++){
                             $arr_id[] = $check_booking[$j]->users_id;
                         }
-                        
+
+                        // Simpan tabel borrow_transaction
+                        $auth_biblio = DB::table('borrow_transaction')
+                        ->insert(['borrows_id' => $borrow->id, 'register_num' => $listBook[$i]]);
+
                         // dd($arr_id, $users_id);
                         // cek apakah user yang mau pinjam = yang sudah pesan di daftar pesanan maka catat peminjaman dan hapus dari list pesanan
                         if(in_array($users_id, $arr_id)){
-
-                            $auth_biblio = DB::table('borrow_transaction')
-                                            ->insert(['borrows_id' => $borrow->id, 'register_num' => $listBook[$i]]);
-
-                            // update status ketersediaan item buku
-                            DB::table('items')
-                            ->where('register_num','=',$listBook[$i])
-                            ->update(['status'=> 'dipinjam']);
-
                             // delete dari bookings
                             DB::table('bookings')->where('users_id', '=', $users_id)->where('biblios_id','=',$biblios_id[0]->biblios_id)->delete();
-                          
                         }
-                        else{
-                                // Simpan tabel borrow_transaction
-                            $auth_biblio = DB::table('borrow_transaction')
-                                            ->insert(['borrows_id' => $borrow->id, 'register_num' => $listBook[$i]]);
 
-                            DB::table('items')
-                            ->where('register_num','=',$listBook[$i])
-                            ->update(['status'=> 'dipinjam']);
-                           
-                        }
+                        // update status ketersediaan item buku
+                        DB::table('items')
+                        ->where('register_num','=',$listBook[$i])
+                        ->update(['status'=> 'dipinjam']);
                     }else{
                             // Simpan tabel borrow_transaction
                         $auth_biblio = DB::table('borrow_transaction')
                                         ->insert(['borrows_id' => $borrow->id, 'register_num' => $listBook[$i]]);
-
+                        // update status ketersediaan item buku
                         DB::table('items')
                         ->where('register_num','=',$listBook[$i])
                         ->update(['status'=> 'dipinjam']);
@@ -263,6 +252,7 @@ class BorrowController extends Controller
         $data = DB::table('users')
                 ->leftJoin('class','class.id','=','users.class_id')
                 ->select('users.id','users.nisn','users.niy','users.name','class.name as class', 'users.role')
+                ->where('users.role', '!=', 'admin')
                 ->orderBy('users.name', 'asc')
                 ->get();
 

@@ -55,4 +55,9 @@ class User extends Authenticatable
     }
 
     public $timestamps = false;
+
+    public function isAdmin()
+    {
+        return $this->role == 'admin';
+    }
 }

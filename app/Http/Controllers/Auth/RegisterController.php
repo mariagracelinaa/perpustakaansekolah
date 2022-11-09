@@ -44,7 +44,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware('Perpustakaan SMA Carolus');
+        // $this->middleware('isAdmin');
     }
 
     /**
@@ -70,6 +70,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $this->authorize('check-admin');
         try{
             $nisn = NULL;
             $niy = NULL;
