@@ -169,6 +169,26 @@ class ItemController extends Controller
         return view('report.deleteReport', compact('data'));
     }
 
+    public function deletion_filter(Request $request){
+        $this->authorize('check-admin');
+        if($request->get('filter') == 'source'){
+            $data = DB::table('items')
+                ->join('biblios', 'items.biblios_id','=','biblios.id')
+                ->select('biblios.title', 'items.register_num', 'items.source','items.price',  DB::raw('DATE_FORMAT(items.delete_date, "%d-%m-%Y") as delete_date'))
+                ->where('is_deleted','=',1)
+                ->where('items.source','=',$request->get('source'))
+                ->get();
+        }else if($request->get('filter') == 'date'){
+            $data = DB::table('items')
+                ->join('biblios', 'items.biblios_id','=','biblios.id')
+                ->select('biblios.title', 'items.register_num', 'items.source','items.price',  DB::raw('DATE_FORMAT(items.delete_date, "%d-%m-%Y") as delete_date'))
+                ->where('is_deleted','=',1)
+                ->whereBetween('delete_date', [$request->get('start_date'), $request->get('end_date')])
+                ->get();
+        }
+        return response()->json(array('data' => $data));
+    }
+
     // Cetak laporan penghapusan buku
     public function printDeleteReport(Request $request){
         $this->authorize('check-admin');

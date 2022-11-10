@@ -1,7 +1,28 @@
 @extends('layouts.gentelella')
 
 @section('content')
-<div class="container" style="min-height: 100vh"> 
+<div class="container" style="min-height: 100vh">
+  <div>
+    <label>Filter Data Berdasarkan</label><br>
+    <select name="filter" id="filter" class="form-control">
+        <option value="">-- Pilih Kriteria --</option>
+        <option value="date">Tanggal Kunjungan</option>
+        <option value="role">Kelas/Jabatan</option>
+    </select>
+    <br>
+    <label>Kelas/Jabatan</label>
+    <select name="role" id="role" class="form-control" disabled>
+        <option value="">-- Pilih Kelas/Jabatan --</option>
+        <option value="guru/staf">Guru/Staf</option>
+        @foreach ($class as $c)
+            <option value="{{$c->id}}">{{$c->name}}</option>
+        @endforeach
+    </select>
+    <br>
+    <label>Tanggal Mulai <input type="date" name="date_start" id="date_start" class="form-control" disabled></label>
+    <label style="margin-left: 10px">Tanggal Akhir <input type="date" name="date_end" id="date_end"  class="form-control" disabled></label>
+    <input type="button" value="Tampilkan Data" id="btn_show" class="btn btn-primary" onclick="filterData()" disabled>
+  </div>
   <div class="row">
     <div class="col-md-12 col-sm-12 ">
         <div class="x_panel">
@@ -26,7 +47,7 @@
                           <th>Keperluan</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody id="show_data">
                       @php $no = 1; @endphp
                         @foreach ($data as $d)
                           <tr>
@@ -92,4 +113,78 @@
 @endsection
 
 @section('javascript')
+  <script>
+    // Untuk disable/visible filter
+    $("#filter").change(function () {
+      if($("#filter").val() == "date"){
+        $("#date_start").removeAttr("disabled");
+        $("#btn_show").removeAttr("disabled");
+        $("#date_end").removeAttr("disabled");
+        $("#role").attr('disabled', 'disabled');
+
+        $("#role").val('');
+      }else if($("#filter").val() == "role"){
+        $("#role").removeAttr("disabled");
+        $("#btn_show").removeAttr("disabled");
+        $("#date_start").attr('disabled', 'disabled');
+        $("#date_end").attr('disabled', 'disabled');
+
+        // reset tgl kalau user sdh pilih tgl tapi mengubah filter ke status
+        $("#date_start").val('');
+        $("#date_end").val('');
+      }else{
+        $("#btn_show").attr('disabled', 'disabled');
+        $("#date_start").attr('disabled', 'disabled');
+        $("#date_end").attr('disabled', 'disabled');
+        $("#role").attr('disabled', 'disabled');
+
+        $("#role").val('');
+        $("#date_start").val('');
+        $("#date_end").val('');
+      }
+    });
+
+    // Untuk ambil dan tampilkan data filter dari controller
+    function filterData()
+    {
+      var start_date = $('#date_start').val();
+      var end_date = $('#date_end').val();
+      var role = $('#role').val();
+      var filter = $('#filter').val();
+      $.ajax({
+        type:'POST',
+        url:'{{url("/laporan-kunjungan-filter")}}',
+        data:{
+          '_token': '<?php echo csrf_token() ?>',
+          'start_date': start_date,
+          'end_date' : end_date,
+          'role': role,
+          'filter' : filter,
+        },
+        success:function(data) {
+          var no = 1;
+          var table = $('#custometable').DataTable();
+                  
+          if(jQuery.isEmptyObject(data.data)){
+            // Jika data kosong clear datatablenya
+            table.rows().remove().draw();
+          }else{
+            $('#show_data').html('');
+            $.each(data.data, function(key, value) {
+              var data = "<tr><td style='width: 5%;'>" + no++ + "</td><td>" + value.name + "</td><td>";
+              if(value.class != null){
+                data += value.class;
+              }else{
+                data += "Guru/Staf";
+              }
+
+              data += "</td><td>" + value.visit_time + "</td><td>{{$d->description}}</td></tr>";
+                          
+              $("#show_data").append(data);
+            });
+          }
+        }
+      });
+    }
+  </script>
 @endsection

@@ -390,6 +390,18 @@ class BiblioController extends Controller
         return view('booking.index', compact('data'));
     }
 
+    public function bookingList_filter(Request $request){
+        $this->authorize('check-admin');
+        $data = DB::table('bookings')
+                ->join('biblios', 'biblios.id','=','bookings.biblios_id')
+                ->join('users','users.id','=','bookings.users_id')
+                ->select('users.name', 'biblios.title', DB::raw('DATE_FORMAT(bookings.booking_date, "%d-%m-%Y") as booking_date'),'bookings.description')
+                ->whereBetween('booking_date', [$request->get('start_date'), $request->get('end_date')])
+                ->orderBy('booking_date','ASC')
+                ->get();
+        return response()->json(array('data' => $data));
+    }
+
     // ----------------------------------------- FRONT END ------------------------------------------------
 
     public function front_index(){

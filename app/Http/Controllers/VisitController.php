@@ -189,12 +189,47 @@ class VisitController extends Controller
         $data = DB::table('visits')
                 ->join('users','users.id','=','visits.users_id')
                 ->leftJoin('class','class.id','=','users.class_id')
-                ->select('visits.*','users.*','class.name as class')
+                ->select(DB::raw('DATE_FORMAT(visits.visit_time, "%d-%m-%Y") as visit_time'),'visits.description','users.name','class.name as class')
                 ->orderBy('visits.id', 'asc')
                 ->get();
+        
+        $class = DB::table('class')->select()->get();
 
         // dd($data);
-        return view('report.visitList', compact('data'));
+        return view('report.visitList', compact('data', 'class'));
+    }
+
+    public function listVisit_filter(Request $request){
+        $this->authorize('check-admin');
+        if($request->get('filter') == 'role'){
+            if($request->get('role') == 'guru/staf'){
+                $data = DB::table('visits')
+                    ->join('users','users.id','=','visits.users_id')
+                    ->leftJoin('class','class.id','=','users.class_id')
+                    ->select(DB::raw('DATE_FORMAT(visits.visit_time, "%d-%m-%Y") as visit_time'),'visits.description','users.name','class.name as class')
+                    ->where('users.role','=',$request->get('role'))
+                    ->orderBy('visits.id', 'asc')
+                    ->get();
+            }else{
+                $data = DB::table('visits')
+                    ->join('users','users.id','=','visits.users_id')
+                    ->leftJoin('class','class.id','=','users.class_id')
+                    ->select(DB::raw('DATE_FORMAT(visits.visit_time, "%d-%m-%Y") as visit_time'),'visits.description','users.name','class.name as class')
+                    ->where('class.id','=',$request->get('role'))
+                    ->orderBy('visits.id', 'asc')
+                    ->get();
+            }
+        }else if($request->get('filter') == 'date'){
+            $data = DB::table('visits')
+                    ->join('users','users.id','=','visits.users_id')
+                    ->leftJoin('class','class.id','=','users.class_id')
+                    ->select(DB::raw('DATE_FORMAT(visits.visit_time, "%d-%m-%Y") as visit_time'),'visits.description','users.name','class.name as class')
+                    ->whereBetween('visits.visit_time', [$request->get('start_date'), $request->get('end_date')])
+                    ->orderBy('visits.id', 'asc')
+                    ->get();
+        }
+        // dd($data);
+        return response()->json(array('data' => $data));
     }
 
     public function addVisit(Request $request){

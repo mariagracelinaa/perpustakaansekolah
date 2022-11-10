@@ -153,6 +153,33 @@ class SuggestionController extends Controller
         return view('report.printSuggestionReport', compact('data', 'start', 'end', 'today'));
     }
 
+    public function filter_data(Request $request){
+        $this->authorize('check-admin');
+        // dd($request->get('start_date'), $request->get('end_date'), $request->get('status'), $request->get('filter'));
+        if($request->get('filter') == 'status'){
+            // dd('masuk ke query seect where status');
+            // $data = Suggestion::where('status','=', $request->get('status'))->get();
+
+            $data = DB::table('suggestions')
+                    ->join('users','users.id','=','suggestions.users_id')
+                    ->select('users.name', 'suggestions.title','suggestions.author', 'suggestions.publisher', 'suggestions.description', 'suggestions.status', DB::raw('DATE_FORMAT(suggestions.date, "%d-%m-%Y") as date'))
+                    ->where('status','=', $request->get('status'))
+                    ->get();
+        
+            // dd($data);
+        }else if($request->get('filter') == 'date'){
+            // dd('masuk ke query seect where between tgl');
+            // $data = Suggestion::whereBetween('date', [$request->get('start_date'), $request->get('end_date')])->get();
+            // dd($data);
+            $data = DB::table('suggestions')
+                    ->join('users','users.id','=','suggestions.users_id')
+                    ->select('users.name', 'suggestions.title','suggestions.author', 'suggestions.publisher', 'suggestions.description', 'suggestions.status', DB::raw('DATE_FORMAT(suggestions.date, "%d-%m-%Y") as date'))
+                    ->whereBetween('date', [$request->get('start_date'), $request->get('end_date')])
+                    ->get();
+        }
+        return response()->json(array('data' => $data));
+    }
+
     // ----------------------------------------- FRONT END ------------------------------------------------
     protected function validatorSuggestion(array $data)
     {

@@ -61,6 +61,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('daftar-penghapusan-buku','ItemController@deletion');
     Route::get('/cetak-laporan-penghapusan','ItemController@printDeleteReport')->name('daftar-penghapusan-buku.printDeleteReport');
     Route::get('/daftar-pesanan','BiblioController@bookingList');
+    Route::post('/daftar-pemesanan-filter','BiblioController@bookingList_filter');
 
     //User Akses
     Route::get('/pesan-buku/{id}','BiblioController@formBooking');
@@ -99,6 +100,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/kunjungan/getAddForm','VisitController@getAddForm')->name('kunjungan.getAddForm');
     Route::post('/tambah-kunjungan','VisitController@addVisit')->name('kunjungan.addVisit');
     Route::get('/laporan-kunjungan','VisitController@listVisit');
+    Route::post('/laporan-kunjungan-filter', 'VisitController@listVisit_filter');
     Route::get('/cetak-laporan-kunjungan','VisitController@printVisitReport');
     // User
     Route::get('/form-masuk','VisitController@getVisitForm');
@@ -116,6 +118,8 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/aksi-ubah-data', 'UserController@editDataUserAdmin');
     Route::get('/non-aktif-user/{id}','UserController@is_active');
 
+    Route::post('/daftar-usulan-buku-filter', 'SuggestionController@filter_data');
+
     // User akses
     Route::get('/profil/{id}', 'UserController@getProfileUser');
     Route::post('/editPassword', 'UserController@editPasswordUser');
@@ -127,4 +131,6 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/ubah-usulan/{id}', 'SuggestionController@getEditFormUser');
     Route::post('/ubah-usulan-catat', 'SuggestionController@editSuggestion');
     Route::get('/hapus-usulan/{id}', 'SuggestionController@deleteSuggestionUser');
+
+    Route::post('/daftar-penghapusan-filter', 'ItemController@deletion_filter');
 });

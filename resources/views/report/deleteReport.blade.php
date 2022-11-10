@@ -1,7 +1,26 @@
 @extends('layouts.gentelella')
 
 @section('content')
-<div class="container" style="min-height: 100vh"> 
+<div class="container" style="min-height: 100vh">
+  <div>
+    <label>Filter Data Berdasarkan</label><br>
+    <select name="filter" id="filter" class="form-control">
+        <option value="">-- Pilih Kriteria --</option>
+        <option value="date">Tanggal Penghapusan</option>
+        <option value="source">Sumber</option>
+    </select>
+    <br>
+    <label>Sumber Buku</label>
+    <select name="source" id="source" class="form-control" disabled>
+        <option value="">-- Pilih Sumber Buku --</option>
+        <option value="hadiah">Hadiah</option>
+        <option value="pembelian">Pembelian</option>
+    </select>
+    <br>
+    <label>Tanggal Mulai <input type="date" name="date_start" id="date_start" class="form-control" disabled></label>
+    <label style="margin-left: 10px">Tanggal Akhir <input type="date" name="date_end" id="date_end"  class="form-control" disabled></label>
+    <input type="button" value="Tampilkan Data" id="btn_show" class="btn btn-primary" onclick="filterData()" disabled>
+  </div>
   <div class="row">
     <div class="col-md-12 col-sm-12 ">
         <div class="x_panel">
@@ -28,7 +47,7 @@
                   <th>Deskripsi</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="show_data">
               @php $no = 1; $i = 0 @endphp
                 @foreach ($data as $del)
                   <tr>
@@ -94,4 +113,81 @@
   </div>
 </div>
 {{-- Modal end --}}
+@endsection
+
+@section('javascript')
+    <script>
+      // Untuk disable/visible filter
+      $("#filter").change(function () {
+          if($("#filter").val() == "date"){
+              $("#date_start").removeAttr("disabled");
+              $("#btn_show").removeAttr("disabled");
+              $("#date_end").removeAttr("disabled");
+              $("#source").attr('disabled', 'disabled');
+
+              $("#source").val('');
+          }else if($("#filter").val() == "source"){
+              $("#source").removeAttr("disabled");
+              $("#btn_show").removeAttr("disabled");
+              $("#date_start").attr('disabled', 'disabled');
+              $("#date_end").attr('disabled', 'disabled');
+
+              // reset tgl kalau user sdh pilih tgl tapi mengubah filter ke status
+              $("#date_start").val('');
+              $("#date_end").val('');
+          }else{
+              $("#btn_show").attr('disabled', 'disabled');
+              $("#date_start").attr('disabled', 'disabled');
+              $("#date_end").attr('disabled', 'disabled');
+              $("#source").attr('disabled', 'disabled');
+
+              $("#source").val('');
+              $("#date_start").val('');
+              $("#date_end").val('');
+          }
+      });
+
+      // Untuk ambil dan tampilkan data filter dari controller
+      function filterData()
+      {
+          var start_date = $('#date_start').val();
+          var end_date = $('#date_end').val();
+          var source = $('#source').val();
+          var filter = $('#filter').val();
+          $.ajax({
+              type:'POST',
+              url:'{{url("/daftar-penghapusan-filter")}}',
+              data:{
+                      '_token': '<?php echo csrf_token() ?>',
+                      'start_date': start_date,
+                      'end_date' : end_date,
+                      'source': source,
+                      'filter' : filter,
+                  },
+              success:function(data) {
+                  var no = 1;
+                  var table = $('#custometable').DataTable();
+                  
+                  if(jQuery.isEmptyObject(data.data)){
+                      // Jika data kosong clear datatablenya
+                      table.rows().remove().draw();
+                  }else{
+                      $('#show_data').html('');
+                      $.each(data.data, function(key, value) {
+                        var data = "<tr><td>"+ no++ +"</td><td>" + value.register_num + "</td><td>{{$del->title}}</td><td>";
+
+                        if(value.source == 'pembelian')
+                            data += "Pembelian";
+                        else
+                            data += "Hadiah";
+                    
+                        data += "</td><td style='text-align: right'>"+ value.price + "</td><td>"+ value.delete_date +"</td><td>{{$del->delete_description}}</td></tr>";
+                          
+                        $("#show_data").append(data);
+                      });
+                  }
+              }
+          });
+      }
+    </script>
 @endsection
