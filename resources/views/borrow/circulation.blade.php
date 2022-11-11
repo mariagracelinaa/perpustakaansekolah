@@ -1,7 +1,55 @@
 @extends('layouts.gentelella')
 
 @section('content')
-<div class="container" style="min-height: 100vh"> 
+<div class="container" style="min-height: 100vh">
+  <div>
+    <form action="{{url('/sirkulasi-buku-filter')}}">
+      <label>Filter Data Berdasarkan</label><br>
+      <select name="filter" id="filter" class="form-control">
+        @if ($filter == "")
+          <option value="" selected>-- Pilih Kriteria --</option>
+        @else
+          <option value="">-- Pilih Kriteria --</option>
+        @endif
+
+        @if ($filter == 'role')
+          <option value="role" selected>Kelas/Jabatan</option>
+        @else
+          <option value="role">Kelas/Jabatan</option>
+        @endif
+      </select>
+      <br>
+      <label>Kelas/Jabatan</label>
+      <select name="role" id="role" class="form-control" disabled>
+          @if ($role == "")
+              <option value="" selected>-- Pilih Kelas/Jabatan --</option>
+          @else
+              <option value="">-- Pilih Kelas/Jabatan --</option>
+          @endif
+          
+          @if ($role == 'guru/staf')
+            <option value="guru/staf" selected>Guru/Staf</option>
+          @else
+            <option value="guru/staf">Guru/Staf</option>
+          @endif
+
+          @if ($role == 'murid')
+            <option value="murid" selected>Murid</option>
+          @else
+            <option value="murid">Murid</option>
+          @endif
+
+          @foreach ($class as $c)
+            @if ($role == $c->id)
+                <option value="{{$c->id}}" selected>Kelas {{$c->name}}</option>
+            @else
+                <option value="{{$c->id}}">Kelas {{$c->name}}</option>
+            @endif
+          @endforeach
+      </select><br>
+      <input type="submit" value="Tampilkan Data" id="btn_show" class="btn btn-primary" disabled>
+    </form>
+  </div>
   <div class="row">
     <div class="col-md-12 col-sm-12 ">
         <div class="x_panel">
@@ -23,7 +71,7 @@
                   <th>Aksi</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="show_data">
               @php $no = 1; @endphp
                 @foreach ($data as $d)
                   <tr>
@@ -66,6 +114,28 @@
 
 @section('javascript')
 <script>
-    
+    $( document ).ready(function() {
+      if($("#filter").val() == "role"){
+        $("#role").removeAttr("disabled");
+        $("#btn_show").removeAttr("disabled");
+      }else{
+        $("#btn_show").attr('disabled', 'disabled');
+        $("#role").attr('disabled', 'disabled');
+
+        $("#role").val('');
+      }  
+    });
+
+    $("#filter").change(function () {
+      if($("#filter").val() == "role"){
+        $("#role").removeAttr("disabled");
+        $("#btn_show").removeAttr("disabled");
+      }else{
+        $("#btn_show").attr('disabled', 'disabled');
+        $("#role").attr('disabled', 'disabled');
+
+        $("#role").val('');
+      }
+    });
 </script>
 @endsection

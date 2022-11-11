@@ -159,34 +159,43 @@ class ItemController extends Controller
     // Laporan penghapusan buku (Tabel deletions)
     public function deletion(){
         $this->authorize('check-admin');
+        $filter = "";
+        $source = "";
+        $start = "";
+        $end = "";
         $data = DB::table('items')
                 ->join('biblios', 'items.biblios_id','=','biblios.id')
-                ->select('biblios.title', 'items.*')
+                ->select('biblios.title', 'items.register_num', 'items.source','items.price',  DB::raw('DATE_FORMAT(items.delete_date, "%d-%m-%Y") as delete_date'), 'items.delete_description')
                 ->where('is_deleted','=',1)
                 ->get();
         // dd($data);
 
-        return view('report.deleteReport', compact('data'));
+        return view('report.deleteReport', compact('data','filter', 'source','start','end'));
     }
 
     public function deletion_filter(Request $request){
         $this->authorize('check-admin');
-        if($request->get('filter') == 'source'){
+        $filter = $request->get('filter');
+        $source = $request->get('source');
+        $start = $request->get('date_start');
+        $end = $request->get('date_end');
+        if($filter == 'source'){
             $data = DB::table('items')
                 ->join('biblios', 'items.biblios_id','=','biblios.id')
-                ->select('biblios.title', 'items.register_num', 'items.source','items.price',  DB::raw('DATE_FORMAT(items.delete_date, "%d-%m-%Y") as delete_date'))
+                ->select('biblios.title', 'items.register_num', 'items.source','items.price',  DB::raw('DATE_FORMAT(items.delete_date, "%d-%m-%Y") as delete_date'), 'items.delete_description')
                 ->where('is_deleted','=',1)
-                ->where('items.source','=',$request->get('source'))
+                ->where('items.source','=',$source)
                 ->get();
-        }else if($request->get('filter') == 'date'){
+        }else if($filter == 'date'){
             $data = DB::table('items')
                 ->join('biblios', 'items.biblios_id','=','biblios.id')
-                ->select('biblios.title', 'items.register_num', 'items.source','items.price',  DB::raw('DATE_FORMAT(items.delete_date, "%d-%m-%Y") as delete_date'))
+                ->select('biblios.title', 'items.register_num', 'items.source','items.price',  DB::raw('DATE_FORMAT(items.delete_date, "%d-%m-%Y") as delete_date'), 'items.delete_description')
                 ->where('is_deleted','=',1)
-                ->whereBetween('delete_date', [$request->get('start_date'), $request->get('end_date')])
+                ->whereBetween('delete_date', [$start, $end])
                 ->get();
         }
-        return response()->json(array('data' => $data));
+        // return response()->json(array('data' => $data));
+        return view('report.deleteReport', compact('data','filter', 'source','start','end'));
     }
 
     // Cetak laporan penghapusan buku

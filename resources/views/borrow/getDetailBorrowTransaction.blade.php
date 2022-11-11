@@ -26,16 +26,13 @@
                     @else
                         -
                     @endif
-                    
                 </td>
                 <td style="text-align: right">{{number_format($bt->fine)}}</td>
-                <td>
-                    @if($bt->status == 'belum kembali')
-                        Belum Kembali
-                    @elseif($bt->status == 'sudah kembali')
-                        Sudah Kembali
-                    @endif
-                </td>
+                @if($bt->status == 'belum kembali')
+                  <td style="background-color: rgb(255, 254, 170)">Belum Kembali</td>  
+                @elseif($bt->status == 'sudah kembali')
+                  <td style="background-color: rgb(142, 255, 159)">Sudah Kembali</td>  
+                @endif
             </tr>
           @endforeach
         </tbody>

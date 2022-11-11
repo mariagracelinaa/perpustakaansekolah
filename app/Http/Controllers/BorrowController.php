@@ -20,35 +20,67 @@ class BorrowController extends Controller
     public function index()
     {
         $this->authorize('check-admin');
+        $filter = "";
+        $start = "";
+        $end = "";
+
         $result = DB::table('borrows')
                 ->join('users','users.id','=','borrows.users_id')
                 ->select('borrows.*','users.name')
                 ->orderBy('borrows.id','desc')
                 ->get();
-        return view('borrow.index', compact('result'));
+        return view('borrow.index', compact('result','filter','start','end'));
     }
 
-    // public function filter(Request $request){
-    //     $start = $request->get('start');
-    //     $end = $request->get('end');
+    public function index_filter(Request $request){
+        $filter = $request->get('filter');
+        $start = $request->get('date_start');
+        $end = $request->get('date_end');
 
-    //     // $start = '2022-10-03';
-    //     // $end = '2022-10-04';
-    //     if($start != null && $end != null){
-    //         $result = DB::table('borrows')
-    //             ->join('users','users.id','=','borrows.users_id')
-    //             ->select('borrows.*','users.name')
-    //             ->whereBetween('borrows.borrow_date', [$start,$end])
-    //             ->get();
-    //     }else{
-    //         $result = DB::table('borrows')
-    //             ->join('users','users.id','=','borrows.users_id')
-    //             ->select('borrows.*','users.name')
-    //             ->get();
-    //     }
+        if($filter == "date_borrow"){
+            $result = DB::table('borrows')
+                ->join('users','users.id','=','borrows.users_id')
+                ->select('borrows.*','users.name')
+                ->whereBetween('borrows.borrow_date', [$start,$end])
+                ->orderBy('borrows.id','desc')
+                ->get();
+        }else if($filter == "due_date"){
+            $result = DB::table('borrows')
+                ->join('users','users.id','=','borrows.users_id')
+                ->select('borrows.*','users.name')
+                ->whereBetween('borrows.due_date', [$start,$end])
+                ->orderBy('borrows.id','desc')
+                ->get();
+        }else if($filter == "complete_borrow"){
+            $result = DB::table('borrows')
+                ->join('users','users.id','=','borrows.users_id')
+                ->join('borrow_transaction','borrows.id','=','borrow_transaction.borrows_id')
+                ->select('borrows.*','users.name')
+                ->where('borrow_transaction.status','=','sudah kembali')
+                ->orderBy('borrows.id','desc')
+                ->get();
+
+            // dd($result);
+        }else if($filter == "active_borrow"){
+            $result = DB::table('borrows')
+                ->join('users','users.id','=','borrows.users_id')
+                ->join('borrow_transaction','borrows.id','=','borrow_transaction.borrows_id')
+                ->select('borrows.*','users.name')
+                ->where('borrow_transaction.status','=','belum kembali')
+                ->orderBy('borrows.id','desc')
+                ->get();
+
+            // dd($result);
+        }else{
+            $result = DB::table('borrows')
+                ->join('users','users.id','=','borrows.users_id')
+                ->select('borrows.*','users.name')
+                ->orderBy('borrows.id','desc')
+                ->get();
+        }
         
-    //     echo json_encode($result);
-    // }
+        return view('borrow.index', compact('result','filter','start','end'));
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -249,6 +281,9 @@ class BorrowController extends Controller
 
     public function listUser(){
         $this->authorize('check-admin');
+        $filter = "";
+        $role = "";
+
         $data = DB::table('users')
                 ->leftJoin('class','class.id','=','users.class_id')
                 ->select('users.id','users.nisn','users.niy','users.name','class.name as class', 'users.role')
@@ -256,8 +291,54 @@ class BorrowController extends Controller
                 ->orderBy('users.name', 'asc')
                 ->get();
 
+        $class = DB::table('class')
+                ->select()
+                ->get();
+
         // dd($data);
-        return view('borrow.circulation', compact('data'));
+        return view('borrow.circulation', compact('data','class','filter', 'role'));
+    }
+
+    public function listUser_filter(Request $request){
+        $this->authorize('check-admin');
+
+        $filter = $request->get('filter');
+        $role = $request->get('role');
+
+        if($request->get('role') == "guru/staf"){
+            $data = DB::table('users')
+                ->leftJoin('class','class.id','=','users.class_id')
+                ->select('users.id','users.nisn','users.niy','users.name','class.name as class', 'users.role')
+                ->where('users.role', '=', 'guru/staf')
+                ->orderBy('users.name', 'asc')
+                ->get();
+        }else if($request->get('role') == 'murid'){
+            $data = DB::table('users')
+                ->leftJoin('class','class.id','=','users.class_id')
+                ->select('users.id','users.nisn','users.niy','users.name','class.name as class', 'users.role')
+                ->where('users.role', '=', 'murid')
+                ->orderBy('users.name', 'asc')
+                ->get();
+        }else if($request->get('role') == ""){
+            $data = DB::table('users')
+                ->leftJoin('class','class.id','=','users.class_id')
+                ->select('users.id','users.nisn','users.niy','users.name','class.name as class', 'users.role')
+                ->where('users.role', '!=', 'admin')
+                ->orderBy('users.name', 'asc')
+                ->get();
+        }else{
+            $data = DB::table('users')
+                ->leftJoin('class','class.id','=','users.class_id')
+                ->select('users.id','users.nisn','users.niy','users.name','class.name as class', 'users.role')
+                ->where('class.id', '=', $request->get('role'))
+                ->orderBy('users.name', 'asc')
+                ->get();
+        }
+        
+        $class = DB::table('class')
+                ->select()
+                ->get();
+        return view('borrow.circulation', compact('data','class','filter', 'role'));
     }
 
     // untuk dihalaman tambah sirkulasi buku/peminjaman

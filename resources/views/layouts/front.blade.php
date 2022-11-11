@@ -91,19 +91,27 @@
                 <div class="nav-item dropdown">
                     <a href="/" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Layanan</a>
                     <div class="dropdown-menu fade-down m-0">
-                        <a href="/buku-baru" class="dropdown-item">Buku Baru</a>
                         <a href="/koleksi-buku" class="dropdown-item">Koleksi Buku</a>
+                        <a href="/buku-baru" class="dropdown-item">Buku Baru</a>
                         <a href="/form-rekomendasi" class="dropdown-item">Cari Rekomendasi Buku</a>
                     </div>
                 </div>
                 @if (Auth::user())
-                    <a href="/form-masuk" class="nav-item nav-link">Buku Tamu</a>
+                    <div class="nav-item dropdown">
+                        <a href="/" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Buku Tamu</a>
+                        <div class="dropdown-menu fade-down m-0">
+                            <a href="/form-masuk" class="dropdown-item">Masuk Mandiri</a>
+                            <a href="" class="dropdown-item">QR Code</a>
+                        </div>
+                    </div>
+                    <a href="{{url('/daftar-usulan')}}" class="nav-item nav-link">Daftar Usulan Buku</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-user" aria-hidden="true"></i> {{Auth::user()->name}}</a>
                         <div class="dropdown-menu fade-down m-0">
                             <a href="{{url('/daftar-pinjaman/'.Auth::user()->id)}}" class="dropdown-item">Pinjaman Saya</a>
                             <a href="{{url('/daftar-pesanan/'.Auth::user()->id)}}" class="dropdown-item">Pesanan Saya</a>
-                            <a href="/daftar-usulan" class="dropdown-item">Usulan Buku</a>
+                            <a href="{{url('/riwayat-kunjungan/'.Auth::User()->id)}}" class="dropdown-item">Riwayat Kunjungan</a>
+                            <a href="/usulan-saya/{{Auth::User()->id}}" class="dropdown-item">Usulan Buku Saya</a>
                             <a href="{{url('/profil/'.Auth::user()->id)}}" class="dropdown-item">Profil</a>
                             <a href="{{url('logout')}}" class="dropdown-item">Keluar</a>
                         </div>

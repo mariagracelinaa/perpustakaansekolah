@@ -380,6 +380,8 @@ class BiblioController extends Controller
 
     public function bookingList(){
         $this->authorize('check-admin');
+        $start = "";
+        $end = "";
         $data = DB::table('bookings')
                 ->join('biblios', 'biblios.id','=','bookings.biblios_id')
                 ->join('users','users.id','=','bookings.users_id')
@@ -387,19 +389,21 @@ class BiblioController extends Controller
                 ->orderBy('booking_date','ASC')
                 ->get();
         // dd($data);
-        return view('booking.index', compact('data'));
+        return view('booking.index', compact('data', 'start', 'end'));
     }
 
     public function bookingList_filter(Request $request){
         $this->authorize('check-admin');
+        $start = $request->get('date_start');
+        $end = $request->get('date_end');
         $data = DB::table('bookings')
                 ->join('biblios', 'biblios.id','=','bookings.biblios_id')
                 ->join('users','users.id','=','bookings.users_id')
                 ->select('users.name', 'biblios.title', DB::raw('DATE_FORMAT(bookings.booking_date, "%d-%m-%Y") as booking_date'),'bookings.description')
-                ->whereBetween('booking_date', [$request->get('start_date'), $request->get('end_date')])
+                ->whereBetween('booking_date', [$start, $end])
                 ->orderBy('booking_date','ASC')
                 ->get();
-        return response()->json(array('data' => $data));
+        return view('booking.index', compact('data', 'start', 'end'));
     }
 
     // ----------------------------------------- FRONT END ------------------------------------------------

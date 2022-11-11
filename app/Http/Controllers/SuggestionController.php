@@ -19,10 +19,50 @@ class SuggestionController extends Controller
     public function index()
     {
         $this->authorize('check-admin');
-        $data = Suggestion::where('is_deleted','=',0)->get();
-        
+        $data = DB::table('suggestions')
+            ->join('users','users.id','=','suggestions.users_id')
+            ->select('suggestions.id','users.name', 'suggestions.title','suggestions.author', 'suggestions.publisher', 'suggestions.description', 'suggestions.status', DB::raw('DATE_FORMAT(suggestions.date, "%d-%m-%Y") as date'))
+            ->where('is_deleted','=',0)
+            ->get();
+            
+        $filter = "";
+        $start = "";
+        $end = "";
+        $status = "";
         // dd($data);
-        return view('suggestion.index', compact('data'));
+        return view('suggestion.index', compact('data', 'filter', 'start', 'end', 'status'));
+    }
+
+    public function filter_data(Request $request){
+        $this->authorize('check-admin');
+        // dd($request->get('start_date'), $request->get('end_date'), $request->get('status'), $request->get('filter'));
+        $filter = $request->get('filter');
+        $start = $request->get('date_start');
+        $end = $request->get('date_end');
+        $status = $request->get('status');
+        // dd($filter,$status);
+        if($filter == 'status'){
+            // dd('masuk ke query seect where status');
+            // $data = Suggestion::where('status','=', $request->get('status'))->get();
+
+            $data = DB::table('suggestions')
+                    ->join('users','users.id','=','suggestions.users_id')
+                    ->select('suggestions.id','users.name', 'suggestions.title','suggestions.author', 'suggestions.publisher', 'suggestions.description', 'suggestions.status', DB::raw('DATE_FORMAT(suggestions.date, "%d-%m-%Y") as date'))
+                    ->where('status','=', $status)
+                    ->get();
+        
+            // dd($data);
+        }else if($filter == 'date'){
+            // dd('masuk ke query seect where between tgl');
+            // $data = Suggestion::whereBetween('date', [$request->get('start_date'), $request->get('end_date')])->get();
+            // dd($data);
+            $data = DB::table('suggestions')
+                    ->join('users','users.id','=','suggestions.users_id')
+                    ->select('suggestions.id','users.name', 'suggestions.title','suggestions.author', 'suggestions.publisher', 'suggestions.description', 'suggestions.status', DB::raw('DATE_FORMAT(suggestions.date, "%d-%m-%Y") as date'))
+                    ->whereBetween('date', [$start, $end])
+                    ->get();
+        }
+        return view('suggestion.index', compact('data', 'filter', 'start', 'end', 'status'));
     }
 
     /**
@@ -151,33 +191,6 @@ class SuggestionController extends Controller
         $end = strftime('%d %B %Y', strtotime($end));
         // dd($data);
         return view('report.printSuggestionReport', compact('data', 'start', 'end', 'today'));
-    }
-
-    public function filter_data(Request $request){
-        $this->authorize('check-admin');
-        // dd($request->get('start_date'), $request->get('end_date'), $request->get('status'), $request->get('filter'));
-        if($request->get('filter') == 'status'){
-            // dd('masuk ke query seect where status');
-            // $data = Suggestion::where('status','=', $request->get('status'))->get();
-
-            $data = DB::table('suggestions')
-                    ->join('users','users.id','=','suggestions.users_id')
-                    ->select('users.name', 'suggestions.title','suggestions.author', 'suggestions.publisher', 'suggestions.description', 'suggestions.status', DB::raw('DATE_FORMAT(suggestions.date, "%d-%m-%Y") as date'))
-                    ->where('status','=', $request->get('status'))
-                    ->get();
-        
-            // dd($data);
-        }else if($request->get('filter') == 'date'){
-            // dd('masuk ke query seect where between tgl');
-            // $data = Suggestion::whereBetween('date', [$request->get('start_date'), $request->get('end_date')])->get();
-            // dd($data);
-            $data = DB::table('suggestions')
-                    ->join('users','users.id','=','suggestions.users_id')
-                    ->select('users.name', 'suggestions.title','suggestions.author', 'suggestions.publisher', 'suggestions.description', 'suggestions.status', DB::raw('DATE_FORMAT(suggestions.date, "%d-%m-%Y") as date'))
-                    ->whereBetween('date', [$request->get('start_date'), $request->get('end_date')])
-                    ->get();
-        }
-        return response()->json(array('data' => $data));
     }
 
     // ----------------------------------------- FRONT END ------------------------------------------------

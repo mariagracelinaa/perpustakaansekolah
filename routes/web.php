@@ -28,6 +28,10 @@ Route::get('/buku-baru','BiblioController@front_newBook');
 Route::post('/rekomendasi-buku', 'BiblioController@topsis');
 Route::get('/form-rekomendasi', 'BiblioController@formTopsis');
 
+// Absensi tanpa login
+Route::get('/absensi-perpustakaan','VisitController@getFormAbsensi');
+Route::post('/absensi-perpustakaan-catat','VisitController@add_visit');
+
 // Route::middleware(['isAdmin'])->group(function(){
 //     Route::resource('/register', 'Auth\RegisterController');
 // });
@@ -61,7 +65,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('daftar-penghapusan-buku','ItemController@deletion');
     Route::get('/cetak-laporan-penghapusan','ItemController@printDeleteReport')->name('daftar-penghapusan-buku.printDeleteReport');
     Route::get('/daftar-pesanan','BiblioController@bookingList');
-    Route::post('/daftar-pemesanan-filter','BiblioController@bookingList_filter');
+    Route::get('/daftar-pemesanan-filter','BiblioController@bookingList_filter');
 
     //User Akses
     Route::get('/pesan-buku/{id}','BiblioController@formBooking');
@@ -78,9 +82,11 @@ Route::middleware(['auth'])->group(function(){
     //Borrow + borrow transaction
     //Admin Akses
     Route::resource('daftar-peminjaman', 'BorrowController');
+    Route::get('/daftar-peminjaman-filter', 'BorrowController@index_filter');
     Route::post('/check-sebelum-tambah','BorrowController@check_before_add_circulation');
     Route::post('/grafik-pinjaman-filter', 'BorrowController@graphicYear');
     Route::get('/sirkulasi-buku','BorrowController@listUser');
+    Route::get('/sirkulasi-buku-filter','BorrowController@listUser_filter');
     Route::post('/daftar-peminjaman/getDetail','BorrowController@getDetail')->name('daftar-peminjaman.getDetail');
     Route::get('/grafik-peminjaman','BorrowController@graphic');
     Route::get('sirkulasi-detail/{id}','BorrowController@detailCirculation');
@@ -100,11 +106,12 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/kunjungan/getAddForm','VisitController@getAddForm')->name('kunjungan.getAddForm');
     Route::post('/tambah-kunjungan','VisitController@addVisit')->name('kunjungan.addVisit');
     Route::get('/laporan-kunjungan','VisitController@listVisit');
-    Route::post('/laporan-kunjungan-filter', 'VisitController@listVisit_filter');
+    Route::get('/laporan-kunjungan-filter', 'VisitController@listVisit_filter');
     Route::get('/cetak-laporan-kunjungan','VisitController@printVisitReport');
     // User
     Route::get('/form-masuk','VisitController@getVisitForm');
     Route::post('/masuk-perpustakaan-catat','VisitController@visitUserAdd');
+    Route::get('/riwayat-kunjungan/{id}', 'VisitController@history_visit');
 
     // User + suggestion
     Route::get('daftar-murid', 'UserController@student');
@@ -118,7 +125,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/aksi-ubah-data', 'UserController@editDataUserAdmin');
     Route::get('/non-aktif-user/{id}','UserController@is_active');
 
-    Route::post('/daftar-usulan-buku-filter', 'SuggestionController@filter_data');
+    Route::get('/daftar-usulan-buku-filter', 'SuggestionController@filter_data');
 
     // User akses
     Route::get('/profil/{id}', 'UserController@getProfileUser');
@@ -132,5 +139,5 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/ubah-usulan-catat', 'SuggestionController@editSuggestion');
     Route::get('/hapus-usulan/{id}', 'SuggestionController@deleteSuggestionUser');
 
-    Route::post('/daftar-penghapusan-filter', 'ItemController@deletion_filter');
+    Route::get('/daftar-penghapusan-filter', 'ItemController@deletion_filter');
 });

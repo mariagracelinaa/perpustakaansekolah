@@ -186,6 +186,11 @@ class VisitController extends Controller
 
     public function listVisit(){
         $this->authorize('check-admin');
+        $filter = "";
+        $start = "";
+        $end = "";
+        $role = "";
+
         $data = DB::table('visits')
                 ->join('users','users.id','=','visits.users_id')
                 ->leftJoin('class','class.id','=','users.class_id')
@@ -196,40 +201,56 @@ class VisitController extends Controller
         $class = DB::table('class')->select()->get();
 
         // dd($data);
-        return view('report.visitList', compact('data', 'class'));
+        return view('report.visitList', compact('data', 'class', 'start', 'end', 'role', 'filter'));
     }
 
     public function listVisit_filter(Request $request){
         $this->authorize('check-admin');
-        if($request->get('filter') == 'role'){
-            if($request->get('role') == 'guru/staf'){
+        // dd($request->get('filter'));
+        $filter = $request->get('filter');
+        $start = $request->get('date_start');
+        $end = $request->get('date_end');
+        $role = $request->get('role');
+        // dd($filter, $role, $start, $end);
+        if($filter == 'role'){
+            if( $role == 'guru/staf'){
                 $data = DB::table('visits')
                     ->join('users','users.id','=','visits.users_id')
                     ->leftJoin('class','class.id','=','users.class_id')
                     ->select(DB::raw('DATE_FORMAT(visits.visit_time, "%d-%m-%Y") as visit_time'),'visits.description','users.name','class.name as class')
-                    ->where('users.role','=',$request->get('role'))
+                    ->where('users.role','=',$role)
                     ->orderBy('visits.id', 'asc')
                     ->get();
-            }else{
+            }else if($role == "murid"){
                 $data = DB::table('visits')
                     ->join('users','users.id','=','visits.users_id')
                     ->leftJoin('class','class.id','=','users.class_id')
                     ->select(DB::raw('DATE_FORMAT(visits.visit_time, "%d-%m-%Y") as visit_time'),'visits.description','users.name','class.name as class')
-                    ->where('class.id','=',$request->get('role'))
+                    ->where('users.role','=',$role)
                     ->orderBy('visits.id', 'asc')
                     ->get();
             }
-        }else if($request->get('filter') == 'date'){
+            else{
+                $data = DB::table('visits')
+                    ->join('users','users.id','=','visits.users_id')
+                    ->leftJoin('class','class.id','=','users.class_id')
+                    ->select(DB::raw('DATE_FORMAT(visits.visit_time, "%d-%m-%Y") as visit_time'),'visits.description','users.name','class.name as class')
+                    ->where('class.id','=',$role)
+                    ->orderBy('visits.id', 'asc')
+                    ->get();
+            }
+        }else if($filter == 'date'){
             $data = DB::table('visits')
                     ->join('users','users.id','=','visits.users_id')
                     ->leftJoin('class','class.id','=','users.class_id')
                     ->select(DB::raw('DATE_FORMAT(visits.visit_time, "%d-%m-%Y") as visit_time'),'visits.description','users.name','class.name as class')
-                    ->whereBetween('visits.visit_time', [$request->get('start_date'), $request->get('end_date')])
+                    ->whereBetween('visits.visit_time', [$start, $end])
                     ->orderBy('visits.id', 'asc')
                     ->get();
         }
         // dd($data);
-        return response()->json(array('data' => $data));
+        $class = DB::table('class')->select()->get();
+        return view('report.visitList', compact('data', 'class', 'start', 'end', 'role', 'filter'));
     }
 
     public function addVisit(Request $request){
@@ -286,6 +307,15 @@ class VisitController extends Controller
         return view('report.printVisitList', compact('data', 'start', 'end', 'today'));
     }
 
+    // Form absensi tanpa login
+    public function getFormAbsensi(){
+        return view('frontend.checkin');
+    }
+
+    public function add_visit(Request $request){
+        // cek dulu email dan passwordnya
+    }
+
     // ----------------------------------------- FRONT END ------------------------------------------------
     protected function validatorVisit(array $data)
     {
@@ -296,6 +326,18 @@ class VisitController extends Controller
             'desc.required' => 'Keperluan di perpustakaan harus diisikan',
         ]);
     }
+
+    public function history_visit($id){
+        $this->authorize('check-user');
+        $data = DB::table('visits')
+                ->select()
+                ->where('users_id','=', $id)
+                ->get();
+
+        // dd($data);
+        return view('frontend.history_visit', compact('data'));
+    }
+
     public function visitUserAdd(Request $request){
         $this->authorize('check-user');
         $this->validatorVisit($request->all())->validate();

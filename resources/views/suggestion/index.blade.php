@@ -3,25 +3,65 @@
 @section('content')
 <div class="container" style="min-height: 100vh"> 
     <div>
-        <label>Filter Data Berdasarkan</label><br>
-        <select name="filter" id="filter" class="form-control">
-            <option value="">-- Pilih Kriteria --</option>
-            <option value="date">Tanggal Usulan</option>
-            <option value="status">Status</option>
-        </select>
-        <br>
-        <label>Status Buku Usulan</label>
-        <select name="status" id="status" class="form-control" disabled>
-            <option value="">-- Pilih Status --</option>
-            <option value="proses review">Proses Review</option>
-            <option value="ditolak">Ditolak</option>
-            <option value="diterima">Diterima</option>
-            <option value="selesai">Selesai</option>
-        </select>
-        <br>
-        <label>Tanggal Mulai <input type="date" name="date_start" id="date_start" class="form-control" disabled></label>
-        <label style="margin-left: 10px">Tanggal Akhir <input type="date" name="date_end" id="date_end"  class="form-control" disabled></label>
-        <input type="button" value="Tampilkan Data" id="btn_show" class="btn btn-primary" onclick="filterData()" disabled>
+        <form action="{{url('/daftar-usulan-buku-filter')}}">
+            <label>Filter Data Berdasarkan</label><br>
+            <select name="filter" id="filter" class="form-control">
+                @if ($filter == "")
+                    <option value="" selected>-- Pilih Kriteria --</option>
+                @else
+                    <option value="">-- Pilih Kriteria --</option>
+                @endif
+
+                @if ($filter == "date")
+                    <option value="date" selected>Tanggal Usulan</option>
+                @else
+                    <option value="date">Tanggal Usulan</option>
+                @endif
+                
+                @if ($filter == "status")
+                    <option value="status" selected>Status</option>
+                @else
+                    <option value="status">Status</option>
+                @endif
+            </select>
+            <br>
+            <label>Status Buku Usulan</label>
+            <select name="status" id="status" class="form-control" disabled>
+                @if ($status == "")
+                    <option value="" selected>-- Pilih Status --</option>
+                @else
+                    <option value="">-- Pilih Status --</option>
+                @endif
+
+                @if ($status == "proses review")
+                    <option value="proses review" selected>Proses Review</option>
+                @else
+                    <option value="proses review">Proses Review</option>
+                @endif
+                
+                @if ($status == "ditolak")
+                    <option value="ditolak" selected>Ditolak</option>
+                @else
+                    <option value="ditolak">Ditolak</option>
+                @endif
+                
+                @if ($status == "diterima")
+                    <option value="diterima" selected>Diterima</option>
+                @else
+                    <option value="diterima">Diterima</option>
+                @endif
+
+                @if ($status == "selesai")
+                    <option value="selesai" selected>Selesai</option>
+                @else
+                    <option value="selesai">Selesai</option>
+                @endif
+            </select>
+            <br>
+            <label>Tanggal Mulai <input type="date" name="date_start" id="date_start" value="{{$start}}" class="form-control" disabled></label>
+            <label style="margin-left: 10px">Tanggal Akhir <input type="date" name="date_end" id="date_end" value="{{$end}}" class="form-control" disabled></label>
+            <input type="submit" value="Tampilkan Data" id="btn_show" class="btn btn-primary" disabled>
+        </form>
     </div>
     <div class="row">
         <div class="col-md-12 col-sm-12 ">
@@ -56,7 +96,7 @@
                                 @foreach ($data as $u)
                                 <tr>
                                     <td style="width: 5%;">{{ $no++ }}</td>
-                                    <td>{{$u->users->name}}</td>
+                                    <td>{{$u->name}}</td>
                                     <td>{{$u->title}}</td>
                                     <td>{{$u->author}}</td>
                                     <td>{{$u->publisher}}</td>
@@ -144,7 +184,7 @@
             <div class="modal-header">
             <button type="button" class="close" 
                     data-dismiss="modal" aria-hidden="true"></button>
-            <h4 class="modal-title">Ubah Data Penerbit</h4>
+            <h4 class="modal-title">Ubah Data Usulan</h4>
             </div>
             {{-- Isinya dari getEditForm.blade.php --}}
         </div>
@@ -201,7 +241,15 @@
     }
 
     // Untuk disable/visible filter
+    $(document).ready(function() {
+        filter();
+    });
+
     $("#filter").change(function () {
+        filter();
+    });
+
+    function filter(){
         if($("#filter").val() == "date"){
             $("#date_start").removeAttr("disabled");
             $("#btn_show").removeAttr("disabled");
@@ -228,70 +276,6 @@
             $("#date_start").val('');
             $("#date_end").val('');
         }
-    });
-
-    // Untuk ambil dan tampilkan data filter dari controller
-    function filterData()
-    {
-        var start_date = $('#date_start').val();
-        var end_date = $('#date_end').val();
-        var status = $('#status').val();
-        var filter = $('#filter').val();
-        $.ajax({
-            type:'POST',
-            url:'{{url("/daftar-usulan-buku-filter")}}',
-            data:{
-                    '_token': '<?php echo csrf_token() ?>',
-                    'start_date': start_date,
-                    'end_date' : end_date,
-                    'status': status,
-                    'filter' : filter,
-                },
-            success:function(data) {
-                var no = 1;
-                var table = $('#custometable').DataTable();
-                
-                if(jQuery.isEmptyObject(data.data)){
-                    // Jika data kosong clear datatablenya
-                    table.rows().remove().draw();
-                }else{
-                    $('#show_data').html('');
-                    $.each(data.data, function(key, value) {
-                        var data = "<tr><td style='width: 5%;'>"+ no++ +"</td><td>"+ value.name +"</td><td>"+value.title+"</td><td>"+value.author+"</td><td>"+value.publisher+"</td><td>"+value.date+"</td><td>";
-
-                        if (value.description == null){
-                            data += "-";
-                        }else{
-                            data += value.description;
-                        }
-
-                        data += "</td><td>";
-
-                        if(value.status == "proses review"){
-                            data += "Proses Review";
-                        }else if(value.status == "ditolak"){
-                            data += "Ditolak";
-                        }else if(value.status == 'diterima'){
-                            data += "Diterima";
-                        }else{
-                            data += "Selesai";    
-                        }
-
-                        data += "</td><td style='width: 5%;'><div class='container'><a class='btn' data-toggle='dropdown'><i class='fa fa-ellipsis-v' aria-hidden='true'></i></a><ul class='dropdown-menu'><li><a href='#modalEdit' data-toggle='modal' class='btn' onclick='getEditForm(";
-                        
-                        data += value.id;
-                        data += ")'><i class='fa fa-pencil-square-o' aria-hidden='true'></i> Ubah</a></li><li><a class='btn' onclick='if(confirm('Apakah anda yakin menghapus data usulan ";
-                        data += value.title;
-                        data += "')) deleteDataRemoveTR(";
-                        data += value.id;
-                        data += ")'><i class='fa fa-trash-o' aria-hidden='true'></i> Hapus</a></li></ul></div></td></tr>";
-
-                        // table.rows.add(data).draw();
-                        $("#show_data").append(data);
-                    });
-                }
-            }
-        });
     }
   </script>
 @endsection

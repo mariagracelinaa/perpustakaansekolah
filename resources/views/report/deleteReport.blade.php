@@ -3,23 +3,53 @@
 @section('content')
 <div class="container" style="min-height: 100vh">
   <div>
-    <label>Filter Data Berdasarkan</label><br>
-    <select name="filter" id="filter" class="form-control">
-        <option value="">-- Pilih Kriteria --</option>
-        <option value="date">Tanggal Penghapusan</option>
-        <option value="source">Sumber</option>
-    </select>
-    <br>
-    <label>Sumber Buku</label>
-    <select name="source" id="source" class="form-control" disabled>
-        <option value="">-- Pilih Sumber Buku --</option>
-        <option value="hadiah">Hadiah</option>
-        <option value="pembelian">Pembelian</option>
-    </select>
-    <br>
-    <label>Tanggal Mulai <input type="date" name="date_start" id="date_start" class="form-control" disabled></label>
-    <label style="margin-left: 10px">Tanggal Akhir <input type="date" name="date_end" id="date_end"  class="form-control" disabled></label>
-    <input type="button" value="Tampilkan Data" id="btn_show" class="btn btn-primary" onclick="filterData()" disabled>
+    <form action="{{url('/daftar-penghapusan-filter')}}">
+      <label>Filter Data Berdasarkan</label><br>
+      <select name="filter" id="filter" class="form-control">
+        @if ($filter == "")
+            <option value="" selected>-- Pilih Kriteria --</option>
+        @else
+            <option value="">-- Pilih Kriteria --</option>
+        @endif
+          
+        @if ($filter == "date")
+            <option value="date" selected>Tanggal Penghapusan</option>
+        @else
+            <option value="date">Tanggal Penghapusan</option>
+        @endif
+          
+        @if ($filter == "source")
+            <option value="source" selected>Sumber</option>
+        @else
+            <option value="source">Sumber</option>
+        @endif
+      </select>
+      <br>
+      <label>Sumber Buku</label>
+      <select name="source" id="source" class="form-control" disabled>
+          @if ($source == "")
+              <option value="" selected>-- Pilih Sumber Buku --</option>
+          @else
+              <option value="">-- Pilih Sumber Buku --</option>
+          @endif
+          
+          @if ($source == "hadiah")
+              <option value="hadiah" selected>Hadiah</option>
+          @else
+              <option value="hadiah">Hadiah</option>
+          @endif
+          
+          @if ($source == "pembelian")
+              <option value="pembelian" selected>Pembelian</option>
+          @else
+              <option value="pembelian">Pembelian</option>
+          @endif
+      </select>
+      <br>
+      <label>Tanggal Mulai <input type="date" name="date_start" id="date_start" value="{{$start}}" class="form-control" disabled></label>
+      <label style="margin-left: 10px">Tanggal Akhir <input type="date" value="{{$end}}" name="date_end" id="date_end"  class="form-control" disabled></label>
+      <input type="submit" value="Tampilkan Data" id="btn_show" class="btn btn-primary" disabled>
+    </form>
   </div>
   <div class="row">
     <div class="col-md-12 col-sm-12 ">
@@ -119,7 +149,15 @@
     <script>
       // Untuk disable/visible filter
       $("#filter").change(function () {
-          if($("#filter").val() == "date"){
+          filter();
+      });
+
+      $(document).ready(function() {
+        filter();
+      });
+
+      function filter(){
+        if($("#filter").val() == "date"){
               $("#date_start").removeAttr("disabled");
               $("#btn_show").removeAttr("disabled");
               $("#date_end").removeAttr("disabled");
@@ -145,49 +183,6 @@
               $("#date_start").val('');
               $("#date_end").val('');
           }
-      });
-
-      // Untuk ambil dan tampilkan data filter dari controller
-      function filterData()
-      {
-          var start_date = $('#date_start').val();
-          var end_date = $('#date_end').val();
-          var source = $('#source').val();
-          var filter = $('#filter').val();
-          $.ajax({
-              type:'POST',
-              url:'{{url("/daftar-penghapusan-filter")}}',
-              data:{
-                      '_token': '<?php echo csrf_token() ?>',
-                      'start_date': start_date,
-                      'end_date' : end_date,
-                      'source': source,
-                      'filter' : filter,
-                  },
-              success:function(data) {
-                  var no = 1;
-                  var table = $('#custometable').DataTable();
-                  
-                  if(jQuery.isEmptyObject(data.data)){
-                      // Jika data kosong clear datatablenya
-                      table.rows().remove().draw();
-                  }else{
-                      $('#show_data').html('');
-                      $.each(data.data, function(key, value) {
-                        var data = "<tr><td>"+ no++ +"</td><td>" + value.register_num + "</td><td>{{$del->title}}</td><td>";
-
-                        if(value.source == 'pembelian')
-                            data += "Pembelian";
-                        else
-                            data += "Hadiah";
-                    
-                        data += "</td><td style='text-align: right'>"+ value.price + "</td><td>"+ value.delete_date +"</td><td>{{$del->delete_description}}</td></tr>";
-                          
-                        $("#show_data").append(data);
-                      });
-                  }
-              }
-          });
       }
     </script>
 @endsection
