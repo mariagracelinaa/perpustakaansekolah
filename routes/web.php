@@ -27,6 +27,7 @@ Route::get('/detail-buku/{id}','BiblioController@front_detailBiblio')->name('det
 Route::get('/buku-baru','BiblioController@front_newBook');
 Route::post('/rekomendasi-buku', 'BiblioController@topsis');
 Route::get('/form-rekomendasi', 'BiblioController@formTopsis');
+Route::post('/cek-topsis', 'BiblioController@getCheckTopsis');
 
 // Absensi tanpa login
 Route::get('/absensi-perpustakaan','VisitController@getFormAbsensi');

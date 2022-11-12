@@ -104,9 +104,9 @@
                 </div>   
             </div>
             <div class="form-group">
-                <label>Apakah usia buku di perpustakaan penting bagi Anda?</label>
+                <label>Apakah Anda koleksi buku baru di perpustakaan lebih cocok untuk Anda?</label>
                 <div style="text-align: center">
-                    <label>Tidak Penting</label>
+                    <label>Tidak Cocok</label>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="radio_age" value=1 style="width: 20px; height: 20px">
                         <label class="form-check-label">1</label>
@@ -127,7 +127,48 @@
                         <input class="form-check-input" type="radio" name="radio_age" value=5 style="width: 20px; height: 20px">
                         <label class="form-check-label">5</label>
                     </div>
+                    <label>Sangat Cocok</label>
+                </div>   
+            </div>
+            <div class="form-group">
+                <label>Apakah ketersediaan buku di perpustakaan penting untuk Anda? (Tidak harus menunggu/pesan, dapat langsung dipinjam)</label>
+                <div style="text-align: center">
+                    <label>Tidak Penting</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radio_stock" value=1 style="width: 20px; height: 20px">
+                        <label class="form-check-label">1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radio_stock" value=2 style="width: 20px; height: 20px">
+                        <label class="form-check-label">2</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radio_stock" value=3 style="width: 20px; height: 20px" checked>
+                        <label class="form-check-label">3</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radio_stock" value=4 style="width: 20px; height: 20px">
+                        <label class="form-check-label">4</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radio_stock" value=5 style="width: 20px; height: 20px">
+                        <label class="form-check-label">5</label>
+                    </div>
                     <label>Sangat Penting</label>
+                </div>   
+            </div>
+            <div class="form-group" id="dynamic_field">
+                <label>Siapa penulis buku kesukaan Anda?</label>
+                <div style="text-align: left">
+                    <input id="author" name="listAuthor[]" list="listAuthor" style="width: 500px" placeholder="Tulis nama penulis">
+                    <datalist id="listAuthor" >
+                        @foreach ($author as $aut)
+                            <option idp="{{$aut->id}}" value="{{$aut->name}}">
+                        @endforeach
+                    </datalist>
+                    <td>
+                        <button type="button" name="add" id="add" class="btn btn-light"><i class="fa fa-plus"></i> Tambah Penulis</button>
+                    </td>
                 </div>   
             </div>
             <div class="form-group" style="text-align: right">
@@ -136,4 +177,23 @@
         </form>
     </div>
 </div>
+@endsection
+
+@section('javascript')
+    <script>
+        $(document).ready(function(){
+            var i=1; 
+            $('#add').click(function(){ 
+                i++;
+                // $('#dynamic_field').append('<tr id="row'+i+'"><td><input id="author" name="listAuthor[]" list="listAuthor" placeholder="Tulis nama penulis"><datalist id="listAuthor">@foreach ($author as $aut)<option idp="{{$aut->id}}" value="{{$aut->name}}">@endforeach</datalist></td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td></tr>');   
+                    
+                $('#dynamic_field').append('<div style="text-align: left" id="row'+i+'"><input id="author" name="listAuthor[]" list="listAuthor" style="width: 500px" placeholder="Tulis nama penulis"><datalist id="listAuthor" >@foreach ($author as $aut)<option idp="{{$aut->id}}" value="{{$aut->name}}">@endforeach</datalist><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td></div>');
+            }); 
+            
+            $(document).on('click', '.btn_remove', function(){    
+            var button_id = $(this).attr("id");     
+            $('#row'+button_id+'').remove();    
+        }); 
+    });
+    </script>
 @endsection

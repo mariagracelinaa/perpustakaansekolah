@@ -357,7 +357,26 @@ class BorrowController extends Controller
                 ->where('borrow_transaction.status','=','belum kembali')
                 ->get();
         $allow = 3-$allow[0]->allow;
-        return view('borrow.addCirculation', compact('user','allow'));
+
+        // untuk menampilkan tabel booking di add circulation
+        $booking = DB::table('bookings')
+                ->join('biblios','biblios.id','=','bookings.biblios_id')
+                ->select('biblios.id','biblios.title')
+                ->where('users_id','=', $users_id)
+                ->get();
+        // dd($book_id);
+        $arr_reg_num = [];
+        foreach($booking as $book){
+            $reg_num = DB::table('items')
+                ->select('items.register_num')
+                ->where('items.status','=','tersedia')
+                ->where('items.biblios_id','=',$book->id)
+                ->get();
+            $arr_reg_num[$book->id] = $reg_num;
+        }
+        // dd($arr_reg_num);
+
+        return view('borrow.addCirculation', compact('user','allow','booking','arr_reg_num'));
     }
 
     public function detailCirculation($users_id){
