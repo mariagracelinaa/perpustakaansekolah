@@ -6,6 +6,7 @@ use App\Visit;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Carbon;
 use DB;
 
@@ -16,17 +17,60 @@ class VisitController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    //  Buku tamu
     public function index()
     {
         $this->authorize('check-admin');
+        $role = "";
+        $filter = "";
+
         $data = DB::table('users')
                 ->leftJoin('class','class.id','=','users.class_id')
                 ->select('users.*','class.name as class')
+                ->where('users.role','!=', 'admin')
                 ->orderBy('users.name', 'asc')
                 ->get();
 
+        $class = DB::table('class')->select()->get();
+
         // dd($data);
-        return view('visit.index', compact('data'));
+        return view('visit.index', compact('data','role','class','filter'));
+    }
+
+    public function index_filter(Request $request)
+    {
+        $this->authorize('check-admin');
+        $role = $request->get('role');
+        $filter = $request->get('filter');
+
+        if($role == "guru/staf" || $role == 'murid'){
+            $data = DB::table('users')
+                ->leftJoin('class','class.id','=','users.class_id')
+                ->select('users.*','class.name as class')
+                ->where('users.role','=', $role)
+                ->orderBy('users.name', 'asc')
+                ->get();
+        }else if($role == ""){
+            $data = DB::table('users')
+                ->leftJoin('class','class.id','=','users.class_id')
+                ->select('users.*','class.name as class')
+                ->where('users.role','!=', 'admin')
+                ->orderBy('users.name', 'asc')
+                ->get();
+        }else{
+            $data = DB::table('users')
+                ->leftJoin('class','class.id','=','users.class_id')
+                ->select('users.*','class.name as class')
+                ->where('class.id', '=', $role)
+                ->orderBy('users.name', 'asc')
+                ->get();
+        }
+
+        $class = DB::table('class')->select()->get();
+
+        // dd($data);
+        return view('visit.index', compact('data','role','class','filter'));
     }
 
     /**
@@ -309,11 +353,64 @@ class VisitController extends Controller
 
     // Form absensi tanpa login
     public function getFormAbsensi(){
-        return view('frontend.checkin');
+        return view('checkin.index');
     }
 
-    public function add_visit(Request $request){
+    protected function validator_add_visit_no_login(array $data)
+    {
+        return Validator::make($data, [
+            'email' => ['required'],
+            'password' => ['required', 'string', 'min:8'],
+            'desc' => ['required'],
+        ],
+        [
+            'email.required' => 'Alamat email tidak boleh kosong',
+            'password.required' => 'Kata sandi tidak boleh kosong',
+            'desc.required' => 'Keperluan di perpustakaan tidak boleh kosong'
+        ]);
+    }
+
+    // Catat absensi tanpa login dengan masukkan email dan password (Tanpa menyimpan session login)
+    public function add_visit_no_login(Request $request){
+        $this->validator_add_visit_no_login($request->all())->validate();
         // cek dulu email dan passwordnya
+        $email = $request->get('email');
+        $pwd_input = $request->get('password');
+        $desc = $request->get('desc');
+        $user = User::select('id','password')->where('email', '=', $email)->get();
+        if(!$user->isEmpty()){
+            if (Hash::check($pwd_input, $user[0]->password)) {
+                try{
+                    $users_id = $user[0]->id;
+        
+                    // dd($users_id);
+        
+                    // mendapatkan datetime skrg, sudah GMT+7 ganti di config->app.php->timezone, locale, faker_locale
+                    $visit_time = date('Y-m-d');
+                        
+                    $data = new Visit();
+                    $data->users_id = $users_id;
+                    $data->visit_time = $visit_time;
+                    $data->description = $desc;
+                    $data->save();
+        
+                    return redirect()->back()->with('status','Data kunjungan baru berhasil disimpan');
+        
+                }catch (\PDOException $e) {
+                        return redirect()->back()->with('error', 'Gagal menambah data baru, silahkan coba lagi');
+                }
+            }else{
+                // dd("pwd salah");
+                return redirect()->back()->with('error', 'Kata sandi salah, masukkan kata sandi dengan benar');
+            }
+        }else{
+            return redirect()->back()->with('error', 'Alamat email yang dimasukkan tidak terdaftar');
+        }
+    }
+
+    // Tampilkan page scan QR
+    public function getPageScan(){
+        return view('checkin.qr');
     }
 
     // ----------------------------------------- FRONT END ------------------------------------------------

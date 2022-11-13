@@ -784,8 +784,8 @@ class BiblioController extends Controller
                 $i++;
             }
 
-            // dd($data[1][0]);
-            return view('frontend.recommendation', compact('data','book','arr_count_borrow', 'arr_count_page', 'arr_publish_year', 'arr_age', 'arr_stock', 'pow_count_borrow', 'pow_count_page','pow_publish_year','pow_age','pow_stock','k1','k2','k3','k4','k5','sqrt_k1','sqrt_k2','sqrt_k3','sqrt_k4','sqrt_k5','matrix_r_k1','matrix_r_k2','matrix_r_k3','matrix_r_k4','matrix_r_k5','bobot_k1','bobot_k2','bobot_k3','bobot_k4','bobot_k5','matrix_v_k1','matrix_v_k2','matrix_v_k3','matrix_v_k4','matrix_v_k5','solusi_ideal_positif_1','solusi_ideal_positif_2','solusi_ideal_positif_3','solusi_ideal_positif_4','solusi_ideal_positif_5','solusi_ideal_negatif_1','solusi_ideal_negatif_2','solusi_ideal_negatif_3','solusi_ideal_negatif_4','solusi_ideal_negatif_5'));
+            // dd($data);
+            return view('frontend.recommendation', compact('data','book','arr_count_borrow', 'arr_count_page', 'arr_publish_year', 'arr_age', 'arr_stock', 'pow_count_borrow', 'pow_count_page','pow_publish_year','pow_age','pow_stock','k1','k2','k3','k4','k5','sqrt_k1','sqrt_k2','sqrt_k3','sqrt_k4','sqrt_k5','matrix_r_k1','matrix_r_k2','matrix_r_k3','matrix_r_k4','matrix_r_k5','bobot_k1','bobot_k2','bobot_k3','bobot_k4','bobot_k5','matrix_v_k1','matrix_v_k2','matrix_v_k3','matrix_v_k4','matrix_v_k5','solusi_ideal_positif_1','solusi_ideal_positif_2','solusi_ideal_positif_3','solusi_ideal_positif_4','solusi_ideal_positif_5','solusi_ideal_negatif_1','solusi_ideal_negatif_2','solusi_ideal_negatif_3','solusi_ideal_negatif_4','solusi_ideal_negatif_5','arr_jarak_solusi_ideal_positif_1','arr_jarak_solusi_ideal_positif_2','arr_jarak_solusi_ideal_positif_3','arr_jarak_solusi_ideal_positif_4','arr_jarak_solusi_ideal_positif_5','jarak_solusi_ideal_positif','arr_jarak_solusi_ideal_negatif_1','arr_jarak_solusi_ideal_negatif_2','arr_jarak_solusi_ideal_negatif_3','arr_jarak_solusi_ideal_negatif_4','arr_jarak_solusi_ideal_negatif_5','jarak_solusi_ideal_negatif','arr_topsis'));
         }
     }
 

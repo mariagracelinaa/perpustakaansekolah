@@ -31,7 +31,8 @@ Route::post('/cek-topsis', 'BiblioController@getCheckTopsis');
 
 // Absensi tanpa login
 Route::get('/absensi-perpustakaan','VisitController@getFormAbsensi');
-Route::post('/absensi-perpustakaan-catat','VisitController@add_visit');
+Route::post('/absensi-perpustakaan-catat','VisitController@add_visit_no_login');
+Route::get('/absensi-qr-perpustakaan', 'VisitController@getPageScan');
 
 // Route::middleware(['isAdmin'])->group(function(){
 //     Route::resource('/register', 'Auth\RegisterController');
@@ -90,6 +91,8 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/sirkulasi-buku-filter','BorrowController@listUser_filter');
     Route::post('/daftar-peminjaman/getDetail','BorrowController@getDetail')->name('daftar-peminjaman.getDetail');
     Route::get('/grafik-peminjaman','BorrowController@graphic');
+    Route::post('/grafik-perbandingan-peminjaman-filter','BorrowController@doughnutGraphic');
+    Route::get('/grafik-perbandingan-peminjaman','BorrowController@getDoughnutGraphic');
     Route::get('sirkulasi-detail/{id}','BorrowController@detailCirculation');
     Route::post('/return','BorrowController@bookReturn');
     Route::post('/extension','BorrowController@bookExtension');
@@ -102,6 +105,7 @@ Route::middleware(['auth'])->group(function(){
     // Visit
     // Admin
     Route::resource('kunjungan', 'VisitController');
+    Route::get('/kunjungan-filter', 'VisitController@index_filter');
     Route::get('/grafik-pengunjung','VisitController@graphic');
     Route::post('/grafik-pengunjung-filter','VisitController@graphicYear');
     Route::post('/kunjungan/getAddForm','VisitController@getAddForm')->name('kunjungan.getAddForm');

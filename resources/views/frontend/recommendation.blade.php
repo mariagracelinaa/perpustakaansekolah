@@ -72,7 +72,7 @@
                 <div class="row">
                     <div class="col-sm-12" style="margin: 20px">
                         <h2>Hasil Angka Topsis</h2>
-                        <h3>Langkah 0 - Membentuk Decision Matrix</h3>
+                        <h3>Langkah 1 - Membentuk Decision Matrix</h3>
                         <table class="table">
                             <thead>
                                 <th>Judul Buku</th>
@@ -97,7 +97,7 @@
                             </tbody>
                         </table>
 
-                        <h3>Langkah 1 - Membentuk Matrix R</h3>
+                        <h3>Langkah 2 - Membentuk Matrix R</h3>
                         <h4>Kuadratkan setiap nilai pada decision matrix</h4>
                         <table class="table">
                             <thead>
@@ -162,10 +162,36 @@
                             </tbody>
                         </table>
 
-                        <h3>Langkah 3 - Menentukan Solusi Ideal Positif (A*) dan Solusi Ideal Negatif (A')</h3>
+                        <h3>Langkah 3 - Membentuk Matrix V</h3>
+                        <h4>Kalikan setiap nilai pada matrix R dengan bobot setiap kriteria</h4>
+                        <h6>Bobot K1 = {{$bobot_k1}}; Bobot K2 = {{$bobot_k2}}; Bobot K3 = {{$bobot_k3}}; Bobot K4 = {{$bobot_k4}}; Bobot K5 = {{$bobot_k5}};</h6>
                         <table class="table">
                             <thead>
-                                <<th></th>
+                                <th>Judul Buku</th>
+                                <th>Kriteria 1</th>
+                                <th>Kriteria 2</th>
+                                <th>Kriteria 3</th>
+                                <th>Kriteria 4</th>
+                                <th>Kriteria 5</th>
+                            </thead>
+                            <tbody>
+                                @foreach ($book as $bk)
+                                    <tr>
+                                        <td>{{$bk->title}}</td>
+                                        <td>{{number_format($matrix_v_k1[$bk->id], 4, '.', '')}}</td>
+                                        <td>{{number_format($matrix_v_k2[$bk->id], 4, '.', '')}}</td>
+                                        <td>{{number_format($matrix_v_k3[$bk->id], 4, '.', '')}}</td>
+                                        <td>{{number_format($matrix_v_k4[$bk->id], 4, '.', '')}}</td>
+                                        <td>{{number_format($matrix_v_k5[$bk->id], 4, '.', '')}}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        <h3>Langkah 4 - Menentukan Solusi Ideal Positif (A*) dan Solusi Ideal Negatif (A')</h3>
+                        <table class="table">
+                            <thead>
+                                <th></th>
                                 <th>Kriteria 1</th>
                                 <th>Kriteria 2</th>
                                 <th>Kriteria 3</th>
@@ -189,6 +215,81 @@
                                     <td>{{number_format($solusi_ideal_negatif_4, 4, '.', '')}}</td>
                                     <td>{{number_format($solusi_ideal_negatif_5, 4, '.', '')}}</td>
                                 </tr>
+                            </tbody>
+                        </table>
+                        <h3>Langkah 5 - Menentukan jarak Solusi Ideal Positif (S*) dan jarak Solusi Ideal Negatif (S')</h3>
+                        <h2>Jarak Solusi Ideal Positif</h2>
+                        <table class="table">
+                            <thead>
+                                <th>Buku</th>
+                                <th>Kriteria 1</th>
+                                <th>Kriteria 2</th>
+                                <th>Kriteria 3</th>
+                                <th>Kriteria 4</th>
+                                <th>Kriteria 5</th>
+                                <th>S*</th>
+                            </thead>
+                            <tbody>
+                                @foreach ($book as $bk)
+                                    <tr>
+                                        <td>{{$bk->title}}</td>
+                                        <td>{{number_format($arr_jarak_solusi_ideal_positif_1[$bk->id], 4, '.', '')}}</td>
+                                        <td>{{number_format($arr_jarak_solusi_ideal_positif_2[$bk->id], 4, '.', '')}}</td>
+                                        <td>{{number_format($arr_jarak_solusi_ideal_positif_3[$bk->id], 4, '.', '')}}</td>
+                                        <td>{{number_format($arr_jarak_solusi_ideal_positif_4[$bk->id], 4, '.', '')}}</td>
+                                        <td>{{number_format($arr_jarak_solusi_ideal_positif_5[$bk->id], 4, '.', '')}}</td>
+                                        <td>{{number_format($jarak_solusi_ideal_positif[$bk->id], 4, '.', '')}}</td>
+                                    </tr>
+                                @endforeach
+                                
+                            </tbody>
+                        </table>
+                        <h2>Jarak Solusi Ideal Negatif</h2>
+                        <table class="table">
+                            <thead>
+                                <th>Buku</th>
+                                <th>Kriteria 1</th>
+                                <th>Kriteria 2</th>
+                                <th>Kriteria 3</th>
+                                <th>Kriteria 4</th>
+                                <th>Kriteria 5</th>
+                                <th>S'</th>
+                            </thead>
+                            <tbody>
+                                @foreach ($book as $bk)
+                                    <tr>
+                                        <td>{{$bk->title}}</td>
+                                        <td>{{number_format($arr_jarak_solusi_ideal_negatif_1[$bk->id], 4, '.', '')}}</td>
+                                        <td>{{number_format($arr_jarak_solusi_ideal_negatif_2[$bk->id], 4, '.', '')}}</td>
+                                        <td>{{number_format($arr_jarak_solusi_ideal_negatif_3[$bk->id], 4, '.', '')}}</td>
+                                        <td>{{number_format($arr_jarak_solusi_ideal_negatif_4[$bk->id], 4, '.', '')}}</td>
+                                        <td>{{number_format($arr_jarak_solusi_ideal_negatif_5[$bk->id], 4, '.', '')}}</td>
+                                        <td>{{number_format($jarak_solusi_ideal_negatif[$bk->id], 4, '.', '')}}</td>
+                                    </tr>
+                                @endforeach
+                                
+                            </tbody>
+                        </table>
+                        <h3>Langkah 6 - Menghitung nilai kedekatan relatif tiap alternatif (C)</h3>
+                        <table class="table">
+                            <thead>
+                                <th>Buku</th>
+                                <th>Kedekatan relatif (C)</th>
+                                <th>Persen %</th>
+                                <th>Ranking</th>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $i = 1;
+                                @endphp
+                                @foreach ($arr_topsis as $at => $val)
+                                    <tr>
+                                        <td>{{$data[$i-1][0]->title}}</td>
+                                        <td>{{number_format($val, 4, '.', '')}}</td>
+                                        <td>{{number_format($val, 4, '.', '') *100}} %</td>
+                                        <td>{{ $i++ }}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

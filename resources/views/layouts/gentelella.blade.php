@@ -83,6 +83,7 @@
                       <li><a href="{{url('/daftar-penghapusan-buku')}}">Laporan Penghapusan</a></li>
                       <li><a href="{{url('/grafik-pengunjung')}}">Laporan Grafik Pengunjung</a></li>
                       <li><a href="{{url('/grafik-peminjaman')}}">Laporan Grafik Peminjaman</a></li>
+                      <li><a href="{{url('/grafik-perbandingan-peminjaman')}}">Laporan Grafik Pengembalian</a></li>
                     </ul>
                   </li>
                 </ul>

@@ -102,7 +102,7 @@
                         <a href="/" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Buku Tamu</a>
                         <div class="dropdown-menu fade-down m-0">
                             <a href="/form-masuk" class="dropdown-item">Masuk Mandiri</a>
-                            <a href="" class="dropdown-item">QR Code</a>
+                            <a href="/qr-masuk-saya" class="dropdown-item">QR Code</a>
                         </div>
                     </div>
                     <a href="{{url('/daftar-usulan')}}" class="nav-item nav-link">Daftar Usulan Buku</a>

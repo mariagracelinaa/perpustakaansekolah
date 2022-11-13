@@ -57,6 +57,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
+            'nisn/niy' => ['required', 'string', 'max:25'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ],
@@ -73,21 +74,20 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        // dd($data['role']);
         $this->authorize('check-admin');
         try{
             $nisn = NULL;
             $niy = NULL;
             $class_id = NULL;
 
-            if($data['class_id'] != 0){
-                $class_id = $data['class_id'];
-            }
-
             if($data['role'] == 'murid'){
                 $nisn = $data['nisn/niy'];
+                $class_id = $data['class_id'];
             }elseif($data['role'] == 'guru/staf'){
                 $niy = $data['nisn/niy'];
             }
+            // dd($class_id);
 
             User::create([
                 'name' => $data['name'],
@@ -100,12 +100,10 @@ class RegisterController extends Controller
             ]);
             
             if($data['role'] == 'murid'){
-                return redirect()->guest(url('daftar-murid'))->with('status','Registrasi murid berhasil');
+                return redirect()->guest(url('/daftar-murid'))->with('status','Registrasi murid berhasil');
             }
             elseif($data['role'] == 'guru/staf'){
-                return redirect()->guest(url('daftar-guru'))->with('status','Registrasi guru/staf berhasil');
-            }else{
-                return redirect()->guest(url('register'))->with('status','Registrasi admin berhasil');
+                return redirect()->guest(url('/daftar-guru'))->with('status','Registrasi guru/staf berhasil');
             }
             
         }catch (\PDOException $e) {

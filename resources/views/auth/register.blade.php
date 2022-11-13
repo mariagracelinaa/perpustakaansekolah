@@ -29,7 +29,7 @@
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('NISN/NIY') }}</label>
 
                             <div class="col-md-6">
-                                <input id="nisn/niy" type="text" class="form-control @error('nisn/niy') is-invalid @enderror" name="nisn/niy" value="{{ old('nisn/niy') }}" autocomplete="nisn/niy" autofocus oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder="Tuliskan nomor NISN atau NIY pengguna">
+                                <input id="nisn/niy" type="text" class="form-control @error('nisn/niy') is-invalid @enderror" name="nisn/niy" value="{{ old('nisn/niy') }}" required autocomplete="nisn/niy" autofocus oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder="Tuliskan nomor NISN atau NIY pengguna">
 
                                 @error('nisn/niy')
                                     <span class="invalid-feedback" role="alert">
@@ -47,7 +47,7 @@
                                     <option value="">--- Pilih ---</option>
                                     <option id="teacher" value="guru/staf">Guru/Staf</option>
                                     <option id="student" value="murid">Murid</option>
-                                    <option id="admin" value="admin">Admin</option>
+                                    {{-- <option id="admin" value="admin">Admin</option> --}}
                                 </select>
 
                                 @error('role')
@@ -63,7 +63,7 @@
 
                             <div class="col-md-6">
                                 <select id="class" type="text" class="form-control @error('class_id') is-invalid @enderror" name="class_id" value="{{ old('class_id') }}" required autocomplete="class_id" disabled>
-                                    <option value=0>--- Pilih ---</option>
+                                    <option value = "0" >--- Pilih ---</option>
                                     @foreach ($result as $r)
                                         <option value="{{$r->id}}">{{$r->name}}</option>
                                     @endforeach

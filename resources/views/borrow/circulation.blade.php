@@ -115,18 +115,14 @@
 @section('javascript')
 <script>
     $( document ).ready(function() {
-      if($("#filter").val() == "role"){
-        $("#role").removeAttr("disabled");
-        $("#btn_show").removeAttr("disabled");
-      }else{
-        $("#btn_show").attr('disabled', 'disabled');
-        $("#role").attr('disabled', 'disabled');
-
-        $("#role").val('');
-      }  
+      filter();
     });
 
     $("#filter").change(function () {
+      filter();
+    });
+
+    function filter(){
       if($("#filter").val() == "role"){
         $("#role").removeAttr("disabled");
         $("#btn_show").removeAttr("disabled");
@@ -136,6 +132,6 @@
 
         $("#role").val('');
       }
-    });
+    }
 </script>
 @endsection

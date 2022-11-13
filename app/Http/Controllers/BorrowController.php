@@ -241,6 +241,65 @@ class BorrowController extends Controller
         ), 200);
     }
 
+    public function doughnutGraphic(Request $request){
+        $this->authorize('check-admin');
+        // dd($request->get('start'), $request->get('end'));
+        $on_time = DB::table('borrow_transaction')
+                    ->join('borrows','borrows.id','=','borrow_transaction.borrows_id')
+                    ->select(DB::raw('COUNT(*) as on_time'))
+                    ->where('status','=','sudah kembali')
+                    ->where('fine','=',0)
+                    ->whereBetween('borrows.borrow_date',[$request->get('start'), $request->get('end')])
+                    ->get();
+        $on_time = $on_time[0]->on_time;
+
+        $not_on_time = DB::table('borrow_transaction')
+                    ->join('borrows','borrows.id','=','borrow_transaction.borrows_id')
+                    ->select(DB::raw('COUNT(*) as not_on_time'))
+                    ->where('status','=','sudah kembali')
+                    ->where('fine','!=',0)
+                    ->whereBetween('borrows.borrow_date',[$request->get('start'), $request->get('end')])
+                    ->get();
+        $not_on_time = $not_on_time[0]->not_on_time;
+
+        $active = DB::table('borrow_transaction')
+                    ->join('borrows','borrows.id','=','borrow_transaction.borrows_id')
+                    ->select(DB::raw('COUNT(*) as active'))
+                    ->where('status','=','belum kembali')
+                    ->whereBetween('borrows.borrow_date',[$request->get('start'), $request->get('end')])
+                    ->get();
+        $active = $active[0]->active;
+
+        // dd($on_time, $not_on_time);
+        // return view('report.graphicDoughnut');
+        return response()->json(array('on_time' => $on_time, 'not_on_time' => $not_on_time, 'active' => $active));
+    }
+
+    public function getDoughnutGraphic(){
+        $this->authorize('check-admin');
+        $on_time = DB::table('borrow_transaction')
+                    ->select(DB::raw('COUNT(*) as on_time'))
+                    ->where('status','=','sudah kembali')
+                    ->where('fine','=',0)
+                    ->get();
+        $on_time = $on_time[0]->on_time;
+
+        $not_on_time = DB::table('borrow_transaction')
+                    ->select(DB::raw('COUNT(*) as not_on_time'))
+                    ->where('status','=','sudah kembali')
+                    ->where('fine','!=',0)
+                    ->get();
+        $not_on_time = $not_on_time[0]->not_on_time;
+        // dd($not_on_time);
+
+        $active = DB::table('borrow_transaction')
+                    ->select(DB::raw('COUNT(*) as active'))
+                    ->where('status','=','belum kembali')
+                    ->get();
+        $active = $active[0]->active;
+        return view('report.graphicDoughnut', compact('on_time','not_on_time','active'));
+    }
+
     public function graphic(){
         $this->authorize('check-admin');
         $this_year = date('Y');
