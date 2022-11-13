@@ -33,6 +33,7 @@ Route::post('/cek-topsis', 'BiblioController@getCheckTopsis');
 Route::get('/absensi-perpustakaan','VisitController@getFormAbsensi');
 Route::post('/absensi-perpustakaan-catat','VisitController@add_visit_no_login');
 Route::get('/absensi-qr-perpustakaan', 'VisitController@getPageScan');
+Route::post('/scan-qr','VisitController@qr_read');
 
 // Route::middleware(['isAdmin'])->group(function(){
 //     Route::resource('/register', 'Auth\RegisterController');

@@ -3,6 +3,9 @@
 @section('content')
 <div class="right_col" role="main" style="margin-top: 50px">
     <div class="container" style="max-width: 70%">
+        <div style="text-align: center">
+            {{ QrCode::size(150)->generate($data->email) }}
+        </div>
         <form role="form" method="POST" action="{{url('/editPassword')}}">
             @csrf
             <input type="hidden" name="id" value="{{$data->id}}">

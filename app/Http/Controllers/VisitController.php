@@ -413,6 +413,30 @@ class VisitController extends Controller
         return view('checkin.qr');
     }
 
+    public function qr_read(Request $request){
+        $email = $request->get('email');
+        $user = User::select('id','password')->where('email', '=', $email)->get();
+        if(!$user->isEmpty()){
+            try{
+                $users_id = $user[0]->id;
+                $visit_time = date('Y-m-d');
+                    
+                $data = new Visit();
+                $data->users_id = $users_id;
+                $data->visit_time = $visit_time;
+                $data->description = NULL;
+                $data->save();
+    
+                $request->session()->flash('status','Data kunjungan baru berhasil disimpan');
+    
+            }catch (\PDOException $e) {
+                $request->session()->flash('error', 'Gagal menambah data baru, silahkan coba lagi');
+            }
+        }else{
+            $request->session()->flash('error', 'Data tidak ditemukan');
+        }
+    }
+
     // ----------------------------------------- FRONT END ------------------------------------------------
     protected function validatorVisit(array $data)
     {
