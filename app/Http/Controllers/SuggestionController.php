@@ -9,6 +9,8 @@ use DB;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
+use Auth;
+
 class SuggestionController extends Controller
 {
     /**
@@ -245,8 +247,9 @@ class SuggestionController extends Controller
         return view('frontend.suggestion', compact('data'));
     }
 
-    public function mySuggestion($id){
+    public function mySuggestion(){
         $this->authorize('check-user');
+        $id = Auth::user()->id;
         $data = Suggestion::where('users_id','=', $id)->orderBy('date','desc')->get();
         // dd($data);
         return view('frontend.mySuggestion', compact('data'));

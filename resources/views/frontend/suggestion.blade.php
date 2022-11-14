@@ -8,7 +8,7 @@
                 <div class="x_title" style="margin-left: 20px">
                     <h2>Daftar Semua Usulan Buku</small></h2>
                     <div class="nav navbar-right panel_toolbox">
-                        <a href="/usulan-saya/{{Auth::User()->id}}" class="btn btn-light"><i class="fa fa-info-circle"></i> Usulan Saya</a>
+                        <a href="/usulan-saya" class="btn btn-light"><i class="fa fa-info-circle"></i> Usulan Saya</a>
                     </div>
                     <div class="clearfix"></div>
                 </div>

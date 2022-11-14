@@ -13,6 +13,8 @@ use File;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
+use Auth;
+
 class BiblioController extends Controller
 {
     /**
@@ -480,8 +482,10 @@ class BiblioController extends Controller
         }
     }
 
-    public function myBooking($id){
+    public function myBooking(){
         $this->authorize('check-user');
+        $id = Auth::user()->id;
+        
         $data = DB::table('bookings')
                 ->join('biblios', 'biblios.id','=','bookings.biblios_id')
                 ->select('biblios.id','biblios.title', 'bookings.booking_date','bookings.description')

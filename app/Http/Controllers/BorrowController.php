@@ -10,6 +10,8 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Facades\Gate;
 
+use Auth;
+
 class BorrowController extends Controller
 {
     /**
@@ -347,6 +349,7 @@ class BorrowController extends Controller
                 ->leftJoin('class','class.id','=','users.class_id')
                 ->select('users.id','users.nisn','users.niy','users.name','class.name as class', 'users.role')
                 ->where('users.role', '!=', 'admin')
+                ->where('is_active','=',1)
                 ->orderBy('users.name', 'asc')
                 ->get();
 
@@ -627,7 +630,8 @@ class BorrowController extends Controller
     }
 
     // ----------------------------------------- FRONT END ------------------------------------------------
-    public function myBorrow($id){
+    public function myBorrow(){
+        $id = Auth::user()->id;
         $data = DB::table('borrows')
                 ->join('borrow_transaction','borrows.id','=','borrow_transaction.borrows_id')
                 ->join('items','items.register_num', '=', 'borrow_transaction.register_num')

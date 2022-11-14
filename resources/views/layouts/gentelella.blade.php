@@ -63,6 +63,7 @@
                       <li><a href="{{url('/daftar-buku')}}">Daftar Buku</a></li>
                       <li><a href="{{url('/daftar-penulis')}}">Daftar Penulis</a></li>
                       <li><a href="{{url('/daftar-penerbit')}}">Daftar Penerbit</a></li>
+                      <li><a href="">Daftar Kategori Buku</a></li>
                       <li><a href="{{url('/daftar-kelas')}}">Daftar Kelas</a></li>
                       <li><a href="{{url('/daftar-murid')}}">Daftar Murid</a></li>
                       <li><a href="{{url('/daftar-guru')}}">Daftar Guru</a></li>

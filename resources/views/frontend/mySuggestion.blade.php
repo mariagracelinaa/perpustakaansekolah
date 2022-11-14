@@ -53,11 +53,13 @@
                                             @if ($d->status != "diterima")
                                               <a class="btn" data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
                                                 <ul class="dropdown-menu">
-                                                    <li>
-                                                        <a href="/ubah-usulan/{{$d->id}}" class="btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Ubah</a></li>
-                                                    <li>
-                                                        <a class="btn" href="/hapus-usulan/{{$d->id}}"><i class="fa fa-trash-o" aria-hidden="true"></i> Hapus</a>
-                                                    </li>
+                                                    @if($d->status == 'proses review')
+                                                        <li>
+                                                            <a href="/ubah-usulan/{{$d->id}}" class="btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Ubah</a></li>
+                                                        <li>
+                                                            <a class="btn" href="/hapus-usulan/{{$d->id}}"><i class="fa fa-trash-o" aria-hidden="true"></i> Hapus</a>
+                                                        </li>
+                                                    @endif
                                                 </ul>
                                               @endif
                                             </div> 
@@ -89,8 +91,10 @@
                                                 @endif
                                             </h6>
                                             <p>Tanggal Pengusulan: {{ Carbon\Carbon::parse($d->date)->isoFormat('D MMMM Y') }}</p>
-                                            <a href="/ubah-usulan/{{$d->id}}" class="card-link">Ubah</a>
-                                            <a href="/hapus-usulan/{{$d->id}}" class="card-link">Hapus</a>
+                                            @if($d->status == 'proses review')
+                                                <a href="/ubah-usulan/{{$d->id}}" class="card-link">Ubah</a>
+                                                <a href="/hapus-usulan/{{$d->id}}" class="card-link">Hapus</a>
+                                            @endif
                                             </div>
                                         </div>
                                     @endforeach

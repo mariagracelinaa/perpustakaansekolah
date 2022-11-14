@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Carbon;
 use DB;
 
+use Auth;
+
 class VisitController extends Controller
 {
     /**
@@ -448,11 +450,13 @@ class VisitController extends Controller
         ]);
     }
 
-    public function history_visit($id){
+    public function history_visit(){
         $this->authorize('check-user');
+        $id = Auth::user()->id;
         $data = DB::table('visits')
                 ->select()
                 ->where('users_id','=', $id)
+                ->orderBy('id','desc')
                 ->get();
 
         // dd($data);

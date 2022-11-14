@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\User;
 use App\Classes;
+
+use Auth;
 use DB;
 
 class UserController extends Controller
@@ -131,9 +133,9 @@ class UserController extends Controller
         }  
     }
 
-    public function getProfileUser($id){
+    public function getProfileUser(){
         
-        $data = User::find($id);
+        $data = User::find(Auth::user()->id);
         // dd($data);
         return view('frontend.profile', compact('data'));
     }

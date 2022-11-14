@@ -10,16 +10,16 @@
               <label>Kategori Buku</label><br>
               <select name="category" id="category" class="form-control" style="background-color: white">
                 <option value="1000">--- Pilih Kategori ---</option>
-                <option value="000">Karya Umum</option>
-                <option value="100">Filsafat</option>
-                <option value="200">Agama</option>
-                <option value="300">Ilmu Sosial</option>
-                <option value="400">Bahasa</option>
-                <option value="500">Ilmu Murni</option>
-                <option value="600">Ilmu Terapan</option>
-                <option value="700">Kesenian dan Olahraga</option>
-                <option value="800">Kesusastraan</option>
-                <option value="900">Sejarah dan Geografi</option>
+                <option value="000">Karya Umum (Ilmu perpustakaan, ensiklopedia umum, penerbitan dan surat kabar)</option>
+                <option value="100">Filsafat (Psikologi, etika, logika, filsafat modern, metafisika)</option>
+                <option value="200">Agama (Alkitab, Agama Kristen)</option>
+                <option value="300">Ilmu Sosial (Ilmu ekonomi, masalah sosial, pendidikan)</option>
+                <option value="400">Bahasa (Bahasa indonesia, bahasa inggris,bahasa lainnya)</option>
+                <option value="500">Ilmu Murni (biologi, kimia, fisika, matematika, ilmu tumbuhan, astronomi)</option>
+                <option value="600">Ilmu Terapan (Pertanian, kesejahteraan rumah tangga, manajemen)</option>
+                <option value="700">Kesenian dan Olahraga (Menggambar, seni lukis, seni musik, olahraga)</option>
+                <option value="800">Kesusastraan (Kesusastraan indonesia, kesusastraan inggris, novel fiksi)</option>
+                <option value="900">Sejarah dan Geografi (Geografi umum, biografi, sejarah umum dunia)</option>
               </select>
             </div>
             <div class="form-group">
