@@ -20,6 +20,9 @@
                 <option value="700">Kesenian dan Olahraga (Menggambar, seni lukis, seni musik, olahraga)</option>
                 <option value="800">Kesusastraan (Kesusastraan indonesia, kesusastraan inggris, novel fiksi)</option>
                 <option value="900">Sejarah dan Geografi (Geografi umum, biografi, sejarah umum dunia)</option>
+                @foreach ($category as $cat)
+                    <option value="{{$cat->id}}">{{ucfirst($cat->name)}}</option>
+                @endforeach
               </select>
             </div>
             <div class="form-group">

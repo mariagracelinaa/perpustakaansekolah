@@ -6,6 +6,7 @@ use App\Biblio;
 use App\Publisher;
 use App\Deletion;
 use App\Item;
+use App\Category;
 use App\Author;
 use Illuminate\Http\Request;
 use DB;
@@ -28,7 +29,8 @@ class BiblioController extends Controller
         $result = Biblio::all();
         $publisher = Publisher::all();
         $author = Author::all();
-        return view('biblio.index', compact('result', 'publisher', 'author'));
+        $category = Category::all();
+        return view('biblio.index', compact('result', 'publisher', 'author', 'category'));
     }
 
     /**
@@ -50,6 +52,7 @@ class BiblioController extends Controller
     public function store(Request $request)
     {
         $this->authorize('check-admin');
+        // dd($request->get('category'));
         // dd($request);
         $validator = \Validator::make($request->all(), [
             'title' => 'required',
@@ -58,7 +61,7 @@ class BiblioController extends Controller
             'listAuthor' => 'required',
             'publish_year' => 'required',
             'first_purchase' => 'required',
-            'ddc' => 'required',
+            'category' => 'required',
             'classification' => 'required',
             'edition' => 'required',
             'page' => 'required',
@@ -73,7 +76,7 @@ class BiblioController extends Controller
             'listAuthor.required' => 'Penulis tidak boleh kosong',
             'publish_year.required' => 'Tahun terbit tidak boleh kosong. Jika tidak diketahui isikan 0',
             'first_purchase.required' => 'Tahun pertama pengadaan tidak boleh kosong. Jika tidak diketahui isikan 0',
-            'ddc.required' => 'Kategori DDC tidak boleh kosong',
+            'category.required' => 'Kategori tidak boleh kosong',
             'classification.required' => 'Nomor panggil buku tidak boleh kosong',
             'edition.required' => 'Edisi tidak boleh kosong. Jika tidak diketahui isikan 1',
             'page.required' => 'Jumlah halaman tidak boleh kosong',
@@ -113,7 +116,7 @@ class BiblioController extends Controller
                 $biblio->publishers_id = $pub_id[0]->id;
                 $biblio->publish_year = $request->get('publish_year');
                 $biblio->first_purchase = $request->get('first_purchase');
-                $biblio->ddc = $request->get('ddc');
+                $biblio->categories_id = $request->get('category');
                 $biblio->classification = $request->get('classification');
                 
                 $ext = $request->file('image')->extension();
@@ -244,10 +247,11 @@ class BiblioController extends Controller
 
         $publisher = Publisher::all();
         $author = Author::all();
+        $category = Category::all();
 
         return response()->json(array(
             'status'=>'OK',
-            'msg'=>view('biblio.getEditForm', compact('data','author_data','publisher','author'))->render()
+            'msg'=>view('biblio.getEditForm', compact('data','author_data','publisher','author','category'))->render()
         ), 200);
     }
 
@@ -267,7 +271,7 @@ class BiblioController extends Controller
             'listAuthor' => 'required',
             'publish_year' => 'required',
             'first_purchase' => 'required',
-            'ddc' => 'required',
+            'category' => 'required',
             'classification' => 'required',
             'edition' => 'required',
             'page' => 'required',
@@ -282,7 +286,7 @@ class BiblioController extends Controller
             'listAuthor.required' => 'Penulis tidak boleh kosong',
             'publish_year.required' => 'Tahun terbit tidak boleh kosong. Jika tidak diketahui isikan 0',
             'first_purchase.required' => 'Tahun pertama pengadaan tidak boleh kosong. Jika tidak diketahui isikan 0',
-            'ddc.required' => 'Kategori DDC tidak boleh kosong',
+            'category.required' => 'Kategori tidak boleh kosong',
             'classification.required' => 'Nomor panggil buku tidak boleh kosong',
             'edition.required' => 'Edisi tidak boleh kosong. Jika tidak diketahui isikan 1',
             'page.required' => 'Jumlah halaman tidak boleh kosong',
@@ -325,7 +329,7 @@ class BiblioController extends Controller
                 $publishers_id = $pub_id[0]->id;
                 $publish_year = $request->get('publish_year');
                 $first_purchase = $request->get('first_purchase');
-                $ddc = $request->get('ddc');
+                $categories_id = $request->get('category');
                 $classification = $request->get('classification');
                 
                 // Hapus foto lama terlebih dahulu 
@@ -354,11 +358,11 @@ class BiblioController extends Controller
                 $location = $request->get('location');
                 $synopsis = $request->get('synopsis');
 
-                // dd($title, $isbn , $publish_year, $publishers_id, $first_purchase, $ddc, $classification, $image, $edition, $page, $book_height, $location);
+                // dd($title, $isbn , $publish_year, $publishers_id, $first_purchase, $categories_id, $classification, $image, $edition, $page, $book_height, $location);
 
                 $data = DB::table('biblios')
                         ->where('id', $request->get('id'))
-                        ->update(['title' => $title, 'isbn' => $isbn, 'publishers_id' => $publishers_id,'publish_year' => $publish_year, 'first_purchase' => $first_purchase, 'ddc' => $ddc, 'classification' => $classification, 'image' => $image, 'edition' => $edition, 'page' => $page, 'book_height' => $book_height, 'location' => $location, 'synopsis' => $synopsis]);
+                        ->update(['title' => $title, 'isbn' => $isbn, 'publishers_id' => $publishers_id,'publish_year' => $publish_year, 'first_purchase' => $first_purchase, 'categories_id' => $categories_id, 'classification' => $classification, 'image' => $image, 'edition' => $edition, 'page' => $page, 'book_height' => $book_height, 'location' => $location, 'synopsis' => $synopsis]);
 
                 $delete = DB::table('authors_biblios')->where('biblios_id', '=', $request->get('id'))->delete();
 
@@ -555,7 +559,8 @@ class BiblioController extends Controller
 
     public function formTopsis(){
         $author = Author::all();
-        return view('frontend.formTopsis',compact('author'));
+        $category = Category::all();
+        return view('frontend.formTopsis',compact('author','category'));
     }
 
     public function topsis(Request $request){
@@ -580,12 +585,22 @@ class BiblioController extends Controller
 
             // bobot 5 -> stok buku diperpustakaan, jika stok ada kasih 5, jika kosong kasih 1
             
-
-            // Query untuk ambil data buku dari db sesuai kategori DDC user
-            $book = DB::table('biblios')
+            if($request->get('category') == 000 || $request->get('category') == 100 || $request->get('category') == 200 || $request->get('category') == 300 || $request->get('category') == 400 || $request->get('category') == 500 || $request->get('category') == 600 || $request->get('category') == 700 || $request->get('category') == 800 || $request->get('category') == 900){
+                // Query untuk ambil data buku dari db sesuai kategori DDC user
+                $book = DB::table('biblios')
+                        ->join('categories','categories.id','=','biblios.categories_id')
+                        ->select('biblios.*')
+                        ->where('categories.ddc','=', $request->get('category'))
+                        ->orderBy('id','desc')
+                        ->get();
+                // dd("Masuk DDC");
+            }else{
+                $book = DB::table('biblios')
                     ->select()
-                    ->where('ddc','=',$request->get('category'))
+                    ->where('categories_id','=',$request->get('category'))
                     ->get();
+                // dd("Masuk cat id");
+            }
             // dd($book);
             
             // ---------------------------------------------------- Decision Matrix ------------------------------------------------------

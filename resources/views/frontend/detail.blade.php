@@ -58,8 +58,8 @@
                                         <td> : {{$data->first_purchase}}</td>
                                     </tr>
                                     <tr>
-                                        <td style="width: 15%">Kelas DDC </td>
-                                        <td> : {{$data->ddc}}</td>
+                                        <td style="width: 15%">Kategori </td>
+                                        <td> : {{ucfirst($data->categories->name)}}</td>
                                     </tr>
                                     <tr>
                                         <td style="width: 15%">Nomor Panggil </td>
@@ -79,7 +79,7 @@
                                     </tr>
                                     <tr>
                                         <td style="width: 15%">Lokasi buku </td>
-                                        <td> : {{$data->location}}</td>
+                                        <td> : {{ucfirst($data->location)}}</td>
                                     </tr>
                                     <tr>
                                         <td align="justify" style="width: 15%;" colspan="3">
@@ -193,8 +193,8 @@
                                     <td> : {{$data->first_purchase}}</td>
                                 </tr>
                                 <tr>
-                                    <td style="width: 15%">Kelas DDC </td>
-                                    <td> : {{$data->ddc}}</td>
+                                    <td style="width: 15%">Kategori </td>
+                                    <td> : {{ucfirst($data->categories->name)}}</td>
                                 </tr>
                                 <tr>
                                     <td style="width: 15%">Nomor Panggil </td>
@@ -214,7 +214,7 @@
                                 </tr>
                                 <tr>
                                     <td style="width: 15%">Lokasi buku </td>
-                                    <td> : {{$data->location}}</td>
+                                    <td> : {{ucfirst($data->location)}}</td>
                                 </tr>
                                 
                                 <tr>

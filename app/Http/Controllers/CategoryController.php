@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use Illuminate\Http\Request;
 use DB;
 
@@ -14,7 +15,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $data = DB::table('categories')->select()->get();
+        return view('category.index', compact('data'));
     }
 
     /**
@@ -35,11 +37,29 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $ddc = $request->get('ddc');
-        $name = $request->get('name');
-
-        DB::table('categories')->insert(['ddc' => $ddc, 'name' => $name]);
+        $this->authorize('check-admin');
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required',
+        ],
+        [
+            'name.required' => 'Nama penulis tidak boleh kosong',
+        ]);
         
+        if (!$validator->passes())
+        {
+            return response()->json(['status'=>0, 'errors'=>$validator->errors()->toArray()]);
+        }else{
+            try{
+                $ddc = $request->get('ddc');
+                $name = $request->get('name');
+
+                DB::table('categories')->insert(['ddc' => $ddc, 'name' => $name]);
+
+                $request->session()->flash('status','Data kategori baru berhasil disimpan');
+            }catch (\PDOException $e) {
+                $request->session()->flash('error', 'Gagal menambah data baru, silahkan coba lagi');
+            }
+        }
     }
 
     /**
@@ -85,5 +105,15 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getEditForm(Request $request){
+        $id = $request->get('id');
+        $data = Category::find($id);
+        dd($data);
+        return response()->json(array(
+            'status'=>'OK',
+            'msg'=>view('category.getEditForm', compact('data'))->render()
+        ), 200);
     }
 }

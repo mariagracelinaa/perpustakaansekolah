@@ -68,14 +68,17 @@ class HomeController extends Controller
     //     return response()->json(array('data' => $data));
     // }
 
-    public function book_cathegory($ddc){
+    public function book_category($ddc){
         if( $ddc == 0){
             $ddc = '000';
         }
+
+        // SELECT * FROM biblios INNER JOIN categories ON categories.id = biblios.categories_id WHERE categories.ddc = '800';
         
         $data = DB::table('biblios')
-                ->select()
-                ->where('ddc','=', $ddc)
+                ->join('categories','categories.id','=','biblios.categories_id')
+                ->select('biblios.*')
+                ->where('categories.ddc','=', $ddc)
                 ->orderBy('id','desc')
                 ->get();
 

@@ -13,6 +13,11 @@ class Biblio extends Model
         return $this->belongsTo('App\Publisher','publishers_id');
     }
 
+    public function categories()
+    {
+        return $this->belongsTo('App\Category','categories_id');
+    }
+
     public function items()
     {
         return $this->hasMany('App\Item', 'biblios_id', 'id');

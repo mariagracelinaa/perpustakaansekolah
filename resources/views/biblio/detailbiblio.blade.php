@@ -51,8 +51,8 @@
                 <td> : {!! nl2br(e($data->synopsis)) !!} </td>
             </tr>
             <tr>
-                <td>Kelas DDC </td>
-                <td> : {{$data->ddc}}</td>
+                <td>Kategori Buku </td>
+                <td> : {{ucfirst($data->categories->name)}}</td>
             </tr>
             <tr>
                 <td>Nomor Panggil </td>
@@ -72,7 +72,7 @@
             </tr>
             <tr>
                 <td>Lokasi buku </td>
-                <td> : {{$data->location}}</td>
+                <td> : {{ucfirst($data->location)}}</td>
             </tr>
         </tbody>
     </table>

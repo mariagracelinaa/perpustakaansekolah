@@ -92,73 +92,21 @@
                 <input id="first_purchase" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Tulis tahun pengadaan buku di perpustakaan pertama kali" name="first_purchase" value="{{$data->first_purchase}}">
                 <span class="text-danger eError-text first_purchase_eError"></span>
             </div>
-            {{-- Combobox DDC --}}
+            {{-- Combobox Kategori --}}
             <div class="form-group">
-                <label for="ddc">Pilih kelas DDC:</label>
-                <select style="width: 100%; height:30px" name="ddc" id="ddc">
-                    @if($data->ddc == "000")
-                        <option value="000" selected >000 - Karya Umum</option>
-                    @else
-                        <option value="000">000 - Karya Umum</option>
-                    @endif
-                    {{-- ------------------------------------------------------------------------------- --}}
-                    @if($data->ddc == "100")
-                        <option value="100" selected >100 - Filsafat</option>
-                    @else
-                        <option value="100">100 - Filsafat</option>
-                    @endif
-                    {{-- ------------------------------------------------------------------------------- --}}
-                    @if($data->ddc == "200")
-                        <option value="200" selected >200 - Agama</option>
-                    @else
-                        <option value="200">200 - Agama</option>
-                    @endif
-                    {{-- ------------------------------------------------------------------------------- --}}
-                    @if($data->ddc == "300")
-                        <option value="300" selected >300 - Ilmu Sosial</option>
-                    @else
-                        <option value="300">300 - Ilmu Sosial</option>
-                    @endif
-                    {{-- ------------------------------------------------------------------------------- --}}
-                    @if($data->ddc == "400")
-                        <option value="400" selected >400 - Bahasa</option>
-                    @else
-                        <option value="400">400 - Bahasa</option>
-                    @endif
-                    {{-- ------------------------------------------------------------------------------- --}}
-                    @if($data->ddc == "500")
-                        <option value="500" selected >500 - Ilmu Murni</option>
-                    @else
-                        <option value="500">500 - Ilmu Murni</option>
-                    @endif
-                    {{-- ------------------------------------------------------------------------------- --}}
-                    @if($data->ddc == "600")
-                        <option value="600" selected >600 - Ilmu Terapan</option>
-                    @else
-                        <option value="600">600 - Ilmu Terapan</option>
-                    @endif
-                    {{-- ------------------------------------------------------------------------------- --}}
-                    @if($data->ddc == "700")
-                        <option value="700" selected >700 - Kesenian dan Olahraga</option>
-                    @else
-                        <option value="700">700 - Kesenian dan Olahraga</option>
-                    @endif
-                    {{-- ------------------------------------------------------------------------------- --}}
-                    @if($data->ddc == "800")
-                        <option value="800" selected >800 - Kesusastraan</option>
-                    @else
-                        <option value="800">800 - Kesusastraan</option>
-                    @endif
-                    {{-- ------------------------------------------------------------------------------- --}}
-                    @if($data->ddc == "900")
-                        <option value="900" selected >900 - Sejarah dan Geografi</option>
-                    @else
-                        <option value="900">900 - Sejarah dan Geografi</option>
-                    @endif
+                <label>Pilih Kategori Buku:</label>
+                <select style="width: 100%; height:30px" name="category" id="category">
+                    @foreach ($category as $cat)
+                        @if($data->categories_id == $cat->id)
+                            <option value="{{$cat->id}}" selected >{{ucfirst($cat->name)}}</option>
+                        @else
+                            <option value="{{$cat->id}}">{{ucfirst($cat->name)}}</option>
+                        @endif
+                    @endforeach
                 </select>
-                <span class="text-danger eError-text ddc_eError"></span>
+                <span class="text-danger eError-text category_eError"></span>
             </div>
-            {{-- Combobox DDC --}}
+            {{-- ComboboxKategoriC --}}
             <div class="form-group">
                 <label>Nomor Panggil</label><span style="color: red"> *</span>
                 <input id="classification" type="text" class="form-control" placeholder="Tulis nomor panggil buku dengan lengkap. Contoh: 813 Sus r" name="classification" value="{{$data->classification}}">

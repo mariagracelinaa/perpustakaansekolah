@@ -25,9 +25,9 @@ Route::get('/koleksi-buku', 'HomeController@index')->name('home');
 // Tampilkan koleksi buku tanpa login -> Habis di filter
 Route::post('/koleksi-buku-filter', 'HomeController@index_filter');
 
-Route::post('/koleksi-buku-kategori-filter', 'HomeController@index_filter_cathegory');
+// Route::post('/koleksi-buku-kategori-filter', 'HomeController@index_filter_category');
 // Tampilkan buku sesuai kategori DDC 000-900 di index tanpa login
-Route::get('/koleksi-buku-kategori/{ddc}', 'HomeController@book_cathegory');
+Route::get('/koleksi-buku-kategori/{ddc}', 'HomeController@book_category');
 // Tampilkan detail buku user
 Route::get('/detail-buku/{id}','BiblioController@front_detailBiblio')->name('detail-buku');
 // Tampilkan buku baru user
@@ -48,6 +48,13 @@ Route::get('/absensi-qr-perpustakaan', 'VisitController@getPageScan');
 Route::post('/scan-qr','VisitController@qr_read');
 
 Route::middleware(['auth'])->group(function(){
+    // Category
+    // Admin akses
+    Route::resource('/daftar-kategori','CategoryController');
+    // Tambah data kategori
+    Route::post('/tambah-kategori','CategoryController@store');
+    Route::post('/daftar-kategori/getEditForm','CategoryController@getEditForm');
+
     // Publisher
     // Admin Akses
 

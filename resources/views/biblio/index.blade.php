@@ -24,7 +24,7 @@
                   <th>ISBN</th>
                   <th>Tahun Terbit</th>
                   <th>Pertama Pengadaan</th>
-                  <th>Kelas DDC</th>
+                  <th>Kategori</th>
                   <th>Nomor Panggil</th>
                   <th>Edisi</th>
                   <th>Jumlah Halaman</th>
@@ -45,12 +45,12 @@
                     <td>{{$biblio->isbn}}</td>
                     <td>{{$biblio->publish_year}}</td>
                     <td>{{$biblio->first_purchase}}</td>
-                    <td>{{$biblio->ddc}}</td>
+                    <td>{{ucfirst($biblio->categories->name)}}</td>
                     <td>{{$biblio->classification}}</td>
                     <td>{{$biblio->edition}}</td>
                     <td>{{$biblio->page}}</td>
                     <td>{{$biblio->book_height}}</td>
-                    <td>{{$biblio->location}}</td>
+                    <td>{{ucfirst($biblio->location)}}</td>
                     <td>{{$biblio->publishers->name}}</td>
                     <td>
                       <div class="container">
@@ -145,24 +145,17 @@
                   <input id="first_purchase" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" placeholder="Isikan tahun pengadaan buku di perpustakaan pertama kali" name="first_purchase">
                   <span class="text-danger error-text first_purchase_error"></span>
                 </div>
-                {{-- Combobox DDC --}}
+                {{-- Combobox Kategori --}}
                 <div class="form-group">
-                  <label for="ddc">Pilih kelas DDC:</label>
-                  <select style="width: 100%; height:30px" name="ddc" id="ddc">
-                    <option value="000">000 - Karya Umum</option>
-                    <option value="100">100 - Filsafat</option>
-                    <option value="200">200 - Agama</option>
-                    <option value="300">300 - Ilmu Sosial</option>
-                    <option value="400">400 - Bahasa</option>
-                    <option value="500">500 - Ilmu Murni</option>
-                    <option value="600">600 - Ilmu Terapan</option>
-                    <option value="700">700 - Kesenian dan Olahraga</option>
-                    <option value="800">800 - Kesusastraan</option>
-                    <option value="900">900 - Sejarah dan Geografi</option>
+                  <label>Pilih Ketegori Buku:</label>
+                  <select style="width: 100%; height:30px" name="category" id="category">
+                    @foreach ($category as $cat)
+                      <option value="{{$cat->id}}">{{$cat->name}}</option>  
+                    @endforeach
                   </select>
-                  <span class="text-danger error-text ddc_error"></span>
+                  <span class="text-danger error-text category_error"></span>
                 </div>
-                {{-- Combobox DDC --}}
+                {{-- Combobox Kategori --}}
                 <div class="form-group">
                   <label>Nomor Panggil</label><span style="color: red"> *</span>
                   <input id="classification" type="text" class="form-control" placeholder="Tulis nomor panggil buku dengan lengkap. Contoh: 813 Sus r" name="classification">
