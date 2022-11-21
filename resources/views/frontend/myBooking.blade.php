@@ -20,6 +20,7 @@
                                     <th>Judul Buku</th>
                                     <th>Tanggal Pesan</th>
                                     <th>Alasan Pesan</th>
+                                    <th>Status</th>
                                     <th>Aksi</th>
                                   </tr>
                                 </thead>
@@ -37,9 +38,22 @@
                                                 -
                                             @endif
                                         </td>
+                                        @if ($d->status == "proses")
+                                            <td style="background-color: rgb(255, 255, 157)">
+                                                Proses
+                                            </td>
+                                        @elseif ($d->status == "selesai")
+                                            <td style="background-color: rgb(78, 255, 164)">
+                                                Selesai
+                                            </td>
+                                        @else
+                                            <td style="background-color: rgb(255, 100, 98)">
+                                                Dibatalkan
+                                            </td>
+                                        @endif
                                         <td style="width: 2%;">
                                             <div class="container" style="color: white; ">
-                                                <a onclick="deleteMyBooking({{Auth::user()->id}},'{{$d->id}}')" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true" style="height: 20px;"></i></a>
+                                                <a onclick="deleteMyBooking({{Auth::user()->id}},'{{$d->id}}','{{$d->bid}}')" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true" style="height: 20px;"></i></a>
                                             </div> 
                                         </td>
                                     </tr>
@@ -58,7 +72,20 @@
                                             <div class="card-body">
                                             <h5 class="card-title">{{$d->title}}</h5>
                                             <p>{{ Carbon\Carbon::parse($d->booking_date)->isoFormat('D MMMM Y') }}</p>
-                                            <a onclick="deleteMyBooking({{Auth::user()->id}},'{{$d->id}}')" class="card-link text-danger">Hapus</a>
+                                            @if ($d->status == "proses")
+                                                <p style="background-color: rgb(255, 255, 157)">
+                                                    Status : Proses
+                                                </p>
+                                            @elseif ($d->status == "selesai")
+                                                <p style="background-color: rgb(78, 255, 164)">
+                                                    Status : Selesai
+                                                </td>
+                                            @else
+                                                <p style="background-color: rgb(255, 100, 98)">
+                                                    Status : Dibatalkan
+                                                </p>
+                                            @endif
+                                            <a onclick="deleteMyBooking({{Auth::user()->id}},'{{$d->id}}','{{$d->bid}}')" class="card-link text-danger">Batalkan</a>
                                             </div>
                                         </div>
                                     @endforeach
@@ -77,7 +104,7 @@
 
 @section('javascript')
 <script type="text/javascript">
-    function deleteMyBooking(id, biblios_id,) {
+    function deleteMyBooking(id, biblios_id,bookings_id) {
         $.ajax({
             type:'POST',
             url:'{{url("/hapus-pesanan")}}',
@@ -85,6 +112,7 @@
                     '_token': '<?php echo csrf_token() ?>',
                     'id':id,
                     'biblios_id': biblios_id,
+                    'bookings_id': bookings_id,
                 },
             success:function(data) {
                 location.reload();

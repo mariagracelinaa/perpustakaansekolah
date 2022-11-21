@@ -96,7 +96,7 @@ Route::middleware(['auth'])->group(function(){
     // Cetak laporan penghapusan admin
     Route::get('/cetak-laporan-penghapusan','ItemController@printDeleteReport')->name('daftar-penghapusan-buku.printDeleteReport');
     // Tampilkan daftar pesanan admin
-    Route::get('/daftar-pesanan','BiblioController@bookingList');
+    Route::get('/daftar-pesanan-buku','BiblioController@bookingList');
     // Tampilkan daftar pesanan admin -> filter
     Route::get('/daftar-pemesanan-filter','BiblioController@bookingList_filter');
 

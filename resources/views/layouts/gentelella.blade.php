@@ -37,6 +37,10 @@
 
     <!-- Datatables -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.13.1/b-2.3.3/b-colvis-2.3.3/b-html5-2.3.3/b-print-2.3.3/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap4.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.3.3/css/buttons.bootstrap4.min.css"/>
+     
 
 
     {{-- PDF --}}
@@ -79,7 +83,7 @@
                     <ul class="nav child_menu">
                       <li><a href="{{url('/kunjungan')}}">Buku Tamu</a></li>
                       <li><a href="{{url('/laporan-kunjungan')}}">Daftar Kunjungan</a></li>
-                      <li><a href="{{url('/daftar-pesanan')}}">Daftar Pemesanan Buku</a></li>
+                      <li><a href="{{url('/daftar-pesanan-buku')}}">Daftar Pemesanan Buku</a></li>
                       <li><a href="{{url('/daftar-usulan-buku')}}">Daftar Usulan Buku</a></li>
                       <li><a href="{{url('/daftar-penghapusan-buku')}}">Laporan Penghapusan</a></li>
                       <li><a href="{{url('/grafik-pengunjung')}}">Laporan Grafik Pengunjung</a></li>
@@ -190,7 +194,16 @@
 
     <!-- Datatables -->
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
-
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    {{-- <script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap4.min.js"></script> --}}
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.3/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.3/js/buttons.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.3/js/buttons.colVis.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.3/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.3/js/buttons.print.min.js"></script>
     
 
     <!-- Custom Theme Scripts -->
@@ -209,11 +222,19 @@
       });
 
       var table = $('#custometable').DataTable( {
+        responsive:true,
         language: {
           url : '//cdn.datatables.net/plug-ins/1.12.1/i18n/id.json'
         },
-        "lengthMenu" : [[10,25,50, -1], [10,25,50,"Semua"]]
+        "lengthMenu" : [[10,25,50, -1], [10,25,50,"Semua"]],
+        // dom: '<"html5buttons"B>lTfgitp',
+
+        buttons: [
+          {extend:'copy'}, {extend: 'excel'}, {extend: 'pdf'},{extend: 'print'},'pageLength'
+        ],
+        
       });
+
     </script>
     @yield('javascript')
   </body>

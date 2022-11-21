@@ -45,14 +45,16 @@
                                         </div><br>
                                         <div class="row g-4" id="book_list">
                                             @foreach ( $data as $d)
-                                                <a href="/detail-buku/{{$d[0]->id}}" class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                                                <a href="/detail-buku/{{$d[0]->id}}" class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s" style="text-decoration: none">
                                                     <div class="team-item bg-light">
+                                                        
+                                                        
                                                         <div class="overflow-hidden">
                                                             <img class="img-fluid" src="{{asset('images/'.$d[0]->image)}}" id="cover-book">
                                                         </div>
                                                         <div class="text-center p-4">
                                                             <h5 class="mb-0">{{$d[0]->title}}</h5>
-                                                            {{-- <small>Penulis</small> --}}
+                                                            <small style="color: black; text-decoration: none;">Direkomendasikan {{number_format($arr_topsis[$d[0]->id], 4, '.', '') *100}} %</small>
                                                         </div>
                                                     </div>
                                                 </a>
@@ -72,226 +74,285 @@
                 <div class="row">
                     <div class="col-sm-12" style="margin: 20px">
                         <h2>Hasil Angka Topsis</h2>
-                        <h3>Langkah 1 - Membentuk Decision Matrix</h3>
-                        <table class="table">
-                            <thead>
-                                <th>Judul Buku</th>
-                                <th>Kriteria 1</th>
-                                <th>Kriteria 2</th>
-                                <th>Kriteria 3</th>
-                                <th>Kriteria 4</th>
-                                <th>Kriteria 5</th>
-                            </thead>
-                            <tbody>
-                                @foreach ($book as $bk)
-                                    <tr>
-                                        <td>{{$bk->title}}</td>
-                                        <td>{{$arr_count_borrow[$bk->id]->count}}</td>
-                                        <td>{{$arr_count_page[$bk->id]->page}}</td>
-                                        <td>{{$arr_publish_year[$bk->id]->publish_year}}</td>
-                                        <td>{{$arr_age[$bk->id]->age}}</td>
-                                        <td>{{$arr_stock[$bk->id]->stock}}</td>
-                                    </tr>
+                        <div class="accordion" id="accordionPanelsStayOpenExample">
+                            <div class="accordion-item">
+                              <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
+                                    Langkah 1 - Membentuk Decision Matrix
+                                </button>
+                              </h2>
+                              <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                                <div class="accordion-body">
+                                    <table class="table">
+                                        <thead>
+                                            <th>Judul Buku</th>
+                                            <th>Kriteria 1</th>
+                                            <th>Kriteria 2</th>
+                                            <th>Kriteria 3</th>
+                                            <th>Kriteria 4</th>
+                                            <th>Kriteria 5</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($book as $bk)
+                                                <tr>
+                                                    <td>{{$bk->title}}</td>
+                                                    <td>{{$arr_count_borrow[$bk->id]->count}}</td>
+                                                    <td>{{$arr_count_page[$bk->id]->page}}</td>
+                                                    <td>{{$arr_publish_year[$bk->id]->publish_year}}</td>
+                                                    <td>{{$arr_age[$bk->id]->age}}</td>
+                                                    <td>{{$arr_stock[$bk->id]->stock}}</td>
+                                                </tr>
+                                                
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="accordion-item">
+                              <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                                    Langkah 2 - Membentuk Matrix R
+                                </button>
+                              </h2>
+                              <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                                <div class="accordion-body">
+                                    <h4>Kuadratkan setiap nilai pada decision matrix</h4>
+                                    <table class="table">
+                                        <thead>
+                                            <th>Judul Buku</th>
+                                            <th>Kriteria 1</th>
+                                            <th>Kriteria 2</th>
+                                            <th>Kriteria 3</th>
+                                            <th>Kriteria 4</th>
+                                            <th>Kriteria 5</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($book as $bk)
+                                                <tr>
+                                                    <td>{{$bk->title}}</td>
+                                                    <td>{{$pow_count_borrow[$bk->id]}}</td>
+                                                    <td>{{$pow_count_page[$bk->id]}}</td>
+                                                    <td>{{$pow_publish_year[$bk->id]}}</td>
+                                                    <td>{{$pow_age[$bk->id]}}</td>
+                                                    <td>{{$pow_stock[$bk->id]}}</td>
+                                                </tr>
+                                            @endforeach
+                                            <tr>
+                                                <th>Total</th>
+                                                <td>{{$k1}}</td>
+                                                <td>{{$k2}}</td>
+                                                <td>{{$k3}}</td>
+                                                <td>{{$k4}}</td>
+                                                <td>{{$k5}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Akar</th>
+                                                <td>{{number_format($sqrt_k1, 4, '.', '')}}</td>
+                                                <td>{{number_format($sqrt_k2, 4, '.', '')}}</td>
+                                                <td>{{number_format($sqrt_k3, 4, '.', '')}}</td>
+                                                <td>{{number_format($sqrt_k4, 4, '.', '')}}</td>
+                                                <td>{{number_format($sqrt_k5, 4, '.', '')}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                     
-                                @endforeach
-                            </tbody>
-                        </table>
-
-                        <h3>Langkah 2 - Membentuk Matrix R</h3>
-                        <h4>Kuadratkan setiap nilai pada decision matrix</h4>
-                        <table class="table">
-                            <thead>
-                                <th>Judul Buku</th>
-                                <th>Kriteria 1</th>
-                                <th>Kriteria 2</th>
-                                <th>Kriteria 3</th>
-                                <th>Kriteria 4</th>
-                                <th>Kriteria 5</th>
-                            </thead>
-                            <tbody>
-                                @foreach ($book as $bk)
-                                    <tr>
-                                        <td>{{$bk->title}}</td>
-                                        <td>{{$pow_count_borrow[$bk->id]}}</td>
-                                        <td>{{$pow_count_page[$bk->id]}}</td>
-                                        <td>{{$pow_publish_year[$bk->id]}}</td>
-                                        <td>{{$pow_age[$bk->id]}}</td>
-                                        <td>{{$pow_stock[$bk->id]}}</td>
-                                    </tr>
-                                @endforeach
-                                <tr>
-                                    <th>Total</th>
-                                    <td>{{$k1}}</td>
-                                    <td>{{$k2}}</td>
-                                    <td>{{$k3}}</td>
-                                    <td>{{$k4}}</td>
-                                    <td>{{$k5}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Akar</th>
-                                    <td>{{number_format($sqrt_k1, 4, '.', '')}}</td>
-                                    <td>{{number_format($sqrt_k2, 4, '.', '')}}</td>
-                                    <td>{{number_format($sqrt_k3, 4, '.', '')}}</td>
-                                    <td>{{number_format($sqrt_k4, 4, '.', '')}}</td>
-                                    <td>{{number_format($sqrt_k5, 4, '.', '')}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        
-                        <h4>Bagi setiap nilai pada decision matrix dengan hasil akar setiap kriteria</h4>
-                        <table class="table">
-                            <thead>
-                                <th>Judul Buku</th>
-                                <th>Kriteria 1</th>
-                                <th>Kriteria 2</th>
-                                <th>Kriteria 3</th>
-                                <th>Kriteria 4</th>
-                                <th>Kriteria 5</th>
-                            </thead>
-                            <tbody>
-                                @foreach ($book as $bk)
-                                    <tr>
-                                        <td>{{$bk->title}}</td>
-                                        <td>{{number_format($matrix_r_k1[$bk->id], 4, '.', '')}}</td>
-                                        <td>{{number_format($matrix_r_k2[$bk->id], 4, '.', '')}}</td>
-                                        <td>{{number_format($matrix_r_k3[$bk->id], 4, '.', '')}}</td>
-                                        <td>{{number_format($matrix_r_k4[$bk->id], 4, '.', '')}}</td>
-                                        <td>{{number_format($matrix_r_k5[$bk->id], 4, '.', '')}}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-
-                        <h3>Langkah 3 - Membentuk Matrix V</h3>
-                        <h4>Kalikan setiap nilai pada matrix R dengan bobot setiap kriteria</h4>
-                        <h6>Bobot K1 = {{$bobot_k1}}; Bobot K2 = {{$bobot_k2}}; Bobot K3 = {{$bobot_k3}}; Bobot K4 = {{$bobot_k4}}; Bobot K5 = {{$bobot_k5}};</h6>
-                        <table class="table">
-                            <thead>
-                                <th>Judul Buku</th>
-                                <th>Kriteria 1</th>
-                                <th>Kriteria 2</th>
-                                <th>Kriteria 3</th>
-                                <th>Kriteria 4</th>
-                                <th>Kriteria 5</th>
-                            </thead>
-                            <tbody>
-                                @foreach ($book as $bk)
-                                    <tr>
-                                        <td>{{$bk->title}}</td>
-                                        <td>{{number_format($matrix_v_k1[$bk->id], 4, '.', '')}}</td>
-                                        <td>{{number_format($matrix_v_k2[$bk->id], 4, '.', '')}}</td>
-                                        <td>{{number_format($matrix_v_k3[$bk->id], 4, '.', '')}}</td>
-                                        <td>{{number_format($matrix_v_k4[$bk->id], 4, '.', '')}}</td>
-                                        <td>{{number_format($matrix_v_k5[$bk->id], 4, '.', '')}}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-
-                        <h3>Langkah 4 - Menentukan Solusi Ideal Positif (A*) dan Solusi Ideal Negatif (A')</h3>
-                        <table class="table">
-                            <thead>
-                                <th></th>
-                                <th>Kriteria 1</th>
-                                <th>Kriteria 2</th>
-                                <th>Kriteria 3</th>
-                                <th>Kriteria 4</th>
-                                <th>Kriteria 5</th>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>A*</td>
-                                    <td>{{number_format($solusi_ideal_positif_1, 4, '.', '')}}</td>
-                                    <td>{{number_format($solusi_ideal_positif_2, 4, '.', '')}}</td>
-                                    <td>{{number_format($solusi_ideal_positif_3, 4, '.', '')}}</td>
-                                    <td>{{number_format($solusi_ideal_positif_4, 4, '.', '')}}</td>
-                                    <td>{{number_format($solusi_ideal_positif_5, 4, '.', '')}}</td>
-                                </tr>
-                                <tr>
-                                    <td>A'</td>
-                                    <td>{{number_format($solusi_ideal_negatif_1, 4, '.', '')}}</td>
-                                    <td>{{number_format($solusi_ideal_negatif_2, 4, '.', '')}}</td>
-                                    <td>{{number_format($solusi_ideal_negatif_3, 4, '.', '')}}</td>
-                                    <td>{{number_format($solusi_ideal_negatif_4, 4, '.', '')}}</td>
-                                    <td>{{number_format($solusi_ideal_negatif_5, 4, '.', '')}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <h3>Langkah 5 - Menentukan jarak Solusi Ideal Positif (S*) dan jarak Solusi Ideal Negatif (S')</h3>
-                        <h2>Jarak Solusi Ideal Positif</h2>
-                        <table class="table">
-                            <thead>
-                                <th>Buku</th>
-                                <th>Kriteria 1</th>
-                                <th>Kriteria 2</th>
-                                <th>Kriteria 3</th>
-                                <th>Kriteria 4</th>
-                                <th>Kriteria 5</th>
-                                <th>S*</th>
-                            </thead>
-                            <tbody>
-                                @foreach ($book as $bk)
-                                    <tr>
-                                        <td>{{$bk->title}}</td>
-                                        <td>{{number_format($arr_jarak_solusi_ideal_positif_1[$bk->id], 4, '.', '')}}</td>
-                                        <td>{{number_format($arr_jarak_solusi_ideal_positif_2[$bk->id], 4, '.', '')}}</td>
-                                        <td>{{number_format($arr_jarak_solusi_ideal_positif_3[$bk->id], 4, '.', '')}}</td>
-                                        <td>{{number_format($arr_jarak_solusi_ideal_positif_4[$bk->id], 4, '.', '')}}</td>
-                                        <td>{{number_format($arr_jarak_solusi_ideal_positif_5[$bk->id], 4, '.', '')}}</td>
-                                        <td>{{number_format($jarak_solusi_ideal_positif[$bk->id], 4, '.', '')}}</td>
-                                    </tr>
-                                @endforeach
-                                
-                            </tbody>
-                        </table>
-                        <h2>Jarak Solusi Ideal Negatif</h2>
-                        <table class="table">
-                            <thead>
-                                <th>Buku</th>
-                                <th>Kriteria 1</th>
-                                <th>Kriteria 2</th>
-                                <th>Kriteria 3</th>
-                                <th>Kriteria 4</th>
-                                <th>Kriteria 5</th>
-                                <th>S'</th>
-                            </thead>
-                            <tbody>
-                                @foreach ($book as $bk)
-                                    <tr>
-                                        <td>{{$bk->title}}</td>
-                                        <td>{{number_format($arr_jarak_solusi_ideal_negatif_1[$bk->id], 4, '.', '')}}</td>
-                                        <td>{{number_format($arr_jarak_solusi_ideal_negatif_2[$bk->id], 4, '.', '')}}</td>
-                                        <td>{{number_format($arr_jarak_solusi_ideal_negatif_3[$bk->id], 4, '.', '')}}</td>
-                                        <td>{{number_format($arr_jarak_solusi_ideal_negatif_4[$bk->id], 4, '.', '')}}</td>
-                                        <td>{{number_format($arr_jarak_solusi_ideal_negatif_5[$bk->id], 4, '.', '')}}</td>
-                                        <td>{{number_format($jarak_solusi_ideal_negatif[$bk->id], 4, '.', '')}}</td>
-                                    </tr>
-                                @endforeach
-                                
-                            </tbody>
-                        </table>
-                        <h3>Langkah 6 - Menghitung nilai kedekatan relatif tiap alternatif (C)</h3>
-                        <table class="table">
-                            <thead>
-                                <th>Buku</th>
-                                <th>Kedekatan relatif (C)</th>
-                                <th>Persen %</th>
-                                <th>Ranking</th>
-                            </thead>
-                            <tbody>
-                                @php
-                                    $i = 1;
-                                @endphp
-                                @foreach ($arr_topsis as $at => $val)
-                                    <tr>
-                                        <td>{{$data[$i-1][0]->title}}</td>
-                                        <td>{{number_format($val, 4, '.', '')}}</td>
-                                        <td>{{number_format($val, 4, '.', '') *100}} %</td>
-                                        <td>{{ $i++ }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                    <h4>Bagi setiap nilai pada decision matrix dengan hasil akar setiap kriteria</h4>
+                                    <table class="table">
+                                        <thead>
+                                            <th>Judul Buku</th>
+                                            <th>Kriteria 1</th>
+                                            <th>Kriteria 2</th>
+                                            <th>Kriteria 3</th>
+                                            <th>Kriteria 4</th>
+                                            <th>Kriteria 5</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($book as $bk)
+                                                <tr>
+                                                    <td>{{$bk->title}}</td>
+                                                    <td>{{number_format($matrix_r_k1[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($matrix_r_k2[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($matrix_r_k3[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($matrix_r_k4[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($matrix_r_k5[$bk->id], 4, '.', '')}}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>        
+                                </div>
+                              </div>
+                            </div>
+                            <div class="accordion-item">
+                              <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                                    Langkah 3 - Membentuk Matrix V
+                                </button>
+                              </h2>
+                              <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+                                <div class="accordion-body">
+                                    <h4>Kalikan setiap nilai pada matrix R dengan bobot setiap kriteria</h4>
+                                    <h6>Bobot K1 = {{$bobot_k1}}; Bobot K2 = {{$bobot_k2}}; Bobot K3 = {{$bobot_k3}}; Bobot K4 = {{$bobot_k4}}; Bobot K5 = {{$bobot_k5}};</h6>
+                                    <table class="table">
+                                        <thead>
+                                            <th>Judul Buku</th>
+                                            <th>Kriteria 1</th>
+                                            <th>Kriteria 2</th>
+                                            <th>Kriteria 3</th>
+                                            <th>Kriteria 4</th>
+                                            <th>Kriteria 5</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($book as $bk)
+                                                <tr>
+                                                    <td>{{$bk->title}}</td>
+                                                    <td>{{number_format($matrix_v_k1[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($matrix_v_k2[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($matrix_v_k3[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($matrix_v_k4[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($matrix_v_k5[$bk->id], 4, '.', '')}}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingFour">
+                                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="false" aria-controls="panelsStayOpen-collapseFour">
+                                    Langkah 4 - Menentukan Solusi Ideal Positif (A*) dan Solusi Ideal Negatif (A')
+                                  </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFour">
+                                  <div class="accordion-body">
+                                    <table class="table">
+                                        <thead>
+                                            <th></th>
+                                            <th>Kriteria 1</th>
+                                            <th>Kriteria 2</th>
+                                            <th>Kriteria 3</th>
+                                            <th>Kriteria 4</th>
+                                            <th>Kriteria 5</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>A*</td>
+                                                <td>{{number_format($solusi_ideal_positif_1, 4, '.', '')}}</td>
+                                                <td>{{number_format($solusi_ideal_positif_2, 4, '.', '')}}</td>
+                                                <td>{{number_format($solusi_ideal_positif_3, 4, '.', '')}}</td>
+                                                <td>{{number_format($solusi_ideal_positif_4, 4, '.', '')}}</td>
+                                                <td>{{number_format($solusi_ideal_positif_5, 4, '.', '')}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>A'</td>
+                                                <td>{{number_format($solusi_ideal_negatif_1, 4, '.', '')}}</td>
+                                                <td>{{number_format($solusi_ideal_negatif_2, 4, '.', '')}}</td>
+                                                <td>{{number_format($solusi_ideal_negatif_3, 4, '.', '')}}</td>
+                                                <td>{{number_format($solusi_ideal_negatif_4, 4, '.', '')}}</td>
+                                                <td>{{number_format($solusi_ideal_negatif_5, 4, '.', '')}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingFive">
+                                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="false" aria-controls="panelsStayOpen-collapseFive">
+                                    Langkah 5 - Menentukan jarak Solusi Ideal Positif (S*) dan jarak Solusi Ideal Negatif (S')
+                                  </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFive">
+                                  <div class="accordion-body">
+                                    <h2>Jarak Solusi Ideal Positif</h2>
+                                    <table class="table">
+                                        <thead>
+                                            <th>Buku</th>
+                                            <th>Kriteria 1</th>
+                                            <th>Kriteria 2</th>
+                                            <th>Kriteria 3</th>
+                                            <th>Kriteria 4</th>
+                                            <th>Kriteria 5</th>
+                                            <th>S*</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($book as $bk)
+                                                <tr>
+                                                    <td>{{$bk->title}}</td>
+                                                    <td>{{number_format($arr_jarak_solusi_ideal_positif_1[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($arr_jarak_solusi_ideal_positif_2[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($arr_jarak_solusi_ideal_positif_3[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($arr_jarak_solusi_ideal_positif_4[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($arr_jarak_solusi_ideal_positif_5[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($jarak_solusi_ideal_positif[$bk->id], 4, '.', '')}}</td>
+                                                </tr>
+                                            @endforeach
+                                            
+                                        </tbody>
+                                    </table>
+                                    <h2>Jarak Solusi Ideal Negatif</h2>
+                                    <table class="table">
+                                        <thead>
+                                            <th>Buku</th>
+                                            <th>Kriteria 1</th>
+                                            <th>Kriteria 2</th>
+                                            <th>Kriteria 3</th>
+                                            <th>Kriteria 4</th>
+                                            <th>Kriteria 5</th>
+                                            <th>S'</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($book as $bk)
+                                                <tr>
+                                                    <td>{{$bk->title}}</td>
+                                                    <td>{{number_format($arr_jarak_solusi_ideal_negatif_1[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($arr_jarak_solusi_ideal_negatif_2[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($arr_jarak_solusi_ideal_negatif_3[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($arr_jarak_solusi_ideal_negatif_4[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($arr_jarak_solusi_ideal_negatif_5[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($jarak_solusi_ideal_negatif[$bk->id], 4, '.', '')}}</td>
+                                                </tr>
+                                            @endforeach
+                                            
+                                        </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingSix">
+                                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="false" aria-controls="panelsStayOpen-collapseSix">
+                                    Langkah 6 - Menghitung nilai kedekatan relatif tiap alternatif (C)
+                                  </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingSix">
+                                  <div class="accordion-body">
+                                    <table class="table">
+                                        <thead>
+                                            <th>Buku</th>
+                                            <th>Kedekatan relatif (C)</th>
+                                            <th>Persen %</th>
+                                            <th>Ranking</th>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                $i = 1;
+                                            @endphp
+                                            @foreach ($arr_topsis as $at => $val)
+                                                <tr>
+                                                    <td>{{$data[$i-1][0]->title}}</td>
+                                                    <td>{{number_format($val, 4, '.', '')}}</td>
+                                                    <td>{{number_format($val, 4, '.', '') *100}} %</td>
+                                                    <td>{{ $i++ }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

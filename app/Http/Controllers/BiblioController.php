@@ -382,30 +382,53 @@ class BiblioController extends Controller
 
     public function bookingList(){
         $this->authorize('check-admin');
+        $filter = "";
+
         $start = "";
         $end = "";
         $data = DB::table('bookings')
                 ->join('biblios', 'biblios.id','=','bookings.biblios_id')
                 ->join('users','users.id','=','bookings.users_id')
-                ->select('users.name', 'biblios.title', 'bookings.booking_date','bookings.description')
+                ->select('users.name', 'biblios.title', 'bookings.booking_date','bookings.description','bookings.status')
                 ->orderBy('booking_date','ASC')
                 ->get();
         // dd($data);
-        return view('booking.index', compact('data', 'start', 'end'));
+        return view('booking.index', compact('data', 'start', 'end','filter'));
     }
 
     public function bookingList_filter(Request $request){
         $this->authorize('check-admin');
+        $filter = $request->get('filter');
         $start = $request->get('date_start');
         $end = $request->get('date_end');
-        $data = DB::table('bookings')
+        $status = $request->get('status');
+
+        if($filter == "date"){
+            $data = DB::table('bookings')
                 ->join('biblios', 'biblios.id','=','bookings.biblios_id')
                 ->join('users','users.id','=','bookings.users_id')
-                ->select('users.name', 'biblios.title', DB::raw('DATE_FORMAT(bookings.booking_date, "%d-%m-%Y") as booking_date'),'bookings.description')
+                ->select('users.name', 'biblios.title', DB::raw('DATE_FORMAT(bookings.booking_date, "%d-%m-%Y") as booking_date'),'bookings.description','bookings.status')
                 ->whereBetween('booking_date', [$start, $end])
                 ->orderBy('booking_date','ASC')
                 ->get();
-        return view('booking.index', compact('data', 'start', 'end'));
+        }else if($filter == "status"){
+            $data = DB::table('bookings')
+                ->join('biblios', 'biblios.id','=','bookings.biblios_id')
+                ->join('users','users.id','=','bookings.users_id')
+                ->select('users.name', 'biblios.title', DB::raw('DATE_FORMAT(bookings.booking_date, "%d-%m-%Y") as booking_date'),'bookings.description','bookings.status')
+                ->where('status', '=', $status)
+                ->orderBy('booking_date','ASC')
+                ->get();
+        }else{
+            $data = DB::table('bookings')
+                ->join('biblios', 'biblios.id','=','bookings.biblios_id')
+                ->join('users','users.id','=','bookings.users_id')
+                ->select('users.name', 'biblios.title', 'bookings.booking_date','bookings.description','bookings.status')
+                ->orderBy('booking_date','ASC')
+                ->get();
+        }
+        
+        return view('booking.index', compact('data', 'start', 'end','filter', 'status'));
     }
 
     // ----------------------------------------- FRONT END ------------------------------------------------
@@ -471,9 +494,20 @@ class BiblioController extends Controller
     public function addBooking(Request $request){
         $this->authorize('check-user');
         // dd($request->get('id'), $request->get('biblios_id'), $request->get('desc'));
+        $biblios_id = $request->get('biblios_id');
+        $users_id = $request->get('id');
+        $desc = $request->get('desc');
+
+        $count = DB::table('bookings')->select(DB::raw('COUNT(*) as count'))->where('biblios_id','=',$biblios_id)->where('users_id','=',$users_id)->get();
+
+        $count = $count[0]->count;
+        $count = $count+1;
+        $bookings_id = $biblios_id."/".$users_id."/".$count."/proses";
+        // dd($bookings_id);
+
         try{
             DB::table('bookings')->insert(
-                ['biblios_id' => $request->get('biblios_id') , 'users_id' => $request->get('id'), 'description' => $request->get('desc')]
+                ['id' => $bookings_id,'biblios_id' => $biblios_id , 'users_id' => $users_id, 'description' => $desc]
             );
 
             return redirect('/detail-buku/'.$request->get('biblios_id'))->with('status','Berhasil memesan buku');
@@ -488,7 +522,7 @@ class BiblioController extends Controller
         
         $data = DB::table('bookings')
                 ->join('biblios', 'biblios.id','=','bookings.biblios_id')
-                ->select('biblios.id','biblios.title', 'bookings.booking_date','bookings.description')
+                ->select('biblios.id','biblios.title', 'bookings.booking_date','bookings.description','bookings.id as bid','bookings.status')
                 ->where('users_id','=',$id)
                 ->orderBy('booking_date','ASC')
                 ->get();
@@ -497,15 +531,24 @@ class BiblioController extends Controller
 
     public function deleteMyBooking(Request $request){
         $this->authorize('check-user');
+        $bookings_id = $request->get('bookings_id');
         $users_id = $request->get('id');
         $biblios_id = $request->get('biblios_id');
         // dd($users_id, $biblios_id);
+        $arr_id = [];
+        $i = 0;
+        foreach(explode('/', $bookings_id) as $fields) {
+            $arr_id[$i] = $fields;
+            $i++;
+        }
+        // dd("halo");
 
         try{
-            DB::table('bookings')->where('users_id', '=', $users_id)->where('biblios_id','=',$biblios_id)->delete();
-            return session()->flash('status','Berhasil menghapus pemesanan buku');
+            $new_id = $biblios_id."/".$users_id."/".$arr_id[2]."/dibatalkan";
+            DB::table('bookings')->where('id', '=', $bookings_id)->update(['id' => $new_id ,'status' => "dibatalkan"]);
+            return session()->flash('status','Berhasil membatalkan pemesanan buku');
         }catch (\PDOException $e) {
-            return session()->flash('error', 'Gagal menghapus pemesanan buku, silahkan coba lagi');
+            return session()->flash('error', 'Gagal membatalkan pemesanan buku, silahkan coba lagi');
         }
         
     }
@@ -788,18 +831,9 @@ class BiblioController extends Controller
                 $i++;
             }
 
+            // dd($arr_topsis[16]);
             // dd($data);
             return view('frontend.recommendation', compact('data','book','arr_count_borrow', 'arr_count_page', 'arr_publish_year', 'arr_age', 'arr_stock', 'pow_count_borrow', 'pow_count_page','pow_publish_year','pow_age','pow_stock','k1','k2','k3','k4','k5','sqrt_k1','sqrt_k2','sqrt_k3','sqrt_k4','sqrt_k5','matrix_r_k1','matrix_r_k2','matrix_r_k3','matrix_r_k4','matrix_r_k5','bobot_k1','bobot_k2','bobot_k3','bobot_k4','bobot_k5','matrix_v_k1','matrix_v_k2','matrix_v_k3','matrix_v_k4','matrix_v_k5','solusi_ideal_positif_1','solusi_ideal_positif_2','solusi_ideal_positif_3','solusi_ideal_positif_4','solusi_ideal_positif_5','solusi_ideal_negatif_1','solusi_ideal_negatif_2','solusi_ideal_negatif_3','solusi_ideal_negatif_4','solusi_ideal_negatif_5','arr_jarak_solusi_ideal_positif_1','arr_jarak_solusi_ideal_positif_2','arr_jarak_solusi_ideal_positif_3','arr_jarak_solusi_ideal_positif_4','arr_jarak_solusi_ideal_positif_5','jarak_solusi_ideal_positif','arr_jarak_solusi_ideal_negatif_1','arr_jarak_solusi_ideal_negatif_2','arr_jarak_solusi_ideal_negatif_3','arr_jarak_solusi_ideal_negatif_4','arr_jarak_solusi_ideal_negatif_5','jarak_solusi_ideal_negatif','arr_topsis'));
         }
     }
-
-    // public function getCheckTopsis(Request $request){
-    //     $arr_count_borrow = $request->get('borrow');
-    //     $arr_count_page = $request->get('age');
-    //     $arr_publish_year = $request->get('publish_year');
-    //     $arr_age = $request->get('age');
-    //     $arr_stock = $request->get('stock');
-
-    //     return view('frontend.check_topsis', compact('arr_count_borrow', 'arr_count_page', 'arr_publish_year', 'arr_age', 'arr_stock'));
-    // }
 }

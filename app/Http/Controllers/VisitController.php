@@ -241,7 +241,7 @@ class VisitController extends Controller
                 ->join('users','users.id','=','visits.users_id')
                 ->leftJoin('class','class.id','=','users.class_id')
                 ->select(DB::raw('DATE_FORMAT(visits.visit_time, "%d-%m-%Y") as visit_time'),'visits.description','users.name','class.name as class')
-                ->orderBy('visits.id', 'asc')
+                ->orderBy('visits.id', 'desc')
                 ->get();
         
         $class = DB::table('class')->select()->get();
@@ -265,7 +265,7 @@ class VisitController extends Controller
                     ->leftJoin('class','class.id','=','users.class_id')
                     ->select(DB::raw('DATE_FORMAT(visits.visit_time, "%d-%m-%Y") as visit_time'),'visits.description','users.name','class.name as class')
                     ->where('users.role','=',$role)
-                    ->orderBy('visits.id', 'asc')
+                    ->orderBy('visits.id', 'desc')
                     ->get();
             }else if($role == "murid"){
                 $data = DB::table('visits')
@@ -273,7 +273,7 @@ class VisitController extends Controller
                     ->leftJoin('class','class.id','=','users.class_id')
                     ->select(DB::raw('DATE_FORMAT(visits.visit_time, "%d-%m-%Y") as visit_time'),'visits.description','users.name','class.name as class')
                     ->where('users.role','=',$role)
-                    ->orderBy('visits.id', 'asc')
+                    ->orderBy('visits.id', 'desc')
                     ->get();
             }
             else{
@@ -282,7 +282,7 @@ class VisitController extends Controller
                     ->leftJoin('class','class.id','=','users.class_id')
                     ->select(DB::raw('DATE_FORMAT(visits.visit_time, "%d-%m-%Y") as visit_time'),'visits.description','users.name','class.name as class')
                     ->where('class.id','=',$role)
-                    ->orderBy('visits.id', 'asc')
+                    ->orderBy('visits.id', 'desc')
                     ->get();
             }
         }else if($filter == 'date'){
@@ -291,7 +291,7 @@ class VisitController extends Controller
                     ->leftJoin('class','class.id','=','users.class_id')
                     ->select(DB::raw('DATE_FORMAT(visits.visit_time, "%d-%m-%Y") as visit_time'),'visits.description','users.name','class.name as class')
                     ->whereBetween('visits.visit_time', [$start, $end])
-                    ->orderBy('visits.id', 'asc')
+                    ->orderBy('visits.id', 'desc')
                     ->get();
         }
         // dd($data);
