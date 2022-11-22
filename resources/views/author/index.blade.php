@@ -126,7 +126,7 @@
           data:{
                 '_token': '<?php echo csrf_token() ?>',
                 'id':id,
-                'name':eName
+                'eName':eName
             },
             success:function(data) {
               if(data.status == 0){

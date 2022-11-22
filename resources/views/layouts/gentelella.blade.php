@@ -134,10 +134,12 @@
                 {{-- Alert start --}}
                 @if(session('status'))  
                     <div class="alert alert-success alert-dismissible" role="alert">
-                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick=""><span aria-hidden="true">×</span>
                       </button>
                         <strong>Sukses!</strong> {{session('status')}}
-                        {{Session::forget('status') }}
+                        @if (Session::has('status'))
+                          {{Session::forget('status') }}
+                        @endif
                     </div>
                     
                 @elseif(session('error')) 

@@ -124,6 +124,7 @@ class AuthorController extends Controller
 
     public function updateData(Request $request){
         $this->authorize('check-admin');
+        // dd($request->get('eName'));
         $validator = \Validator::make($request->all(), [
             'eName' => 'required',
         ],
@@ -136,7 +137,7 @@ class AuthorController extends Controller
             return response()->json(['status'=>0, 'errors'=>$validator->errors()->toArray()]);
         }else{
             $id = $request->get('id');
-            $name = $request->get('name');
+            $name = $request->get('eName');
             try{
                 $data = DB::table('authors')
                         ->where('id', $id)
