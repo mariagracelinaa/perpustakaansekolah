@@ -76,8 +76,8 @@
                         <h2>Hasil Angka Topsis</h2>
                         <div class="accordion" id="accordionPanelsStayOpenExample">
                             <div class="accordion-item">
-                              <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
                                     Langkah 1 - Membentuk Decision Matrix
                                 </button>
                               </h2>
@@ -91,6 +91,7 @@
                                             <th>Kriteria 3</th>
                                             <th>Kriteria 4</th>
                                             <th>Kriteria 5</th>
+                                            <th>Kriteria 6</th>
                                         </thead>
                                         <tbody>
                                             @foreach ($book as $bk)
@@ -101,6 +102,7 @@
                                                     <td>{{$arr_publish_year[$bk->id]->publish_year}}</td>
                                                     <td>{{$arr_age[$bk->id]->age}}</td>
                                                     <td>{{$arr_stock[$bk->id]->stock}}</td>
+                                                    <td>{{$arr_edition[$bk->id]->edition}}</td>
                                                 </tr>
                                                 
                                             @endforeach
@@ -126,6 +128,7 @@
                                             <th>Kriteria 3</th>
                                             <th>Kriteria 4</th>
                                             <th>Kriteria 5</th>
+                                            <th>Kriteria 6</th>
                                         </thead>
                                         <tbody>
                                             @foreach ($book as $bk)
@@ -136,6 +139,7 @@
                                                     <td>{{$pow_publish_year[$bk->id]}}</td>
                                                     <td>{{$pow_age[$bk->id]}}</td>
                                                     <td>{{$pow_stock[$bk->id]}}</td>
+                                                    <th>{{$pow_edition[$bk->id]}}</th>
                                                 </tr>
                                             @endforeach
                                             <tr>
@@ -145,6 +149,7 @@
                                                 <td>{{$k3}}</td>
                                                 <td>{{$k4}}</td>
                                                 <td>{{$k5}}</td>
+                                                <td>{{$k6}}</td>
                                             </tr>
                                             <tr>
                                                 <th>Akar</th>
@@ -153,6 +158,7 @@
                                                 <td>{{number_format($sqrt_k3, 4, '.', '')}}</td>
                                                 <td>{{number_format($sqrt_k4, 4, '.', '')}}</td>
                                                 <td>{{number_format($sqrt_k5, 4, '.', '')}}</td>
+                                                <td>{{number_format($sqrt_k6, 4, '.', '')}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -166,6 +172,7 @@
                                             <th>Kriteria 3</th>
                                             <th>Kriteria 4</th>
                                             <th>Kriteria 5</th>
+                                            <th>Kriteria 6</th>
                                         </thead>
                                         <tbody>
                                             @foreach ($book as $bk)
@@ -176,6 +183,7 @@
                                                     <td>{{number_format($matrix_r_k3[$bk->id], 4, '.', '')}}</td>
                                                     <td>{{number_format($matrix_r_k4[$bk->id], 4, '.', '')}}</td>
                                                     <td>{{number_format($matrix_r_k5[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($matrix_r_k6[$bk->id], 4, '.', '')}}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -192,7 +200,7 @@
                               <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
                                 <div class="accordion-body">
                                     <h4>Kalikan setiap nilai pada matrix R dengan bobot setiap kriteria</h4>
-                                    <h6>Bobot K1 = {{$bobot_k1}}; Bobot K2 = {{$bobot_k2}}; Bobot K3 = {{$bobot_k3}}; Bobot K4 = {{$bobot_k4}}; Bobot K5 = {{$bobot_k5}};</h6>
+                                    <h6>Bobot K1 = {{$bobot_k1}}; Bobot K2 = {{$bobot_k2}}; Bobot K3 = {{$bobot_k3}}; Bobot K4 = {{$bobot_k4}}; Bobot K5 = {{$bobot_k5}}; Bobot K6 = {{$bobot_k6}}</h6>
                                     <table class="table">
                                         <thead>
                                             <th>Judul Buku</th>
@@ -201,6 +209,7 @@
                                             <th>Kriteria 3</th>
                                             <th>Kriteria 4</th>
                                             <th>Kriteria 5</th>
+                                            <th>Kriteria 6</th>
                                         </thead>
                                         <tbody>
                                             @foreach ($book as $bk)
@@ -211,6 +220,7 @@
                                                     <td>{{number_format($matrix_v_k3[$bk->id], 4, '.', '')}}</td>
                                                     <td>{{number_format($matrix_v_k4[$bk->id], 4, '.', '')}}</td>
                                                     <td>{{number_format($matrix_v_k5[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($matrix_v_k6[$bk->id], 4, '.', '')}}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -234,6 +244,7 @@
                                             <th>Kriteria 3</th>
                                             <th>Kriteria 4</th>
                                             <th>Kriteria 5</th>
+                                            <th>Kriteria 6</th>
                                         </thead>
                                         <tbody>
                                             <tr>
@@ -243,6 +254,7 @@
                                                 <td>{{number_format($solusi_ideal_positif_3, 4, '.', '')}}</td>
                                                 <td>{{number_format($solusi_ideal_positif_4, 4, '.', '')}}</td>
                                                 <td>{{number_format($solusi_ideal_positif_5, 4, '.', '')}}</td>
+                                                <td>{{number_format($solusi_ideal_positif_6, 4, '.', '')}}</td>
                                             </tr>
                                             <tr>
                                                 <td>A'</td>
@@ -251,6 +263,7 @@
                                                 <td>{{number_format($solusi_ideal_negatif_3, 4, '.', '')}}</td>
                                                 <td>{{number_format($solusi_ideal_negatif_4, 4, '.', '')}}</td>
                                                 <td>{{number_format($solusi_ideal_negatif_5, 4, '.', '')}}</td>
+                                                <td>{{number_format($solusi_ideal_negatif_6, 4, '.', '')}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -274,6 +287,7 @@
                                             <th>Kriteria 3</th>
                                             <th>Kriteria 4</th>
                                             <th>Kriteria 5</th>
+                                            <th>Kriteria 6</th>
                                             <th>S*</th>
                                         </thead>
                                         <tbody>
@@ -285,6 +299,7 @@
                                                     <td>{{number_format($arr_jarak_solusi_ideal_positif_3[$bk->id], 4, '.', '')}}</td>
                                                     <td>{{number_format($arr_jarak_solusi_ideal_positif_4[$bk->id], 4, '.', '')}}</td>
                                                     <td>{{number_format($arr_jarak_solusi_ideal_positif_5[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($arr_jarak_solusi_ideal_positif_6[$bk->id], 4, '.', '')}}</td>
                                                     <td>{{number_format($jarak_solusi_ideal_positif[$bk->id], 4, '.', '')}}</td>
                                                 </tr>
                                             @endforeach
@@ -300,6 +315,7 @@
                                             <th>Kriteria 3</th>
                                             <th>Kriteria 4</th>
                                             <th>Kriteria 5</th>
+                                            <th>Kriteria 6</th>
                                             <th>S'</th>
                                         </thead>
                                         <tbody>
@@ -311,6 +327,7 @@
                                                     <td>{{number_format($arr_jarak_solusi_ideal_negatif_3[$bk->id], 4, '.', '')}}</td>
                                                     <td>{{number_format($arr_jarak_solusi_ideal_negatif_4[$bk->id], 4, '.', '')}}</td>
                                                     <td>{{number_format($arr_jarak_solusi_ideal_negatif_5[$bk->id], 4, '.', '')}}</td>
+                                                    <td>{{number_format($arr_jarak_solusi_ideal_negatif_6[$bk->id], 4, '.', '')}}</td>
                                                     <td>{{number_format($jarak_solusi_ideal_negatif[$bk->id], 4, '.', '')}}</td>
                                                 </tr>
                                             @endforeach

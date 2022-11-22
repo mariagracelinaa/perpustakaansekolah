@@ -107,7 +107,7 @@
                 </div>   
             </div>
             <div class="form-group">
-                <label>Apakah Anda koleksi buku baru di perpustakaan lebih cocok untuk Anda?</label>
+                <label>Apakah koleksi buku baru di perpustakaan lebih cocok untuk Anda?</label>
                 <div style="text-align: center">
                     <label>Tidak Cocok</label>
                     <div class="form-check form-check-inline">
@@ -134,7 +134,7 @@
                 </div>   
             </div>
             <div class="form-group">
-                <label>Apakah ketersediaan buku di perpustakaan penting untuk Anda? (Tidak harus menunggu/pesan, dapat langsung dipinjam)</label>
+                <label>Apakah ketersediaan buku di perpustakaan penting bagi Anda? (Tidak harus menunggu/pesan, dapat langsung dipinjam)</label>
                 <div style="text-align: center">
                     <label>Tidak Penting</label>
                     <div class="form-check form-check-inline">
@@ -160,7 +160,34 @@
                     <label>Sangat Penting</label>
                 </div>   
             </div>
-            <div class="form-group" id="dynamic_field">
+            <div class="form-group">
+                <label>Apakah Anda lebih menyukai buku edisi terbaru?</label>
+                <div style="text-align: center">
+                    <label>Tidak Suka</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radio_edition" value=1 style="width: 20px; height: 20px">
+                        <label class="form-check-label">1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radio_edition" value=2 style="width: 20px; height: 20px">
+                        <label class="form-check-label">2</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radio_edition" value=3 style="width: 20px; height: 20px" checked>
+                        <label class="form-check-label">3</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radio_edition" value=4 style="width: 20px; height: 20px">
+                        <label class="form-check-label">4</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radio_edition" value=5 style="width: 20px; height: 20px">
+                        <label class="form-check-label">5</label>
+                    </div>
+                    <label>Sangat Suka</label>
+                </div>   
+            </div>
+            {{-- <div class="form-group" id="dynamic_field">
                 <label>Siapa penulis buku kesukaan Anda?</label>
                 <div style="text-align: left">
                     <input id="author" name="listAuthor[]" list="listAuthor" style="width: 500px" placeholder="Tulis nama penulis">
@@ -173,7 +200,7 @@
                         <button type="button" name="add" id="add" class="btn btn-light"><i class="fa fa-plus"></i> Tambah Penulis</button>
                     </td>
                 </div>   
-            </div>
+            </div> --}}
             <div class="form-group" style="text-align: right">
                 <button type="submit" class="btn btn-primary" style="width:200px; margin-top: 10px; border-radius: 15px;">Cari Rekomendasi</button>
             </div>

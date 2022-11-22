@@ -559,7 +559,7 @@ class BiblioController extends Controller
 
     public function formTopsis(){
         $author = Author::all();
-        $category = Category::all();
+        $category = DB::table('categories')->select()->orderBy('name','asc')->get();
         return view('frontend.formTopsis',compact('author','category'));
     }
 
@@ -575,12 +575,14 @@ class BiblioController extends Controller
             $bobot_k3 = $request->get('radio_publish');
             $bobot_k4 = $request->get('radio_age');
             $bobot_k5 = $request->get('radio_stock');
+            $bobot_k6 = $request->get('radio_edition');
 
             // $bobot_k1 = 4;
             // $bobot_k2 = 4;
             // $bobot_k3 = 5;
             // $bobot_k4 = 3;
             // $bobot_k5 = 5;
+            // $bobot_k6 = 4;
             // bobot x -> kesesuaian penulis, kalo ada isinya cocok kasih 5. kalo gaada isi/ga cocok kasih 3
 
             // bobot 5 -> stok buku diperpustakaan, jika stok ada kasih 5, jika kosong kasih 1
@@ -654,6 +656,7 @@ class BiblioController extends Controller
             }
             // dd($arr_age);
 
+            // Query stock buku di perpustakaan
             $arr_stock = [];
             foreach($book as $bk){
                 $stock = DB::table('items')
@@ -666,6 +669,17 @@ class BiblioController extends Controller
             }
             // dd($arr_stock);
 
+            // Query edisi buku
+            $arr_edition = [];
+            foreach($book as $bk){
+                $edition = DB::table('biblios')
+                        ->select('edition')
+                        ->where('id','=', $bk->id)
+                        ->get();
+                $arr_edition[$bk->id] = $edition[0];
+            }
+            // dd($arr_edition);
+
             // ---------------------------------------------------- Matrix R ------------------------------------------------------
             // Setiap decision matrix dipangkat 2
             $pow_count_borrow = [];
@@ -673,14 +687,16 @@ class BiblioController extends Controller
             $pow_publish_year = [];
             $pow_age = [];
             $pow_stock = [];
+            $pow_edition = [];
             foreach($book as $bk){
                 $pow_count_borrow[$bk->id] = $arr_count_borrow[$bk->id]->count * $arr_count_borrow[$bk->id]->count;
                 $pow_count_page[$bk->id] = $arr_count_page[$bk->id]->page * $arr_count_page[$bk->id]->page;
                 $pow_publish_year[$bk->id] = $arr_publish_year[$bk->id]->publish_year * $arr_publish_year[$bk->id]->publish_year;
                 $pow_age[$bk->id] = $arr_age[$bk->id]->age * $arr_age[$bk->id]->age;
                 $pow_stock[$bk->id] = $arr_stock[$bk->id]->stock * $arr_stock[$bk->id]->stock;
+                $pow_edition[$bk->id] = $arr_edition[$bk->id]->edition * $arr_edition[$bk->id]->edition;
             }
-            // dd($pow_stock);
+            // dd($pow_edition);
 
             //Total semua nilai buku disetiap kriteria
             $k1 = 0;
@@ -688,6 +704,7 @@ class BiblioController extends Controller
             $k3 = 0;
             $k4 = 0;
             $k5 = 0;
+            $k6 = 0;
 
             foreach($pow_count_borrow as $acb){
                 $k1 = $k1 + $acb;
@@ -709,14 +726,21 @@ class BiblioController extends Controller
                 $k5 = $k5 + $as;
             }
 
+            foreach($pow_edition as $ae){
+                $k6 = $k6 + $ae;
+            }
+
+            // dd($k1, $k2, $k3, $k4, $k5, $k6);
+
             // Akar total dari tiap kriteria yang ada
             $sqrt_k1 = sqrt($k1);
             $sqrt_k2 = sqrt($k2);
             $sqrt_k3 = sqrt($k3);
             $sqrt_k4 = sqrt($k4);
             $sqrt_k5 = sqrt($k5);
+            $sqrt_k6 = sqrt($k6);
 
-            // dd($sqrt_k1, $sqrt_k2, $sqrt_k3, $sqrt_k4, $sqrt_k5);
+            // dd($sqrt_k1, $sqrt_k2, $sqrt_k3, $sqrt_k4, $sqrt_k5, $sqrt_k6);
 
             // Bagi nilai awal matrix dengan hasil akar
             $matrix_r_k1 = [];
@@ -724,15 +748,17 @@ class BiblioController extends Controller
             $matrix_r_k3 = [];
             $matrix_r_k4 = [];
             $matrix_r_k5 = [];
+            $matrix_r_k6 = [];
             foreach($book as $bk){
                 $matrix_r_k1[$bk->id] = $arr_count_borrow[$bk->id]->count / $sqrt_k1;
                 $matrix_r_k2[$bk->id] = $arr_count_page[$bk->id]->page / $sqrt_k2;
                 $matrix_r_k3[$bk->id] = $arr_publish_year[$bk->id]->publish_year / $sqrt_k3;
                 $matrix_r_k4[$bk->id] = $arr_age[$bk->id]->age / $sqrt_k4;
                 $matrix_r_k5[$bk->id] = $arr_stock[$bk->id]->stock / $sqrt_k5;
+                $matrix_r_k6[$bk->id] = $arr_edition[$bk->id]->edition / $sqrt_k6;
             }
 
-            // dd($matrix_r_k1, $matrix_r_k2, $matrix_r_k3 , $matrix_r_k4, $matrix_r_k5);
+            // dd($matrix_r_k1, $matrix_r_k2, $matrix_r_k3 , $matrix_r_k4, $matrix_r_k5, $matrix_r_k6);
 
             // ---------------------------------------------------- Matrix V ------------------------------------------------------
             // Kalikan bobot dari user tiap kriteria dengan matrix R
@@ -741,15 +767,17 @@ class BiblioController extends Controller
             $matrix_v_k3 = [];
             $matrix_v_k4 = [];
             $matrix_v_k5 = [];
+            $matrix_v_k6 = [];
             foreach($book as $bk){
                 $matrix_v_k1[$bk->id] = $matrix_r_k1[$bk->id] * $bobot_k1;
                 $matrix_v_k2[$bk->id] = $matrix_r_k2[$bk->id] * $bobot_k2;
                 $matrix_v_k3[$bk->id] = $matrix_r_k3[$bk->id] * $bobot_k3; 
                 $matrix_v_k4[$bk->id] = $matrix_r_k4[$bk->id] * $bobot_k4;
                 $matrix_v_k5[$bk->id] = $matrix_r_k5[$bk->id] * $bobot_k5;
+                $matrix_v_k6[$bk->id] = $matrix_r_k6[$bk->id] * $bobot_k6;
             }
 
-            // dd($matrix_v_k1, $matrix_v_k2, $matrix_v_k3, $matrix_v_k4, $matrix_v_k5);
+            // dd($matrix_v_k1, $matrix_v_k2, $matrix_v_k3, $matrix_v_k4, $matrix_v_k5), $matrix_v_k6;
 
             // ---------------------------------------------------- Menentukan A* dan A' ------------------------------------------------------
             // A* (Solusi ideal positif) tiap kriteria
@@ -759,6 +787,7 @@ class BiblioController extends Controller
             $solusi_ideal_positif_3 = max($matrix_v_k3);
             $solusi_ideal_positif_4 = min($matrix_v_k4);
             $solusi_ideal_positif_5 = max($matrix_v_k5);
+            $solusi_ideal_positif_6 = max($matrix_v_k6);
 
             // A' (Solusi ideal negatif) tiap kriteria
             // K1 -> Benefit (MIN), K2 -> Cost (MAX), K3 -> Benefit (MIN), K4 -> Cost (MAX), K5 -> Benefit (MIN)
@@ -767,9 +796,10 @@ class BiblioController extends Controller
             $solusi_ideal_negatif_3 = min($matrix_v_k3);
             $solusi_ideal_negatif_4 = max($matrix_v_k4);
             $solusi_ideal_negatif_5 = min($matrix_v_k5);
+            $solusi_ideal_negatif_6 = min($matrix_v_k6);
 
-            // dd($solusi_ideal_positif_1, $solusi_ideal_positif_2, $solusi_ideal_positif_3, $solusi_ideal_positif_4, $solusi_ideal_positif_5);
-            // dd($solusi_ideal_negatif_1, $solusi_ideal_negatif_2, $solusi_ideal_negatif_3, $solusi_ideal_negatif_4, $solusi_ideal_negatif_5);
+            // dd($solusi_ideal_positif_1, $solusi_ideal_positif_2, $solusi_ideal_positif_3, $solusi_ideal_positif_4, $solusi_ideal_positif_5, $solusi_ideal_positif_6);
+            // dd($solusi_ideal_negatif_1, $solusi_ideal_negatif_2, $solusi_ideal_negatif_3, $solusi_ideal_negatif_4, $solusi_ideal_negatif_5, $solusi_ideal_negatif_6);
 
             // ---------------------------------------------------- Menentukan S* dan S' ------------------------------------------------------
             // S* (Jarak Solusi ideal positif) tiap kriteria
@@ -778,6 +808,7 @@ class BiblioController extends Controller
             $arr_jarak_solusi_ideal_positif_3 = [];
             $arr_jarak_solusi_ideal_positif_4 = [];
             $arr_jarak_solusi_ideal_positif_5 = [];
+            $arr_jarak_solusi_ideal_positif_6 = [];
             $jarak_solusi_ideal_positif = [];
             foreach($book as $bk){
                 $arr_jarak_solusi_ideal_positif_1[$bk->id] = ($matrix_v_k1[$bk->id]-$solusi_ideal_positif_1)*($matrix_v_k1[$bk->id]-$solusi_ideal_positif_1);
@@ -785,12 +816,13 @@ class BiblioController extends Controller
                 $arr_jarak_solusi_ideal_positif_3[$bk->id] = ($matrix_v_k3[$bk->id]-$solusi_ideal_positif_3)*($matrix_v_k3[$bk->id]-$solusi_ideal_positif_3); 
                 $arr_jarak_solusi_ideal_positif_4[$bk->id] = ($matrix_v_k4[$bk->id]-$solusi_ideal_positif_4)*($matrix_v_k4[$bk->id]-$solusi_ideal_positif_4);
                 $arr_jarak_solusi_ideal_positif_5[$bk->id] = ($matrix_v_k5[$bk->id]-$solusi_ideal_positif_5)*($matrix_v_k5[$bk->id]-$solusi_ideal_positif_5);
+                $arr_jarak_solusi_ideal_positif_6[$bk->id] = ($matrix_v_k6[$bk->id]-$solusi_ideal_positif_6)*($matrix_v_k6[$bk->id]-$solusi_ideal_positif_6);
             }
-            // dd($arr_jarak_solusi_ideal_positif_1, $arr_jarak_solusi_ideal_positif_2, $arr_jarak_solusi_ideal_positif_3, $arr_jarak_solusi_ideal_positif_4, $arr_jarak_solusi_ideal_positif_5);
+            // dd($arr_jarak_solusi_ideal_positif_1, $arr_jarak_solusi_ideal_positif_2, $arr_jarak_solusi_ideal_positif_3, $arr_jarak_solusi_ideal_positif_4, $arr_jarak_solusi_ideal_positif_5, $arr_jarak_solusi_ideal_positif_6);
 
             // jumlah smua kriteria tiap buku lalu diakar
             foreach($book as $bk){
-                $count = $arr_jarak_solusi_ideal_positif_1[$bk->id] + $arr_jarak_solusi_ideal_positif_2[$bk->id] + $arr_jarak_solusi_ideal_positif_3[$bk->id] + $arr_jarak_solusi_ideal_positif_4[$bk->id] + $arr_jarak_solusi_ideal_positif_5[$bk->id];
+                $count = $arr_jarak_solusi_ideal_positif_1[$bk->id] + $arr_jarak_solusi_ideal_positif_2[$bk->id] + $arr_jarak_solusi_ideal_positif_3[$bk->id] + $arr_jarak_solusi_ideal_positif_4[$bk->id] + $arr_jarak_solusi_ideal_positif_5[$bk->id] + $arr_jarak_solusi_ideal_positif_6[$bk->id];
 
                 $jarak_solusi_ideal_positif[$bk->id] = sqrt($count);
             }
@@ -803,6 +835,7 @@ class BiblioController extends Controller
             $arr_jarak_solusi_ideal_negatif_3 = [];
             $arr_jarak_solusi_ideal_negatif_4 = [];
             $arr_jarak_solusi_ideal_negatif_5 = [];
+            $arr_jarak_solusi_ideal_negatif_6 = [];
             $jarak_solusi_ideal_negatif = [];
             foreach($book as $bk){
                 $arr_jarak_solusi_ideal_negatif_1[$bk->id] = ($matrix_v_k1[$bk->id]-$solusi_ideal_negatif_1)*($matrix_v_k1[$bk->id]-$solusi_ideal_negatif_1);
@@ -810,13 +843,14 @@ class BiblioController extends Controller
                 $arr_jarak_solusi_ideal_negatif_3[$bk->id] = ($matrix_v_k3[$bk->id]-$solusi_ideal_negatif_3)*($matrix_v_k3[$bk->id]-$solusi_ideal_negatif_3); 
                 $arr_jarak_solusi_ideal_negatif_4[$bk->id] = ($matrix_v_k4[$bk->id]-$solusi_ideal_negatif_4)*($matrix_v_k4[$bk->id]-$solusi_ideal_negatif_4);
                 $arr_jarak_solusi_ideal_negatif_5[$bk->id] = ($matrix_v_k5[$bk->id]-$solusi_ideal_negatif_5)*($matrix_v_k5[$bk->id]-$solusi_ideal_negatif_5);
+                $arr_jarak_solusi_ideal_negatif_6[$bk->id] = ($matrix_v_k6[$bk->id]-$solusi_ideal_negatif_6)*($matrix_v_k6[$bk->id]-$solusi_ideal_negatif_6);
             }
 
-            // dd($arr_jarak_solusi_ideal_negatif_1, $arr_jarak_solusi_ideal_negatif_2, $arr_jarak_solusi_ideal_negatif_3, $arr_jarak_solusi_ideal_negatif_4, $arr_jarak_solusi_ideal_negatif_5);
+            // dd($arr_jarak_solusi_ideal_negatif_1, $arr_jarak_solusi_ideal_negatif_2, $arr_jarak_solusi_ideal_negatif_3, $arr_jarak_solusi_ideal_negatif_4, $arr_jarak_solusi_ideal_negatif_5, $arr_jarak_solusi_ideal_negatif_6);
 
             // jumlah smua kriteria tiap buku lalu diakar
             foreach($book as $bk){
-                $count = $arr_jarak_solusi_ideal_negatif_1[$bk->id] + $arr_jarak_solusi_ideal_negatif_2[$bk->id] + $arr_jarak_solusi_ideal_negatif_3[$bk->id] + $arr_jarak_solusi_ideal_negatif_4[$bk->id] + $arr_jarak_solusi_ideal_negatif_5[$bk->id];
+                $count = $arr_jarak_solusi_ideal_negatif_1[$bk->id] + $arr_jarak_solusi_ideal_negatif_2[$bk->id] + $arr_jarak_solusi_ideal_negatif_3[$bk->id] + $arr_jarak_solusi_ideal_negatif_4[$bk->id] + $arr_jarak_solusi_ideal_negatif_5[$bk->id] + $arr_jarak_solusi_ideal_negatif_6[$bk->id];
 
                 $jarak_solusi_ideal_negatif[$bk->id] = sqrt($count);
             }
@@ -848,7 +882,7 @@ class BiblioController extends Controller
 
             // dd($arr_topsis[16]);
             // dd($data);
-            return view('frontend.recommendation', compact('data','book','arr_count_borrow', 'arr_count_page', 'arr_publish_year', 'arr_age', 'arr_stock', 'pow_count_borrow', 'pow_count_page','pow_publish_year','pow_age','pow_stock','k1','k2','k3','k4','k5','sqrt_k1','sqrt_k2','sqrt_k3','sqrt_k4','sqrt_k5','matrix_r_k1','matrix_r_k2','matrix_r_k3','matrix_r_k4','matrix_r_k5','bobot_k1','bobot_k2','bobot_k3','bobot_k4','bobot_k5','matrix_v_k1','matrix_v_k2','matrix_v_k3','matrix_v_k4','matrix_v_k5','solusi_ideal_positif_1','solusi_ideal_positif_2','solusi_ideal_positif_3','solusi_ideal_positif_4','solusi_ideal_positif_5','solusi_ideal_negatif_1','solusi_ideal_negatif_2','solusi_ideal_negatif_3','solusi_ideal_negatif_4','solusi_ideal_negatif_5','arr_jarak_solusi_ideal_positif_1','arr_jarak_solusi_ideal_positif_2','arr_jarak_solusi_ideal_positif_3','arr_jarak_solusi_ideal_positif_4','arr_jarak_solusi_ideal_positif_5','jarak_solusi_ideal_positif','arr_jarak_solusi_ideal_negatif_1','arr_jarak_solusi_ideal_negatif_2','arr_jarak_solusi_ideal_negatif_3','arr_jarak_solusi_ideal_negatif_4','arr_jarak_solusi_ideal_negatif_5','jarak_solusi_ideal_negatif','arr_topsis'));
+            return view('frontend.recommendation', compact('data','book','arr_count_borrow', 'arr_count_page', 'arr_publish_year', 'arr_age', 'arr_stock','arr_edition', 'pow_count_borrow', 'pow_count_page','pow_publish_year','pow_age','pow_stock','pow_edition','k1','k2','k3','k4','k5', 'k6','sqrt_k1','sqrt_k2','sqrt_k3','sqrt_k4','sqrt_k5','sqrt_k6','matrix_r_k1','matrix_r_k2','matrix_r_k3','matrix_r_k4','matrix_r_k5','matrix_r_k6','bobot_k1','bobot_k2','bobot_k3','bobot_k4','bobot_k5','bobot_k6','matrix_v_k1','matrix_v_k2','matrix_v_k3','matrix_v_k4','matrix_v_k5','matrix_v_k6','solusi_ideal_positif_1','solusi_ideal_positif_2','solusi_ideal_positif_3','solusi_ideal_positif_4','solusi_ideal_positif_5','solusi_ideal_positif_6','solusi_ideal_negatif_1','solusi_ideal_negatif_2','solusi_ideal_negatif_3','solusi_ideal_negatif_4','solusi_ideal_negatif_5','solusi_ideal_negatif_6','arr_jarak_solusi_ideal_positif_1','arr_jarak_solusi_ideal_positif_2','arr_jarak_solusi_ideal_positif_3','arr_jarak_solusi_ideal_positif_4','arr_jarak_solusi_ideal_positif_5','arr_jarak_solusi_ideal_positif_6','jarak_solusi_ideal_positif','arr_jarak_solusi_ideal_negatif_1','arr_jarak_solusi_ideal_negatif_2','arr_jarak_solusi_ideal_negatif_3','arr_jarak_solusi_ideal_negatif_4','arr_jarak_solusi_ideal_negatif_5','arr_jarak_solusi_ideal_negatif_6','jarak_solusi_ideal_negatif','arr_topsis'));
         }
     }
 }
