@@ -110,7 +110,7 @@ class BorrowController extends Controller
 
         $borrow_date = Carbon::now()->format('Y-m-d');
         $due_date = Carbon::now()->addDays(3)->format('Y-m-d');
-        
+
         try{
             $borrow = new Borrow();
             $borrow->users_id = $users_id;
@@ -124,6 +124,15 @@ class BorrowController extends Controller
                     $biblios_id = Item::where('register_num',$listBook[$i])->get();
                     // dd($biblios_id[0]->biblios_id);
 
+                    // Simpan tabel borrow_transaction
+                    $auth_biblio = DB::table('borrow_transaction')
+                    ->insert(['borrows_id' => $borrow->id, 'register_num' => $listBook[$i]]);
+
+                    // update status ketersediaan item buku
+                    DB::table('items')
+                    ->where('register_num','=',$listBook[$i])
+                    ->update(['status'=> 'dipinjam']);
+
                     // cek apakah id biblio yang mau dipinjam ada di daftar pesan
                     $check_booking = DB::table('bookings')->select()->where('biblios_id', '=', $biblios_id[0]->biblios_id)->orderBy('booking_date', 'asc')->get();
                     // dd($check_booking);
@@ -136,30 +145,24 @@ class BorrowController extends Controller
                             $arr_id[] = $check_booking[$j]->users_id;
                         }
 
-                        // Simpan tabel borrow_transaction
-                        $auth_biblio = DB::table('borrow_transaction')
-                        ->insert(['borrows_id' => $borrow->id, 'register_num' => $listBook[$i]]);
-
                         // dd($arr_id, $users_id);
-                        // cek apakah user yang mau pinjam = yang sudah pesan di daftar pesanan maka catat peminjaman dan hapus dari list pesanan
+                        // cek apakah user yang mau pinjam = yang sudah pesan di daftar pesanan maka catat peminjaman dan update
                         if(in_array($users_id, $arr_id)){
-                            // delete dari bookings
-                            DB::table('bookings')->where('users_id', '=', $users_id)->where('biblios_id','=',$biblios_id[0]->biblios_id)->delete();
+                            // update status bookings
+                            // Dapat id booking yg biblio id sama, user id sama, dan statusnya masih proses
+                            $booking_id = DB::table('bookings')->select('id')->where('users_id', '=', $users_id)->where('biblios_id', '=', $biblios_id[0]->biblios_id)->where('status','=','proses')->get();
+                            
+                            $arr_id_booking = [];
+                            $i = 0;
+                            foreach(explode('/', $booking_id[0]->id) as $fields) {
+                                $arr_id_booking[$i] = $fields;
+                                $i++;
+                            }
+                            $new_id = $biblios_id[0]->biblios_id."/".$users_id."/".$arr_id_booking[2]."/selesai";
+                            
+                            DB::table('bookings')->where('id', '=', $booking_id[0]->id)->update(['id' => $new_id ,'status' => "selesai"]);
+                            // DB::table('bookings')->where('users_id', '=', $users_id)->where('biblios_id','=',$biblios_id[0]->biblios_id)->where('status','=','proses')->update(['status'=> 'selesai']);
                         }
-
-                        // update status ketersediaan item buku
-                        DB::table('items')
-                        ->where('register_num','=',$listBook[$i])
-                        ->update(['status'=> 'dipinjam']);
-                    }else{
-                            // Simpan tabel borrow_transaction
-                        $auth_biblio = DB::table('borrow_transaction')
-                                        ->insert(['borrows_id' => $borrow->id, 'register_num' => $listBook[$i]]);
-                        // update status ketersediaan item buku
-                        DB::table('items')
-                        ->where('register_num','=',$listBook[$i])
-                        ->update(['status'=> 'dipinjam']);
-                        
                     }   
                 }
             }
@@ -170,18 +173,27 @@ class BorrowController extends Controller
     }
 
     public function check_before_add_circulation(Request $request){
-        // cek apakah item buku yang akan dipinjam ternyata masih ada di daftar pinjaman atau tidak (Mungkin petugas lupa mencatat pengembalian)
-        $check = DB::table('borrow_transaction')
+        // Cek apakah register number ada di db atau tidak
+        $check_reg_num = DB::table('items')->select(DB::raw('COUNT(*) as count_reg'))->where('register_num','=', $request->get('reg_num'))->get();
+        // return session()->flash('status',$check_reg_num [0]->count);
+        if($check_reg_num [0]->count_reg > 0){
+            // item ada di db, lanjut cek di peminjaman aktif
+            // cek apakah item buku yang akan dipinjam ternyata masih ada di daftar pinjaman atau tidak (Mungkin petugas lupa mencatat pengembalian)
+            $check = DB::table('borrow_transaction')
                     ->select(DB::raw('COUNT(*) as count'))
                     ->where('register_num','=', $request->get('reg_num'))
                     ->where('status','=','belum kembali')
                     ->get();
-        if($check[0]->count != 0){
-            // dd('buku ada di dalam daftar peminjaman yang masih berjalan, selesaikan dahulu');
-            return response()->json(array('count' => $check[0]->count));
+            if($check[0]->count != 0){
+                // dd('buku ada di dalam daftar peminjaman yang masih berjalan, selesaikan dahulu');
+                return response()->json(array('count' => $check[0]->count));
+            }else{
+                // dd('bisa catat peminjamannya');
+                return response()->json(array('count' => $check[0]->count));
+            }
         }else{
-            // dd('bisa catat peminjamannya');
-            return response()->json(array('count' => $check[0]->count));
+            // beritahu nomor register salah
+            return response()->json(array('count' => 1));
         }
     }
 
@@ -425,6 +437,7 @@ class BorrowController extends Controller
                 ->join('biblios','biblios.id','=','bookings.biblios_id')
                 ->select('biblios.id','biblios.title')
                 ->where('users_id','=', $users_id)
+                ->where('status','=','proses')
                 ->get();
         // dd($book_id);
         $arr_reg_num = [];

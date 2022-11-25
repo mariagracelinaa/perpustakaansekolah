@@ -166,9 +166,14 @@
                                     $('#dynamic_field').append('<tr id="row'+i+'" reg="'+reg_num+'"><td><input type="hidden" name="listBook[]" value="'+reg_num+'">'+ reg_num +'</td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td></tr>'); 
                                     i++;
                                     count++;
+                                    arr_reg_num.push(reg_num);
+                                    // alert(arr_reg_num);
                                 }
-                                arr_reg_num.push(reg_num);
-                                // alert(arr_reg_num);
+                                else{
+                                    alert('Kuota peminjaman sudah mencapai 3 buku, pengguna belum dapat menambah pinjaman');
+                                }
+                            }else if(data.count == 1){
+                                alert('Nomor registrasi tidak terdaftar, silahkan cek kembali');
                             }else{
                                 alert('Buku ada di daftar peminjaman yang sedang berjalan');
                             }
