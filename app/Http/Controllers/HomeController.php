@@ -83,6 +83,6 @@ class HomeController extends Controller
                 ->get();
 
         // dd($data);
-        return view('frontend.cathegory_book', compact('data'));
+        return view('frontend.cathegory_book', compact('data','ddc'));
     }
 }

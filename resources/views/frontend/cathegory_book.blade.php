@@ -76,7 +76,7 @@
                                         </div><br>
                                         <div class="row g-4" id="book_list">
                                             @foreach ( $data as $d)
-                                                <input type="hidden" id="ddc" name="ddc" value="{{$d->ddc}}">
+                                                <input type="hidden" id="ddc" name="ddc" value="{{$ddc}}">
                                                 <a href="/detail-buku/{{$d->id}}" class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                                                     <div class="team-item bg-light">
                                                         <div class="overflow-hidden">
