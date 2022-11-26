@@ -55,9 +55,9 @@ class AuthorController extends Controller
                 $data = new Author();
                 $data->name = $request->get('name');
                 $data->save();
-                return redirect()->route('daftar-penulis.index')->with('status','Data penulis baru berhasil disimpan');
+                $request->session()->flash('status','Data penulis baru berhasil disimpan');
             }catch (\PDOException $e) {
-                return redirect()->route('daftar-penulis.index')->with('error', 'Gagal menambah data baru, silahkan coba lagi');
+                $request->session()->flash('error', 'Gagal menambah data baru, silahkan coba lagi');
             }
         }
     }

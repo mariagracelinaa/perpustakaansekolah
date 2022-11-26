@@ -13,6 +13,7 @@ use DB;
 use File;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 use Auth;
 
@@ -121,11 +122,16 @@ class BiblioController extends Controller
                 
                 $ext = $request->file('image')->extension();
                 $file = $request->file('image');
+                $file = Image::make($file);
+                $file->resize(300, 400);
                 $imgFolder = 'images';
                 // $imgFile = $file->getClientOriginalName();
                 $imgFile = $request->get('title').'.'.$ext;
-                $file->move($imgFolder, $imgFile);
-                $biblio->image = $imgFile;
+                $file->save(public_path('images/') . $imgFile);
+                // $file->move($imgFolder, $imgFile);
+                $image = $imgFile;
+                
+                $biblio->image = $image;
 
                 $biblio->edition = $request->get('edition');
                 $biblio->page = $request->get('page');
@@ -346,10 +352,13 @@ class BiblioController extends Controller
 
                 $ext = $request->file('image')->extension();
                 $file = $request->file('image');
+                $file = Image::make($file);
+                $file->resize(300, 400);
                 $imgFolder = 'images';
                 // $imgFile = $file->getClientOriginalName();
                 $imgFile = $title.'.'.$ext;
-                $file->move($imgFolder, $imgFile);
+                $file->save(public_path('images/') . $imgFile);
+                // $file->move($imgFolder, $imgFile);
                 $image = $imgFile;
 
                 $edition = $request->get('edition');
@@ -390,6 +399,7 @@ class BiblioController extends Controller
 
         $start = "";
         $end = "";
+        $status = "";
         $data = DB::table('bookings')
                 ->join('biblios', 'biblios.id','=','bookings.biblios_id')
                 ->join('users','users.id','=','bookings.users_id')
@@ -397,7 +407,7 @@ class BiblioController extends Controller
                 ->orderBy('booking_date','ASC')
                 ->get();
         // dd($data);
-        return view('booking.index', compact('data', 'start', 'end','filter'));
+        return view('booking.index', compact('data', 'start', 'end','filter','status'));
     }
 
     public function bookingList_filter(Request $request){
@@ -507,12 +517,22 @@ class BiblioController extends Controller
         $count = $count[0]->count;
         $count = $count+1;
         $bookings_id = $biblios_id."/".$users_id."/".$count."/proses";
-        // dd($bookings_id);
+        $date = Carbon::now()->format('Y-m-d H:i:s');
+        // dd($date);
 
         try{
-            DB::table('bookings')->insert(
-                ['id' => $bookings_id,'biblios_id' => $biblios_id , 'users_id' => $users_id, 'description' => $desc]
-            );
+            // Cek apakah sudah ada pesanan aktif dengan id user dan id biblio yang masih proses?
+            $check_booking = DB::table('bookings')->select()->where('users_id','=',$users_id)->where('biblios_id','=',$biblios_id)->where('status','=','proses')->get();
+
+            // dd($check_booking);
+
+            if(count($check_booking) > 0){
+                return redirect('/detail-buku/'.$request->get('biblios_id'))->with('error', 'Buku sudah ada didaftar pesanan');
+            }else{
+                DB::table('bookings')->insert(
+                    ['id' => $bookings_id,'biblios_id' => $biblios_id , 'users_id' => $users_id, 'booking_date' => $date, 'description' => $desc, 'status' => 'proses']
+                );
+            }  
 
             return redirect('/detail-buku/'.$request->get('biblios_id'))->with('status','Berhasil memesan buku');
         }catch (\PDOException $e) {

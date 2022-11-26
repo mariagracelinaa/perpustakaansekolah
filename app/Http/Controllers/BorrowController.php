@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Redirect;
 
 use Auth;
 
@@ -166,9 +167,11 @@ class BorrowController extends Controller
                     }   
                 }
             }
-            return session()->flash('status','Catatan peminjaman berhasil ditambahkan');
+            
+            // return session()->flash('status','Catatan peminjaman berhasil ditambahkan');
+            return redirect()->route('sirkulasi-detail', ['id' => $users_id])->with('status','Catatan peminjaman berhasil ditambahkan');
         }catch (\PDOException $e) {
-            $request->session()->flash('error', 'Gagal menambah data baru, silahkan coba lagi');
+            return redirect()->route('sirkulasi-detail', ['id' => $users_id])->with('error', 'Gagal menambah data baru, silahkan coba lagi');
         } 
     }
 

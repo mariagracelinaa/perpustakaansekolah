@@ -15,7 +15,7 @@
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Nama') }}</label>
 
                             <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus placeholder="Tuliskan nama lengkap pengguna">
+                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required oninvalid="this.setCustomValidity('Nama tidak boleh kosong')" oninput="setCustomValidity('')" autocomplete="name" autofocus placeholder="Tuliskan nama lengkap pengguna">
 
                                 @error('name')
                                     <span class="invalid-feedback" role="alert">
@@ -29,7 +29,7 @@
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('NISN/NIY') }}</label>
 
                             <div class="col-md-6">
-                                <input id="nisn/niy" type="text" class="form-control @error('nisn/niy') is-invalid @enderror" name="nisn/niy" value="{{ old('nisn/niy') }}" required autocomplete="nisn/niy" autofocus oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder="Tuliskan nomor NISN atau NIY pengguna">
+                                <input id="nisn/niy" type="text" class="form-control @error('nisn/niy') is-invalid @enderror" name="nisn/niy" value="{{ old('nisn/niy') }}" required oninvalid="this.setCustomValidity('NISN/NIY tidak boleh kosong')" oninput="setCustomValidity('')" autocomplete="nisn/niy" autofocus oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder="Tuliskan nomor NISN atau NIY pengguna">
 
                                 @error('nisn/niy')
                                     <span class="invalid-feedback" role="alert">
@@ -43,7 +43,7 @@
                             <label class="col-md-4 col-form-label text-md-right">{{ __('Sebagai') }}</label>
 
                             <div class="col-md-6">
-                                <select id="role" type="text" class="form-control @error('role') is-invalid @enderror" name="role" value="{{ old('role') }}" required autocomplete="role" autofocus>  
+                                <select id="role" type="text" class="form-control @error('role') is-invalid @enderror" name="role" value="{{ old('role') }}" required oninvalid="this.setCustomValidity('Peran pengguna harus dipilih')" oninput="setCustomValidity('')" autocomplete="role" autofocus>  
                                     <option value="">--- Pilih ---</option>
                                     <option id="teacher" value="guru/staf">Guru/Staf</option>
                                     <option id="student" value="murid">Murid</option>
@@ -81,7 +81,7 @@
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Alamat Email') }}</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="Tuliskan alamat email pengguna">
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required oninvalid="this.setCustomValidity('Alamat email tidak boleh kosong')" oninput="setCustomValidity('')" autocomplete="email" placeholder="Tuliskan alamat email pengguna">
 
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -95,7 +95,7 @@
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Kata Sandi') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" placeholder="********">
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required oninvalid="this.setCustomValidity('Kata sandi tidak boleh kosong')" oninput="setCustomValidity('')" autocomplete="new-password" placeholder="********">
 
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">

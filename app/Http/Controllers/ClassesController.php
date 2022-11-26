@@ -66,9 +66,9 @@ class ClassesController extends Controller
                 $data->name = $request->get('name');
                 $data->save();
     
-                return redirect()->route('daftar-kelas.index')->with('status','Data ruang kelas baru berhasil disimpan');
+                $request->session()->flash('status','Data ruang kelas baru berhasil disimpan');
             }catch (\PDOException $e) {
-                return redirect()->route('daftar-kelas.index')->with('error', 'Gagal menambah data baru, silahkan coba lagi');
+                $request->session()->flash('error', 'Gagal menambah data baru, silahkan coba lagi');
             }
         }
     }

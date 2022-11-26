@@ -58,9 +58,9 @@ class PublisherController extends Controller
                 $data->city = $request->get('city');
                 $data->save();
     
-                return redirect()->route('daftar-penerbit.index')->with('status','Data penerbit baru berhasil disimpan');
+                $request->session()->flash('status','Data penerbit baru berhasil disimpan');
             }catch (\PDOException $e) {
-                return redirect()->route('daftar-penerbit.index')->with('error', 'Gagal menambah data baru, silahkan coba lagi');
+                $request->session()->flash('error', 'Gagal menambah data baru, silahkan coba lagi');
             }
         }   
     }

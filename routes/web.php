@@ -146,7 +146,7 @@ Route::middleware(['auth'])->group(function(){
     // Tampilkan list nama semua pengguna perpustakaan untuk catat peminjaman dan ke detail peminjaman -> filter 
     Route::get('/sirkulasi-buku-filter','BorrowController@listUser_filter');
     // Tampilkan tiap detail sirkulasi pengguna, history pinjam
-    Route::get('sirkulasi-detail/{id}','BorrowController@detailCirculation');
+    Route::get('sirkulasi-detail/{id}','BorrowController@detailCirculation')->name('sirkulasi-detail');
     // Tampilkan halaman add sirkulasi, daftar pesanan pengguna
     Route::get('/tambah-sirkulasi-buku/{id}','BorrowController@detailAddCirculation');
     // Tampilkan detail peminjaman tiap pengguna dalam bentuk modal 
@@ -197,9 +197,9 @@ Route::middleware(['auth'])->group(function(){
 
     // User + suggestion
     // Tampilkan daftar murid
-    Route::get('daftar-murid', 'UserController@student');
+    Route::get('/daftar-murid', 'UserController@student')->name('daftar-murid.murid');
     // Tampilkan daftar guru
-    Route::get('daftar-guru', 'UserController@teacher');
+    Route::get('/daftar-guru', 'UserController@teacher');
     // Tampilkan daftar usulan buku
     Route::resource('daftar-usulan-buku', 'SuggestionController');
     // Tampilkan form update data usulan
