@@ -149,4 +149,30 @@ class AuthorController extends Controller
             }  
         }
     }
+
+    // Isi combobox author di form TOPSIS berdasarkan 
+    public function cb_box_author(Request $request){
+        $cat = $request->get('cat');
+        if($cat == 000 || $cat == 100 || $cat == 200 || $cat == 300 || $cat == 400 || $cat == 500 || $cat == 600 || $cat == 700 || $cat == 800 || $cat == 900){
+            $data = DB::table('authors')
+                        ->join('authors_biblios','authors.id','=','authors_biblios.authors_id')
+                        ->join('biblios','biblios.id','=','authors_biblios.biblios_id')
+                        ->join('categories','categories.id','=','biblios.categories_id')
+                        ->select(DB::raw('DISTINCT(authors.id), authors.name'))
+                        ->where('categories.ddc','=',$cat)
+                        ->orderBy('authors.name','asc')
+                        ->get();
+        }else{
+            $data = DB::table('authors')
+                        ->join('authors_biblios','authors.id','=','authors_biblios.authors_id')
+                        ->join('biblios','biblios.id','=','authors_biblios.biblios_id')
+                        ->join('categories','categories.id','=','biblios.categories_id')
+                        ->select(DB::raw('DISTINCT(authors.id), authors.name'))
+                        ->where('categories.id','=',$cat)
+                        ->orderBy('authors.name','asc')
+                        ->get();
+        }
+        
+        return response()->json(array('data' => $data));
+    }
 }

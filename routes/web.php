@@ -47,6 +47,9 @@ Route::get('/absensi-qr-perpustakaan', 'VisitController@getPageScan');
 // Catat absensi dengan QR
 Route::post('/scan-qr','VisitController@qr_read');
 
+// Menampilkan data author di form TOPSIS
+Route::post('/daftar-penulis-combobox','AuthorController@cb_box_author');
+
 Route::middleware(['auth'])->group(function(){
     // Category
     // Admin akses
