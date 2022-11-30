@@ -53,7 +53,9 @@
                                         @endif
                                         <td style="width: 2%;">
                                             <div class="container" style="color: white; ">
-                                                <a onclick="deleteMyBooking({{Auth::user()->id}},'{{$d->id}}','{{$d->bid}}')" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true" style="height: 20px;"></i></a>
+                                                @if($d->status == "proses")
+                                                    <a onclick="if(confirm('apakah anda yakin menghapus data pesanan?')) deleteMyBooking({{Auth::user()->id}},'{{$d->id}}','{{$d->bid}}')" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true" style="height: 20px;"></i></a>
+                                                @endif
                                             </div> 
                                         </td>
                                     </tr>
@@ -85,7 +87,9 @@
                                                     Status : Dibatalkan
                                                 </p>
                                             @endif
-                                            <a onclick="deleteMyBooking({{Auth::user()->id}},'{{$d->id}}','{{$d->bid}}')" class="card-link text-danger">Batalkan</a>
+                                            @if($d->status == "proses")
+                                                <a onclick="if(confirm('apakah anda yakin menghapus data pesanan?')) deleteMyBooking({{Auth::user()->id}},'{{$d->id}}','{{$d->bid}}')" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true" style="height: 20px;"></i></a>
+                                            @endif
                                             </div>
                                         </div>
                                     @endforeach

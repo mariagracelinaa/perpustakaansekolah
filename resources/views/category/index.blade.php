@@ -36,7 +36,7 @@
                       <div class="container">
                         <a class="btn" data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
                         <ul class="dropdown-menu">
-                          <li><a href="#modalEdit" data-toggle="modal" class="btn"><i class="fa fa-pencil-square-o" aria-hidden="true" onclick="getEditForm({{$d->id}})"></i> Ubah</a></li>
+                          <li><a href="#modalEdit" data-toggle="modal" class="btn"  onclick="getEditForm({{$d->id}})"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Ubah</a></li>
                           {{-- <li>
                             <a class="btn" onclick="if(confirm('Apakah anda yakin menghapus data {{$aut->name}}'))"><i class="fa fa-trash-o" aria-hidden="true"></i> Hapus</a>
                           </li> --}}
@@ -137,18 +137,43 @@
     }
 
     function submitAdd(){
-    var formData = new FormData($("#add_category")[0]);
+      var formData = new FormData($("#add_category")[0]);
+        $.ajax({
+              url: "{{url('/tambah-kategori')}}",
+              type: 'POST',
+              data: formData,
+              async: false,
+              cache: false,
+              contentType: false,
+              enctype: 'multipart/form-data',
+              processData: false,
+              beforeSend:function(){
+                $(document).find('span.error-text').text('');
+              },
+              success:function(data) {
+                if(data.status == 0){
+                  $.each(data.errors, function(prefix, val){
+                    $('span.'+ prefix +'_error').text(val[0]);
+                  });
+                }else{
+                  location.reload();
+                }
+              }
+        }); 
+    }
+
+    function updateData(id)
+    {
+      var eName=$('#eName').val();
+      var eddc=$('#eddc').val();
       $.ajax({
-            url: "{{url('/tambah-kategori')}}",
-            type: 'POST',
-            data: formData,
-            async: false,
-            cache: false,
-            contentType: false,
-            enctype: 'multipart/form-data',
-            processData: false,
-            beforeSend:function(){
-              $(document).find('span.error-text').text('');
+          type:'POST',
+          url:'{{route("daftar-kategori.updateData")}}',
+          data:{
+                '_token': '<?php echo csrf_token() ?>',
+                'id':id,
+                'eName':eName,
+                'eddc' : eddc
             },
             success:function(data) {
               if(data.status == 0){
@@ -159,7 +184,7 @@
                 location.reload();
               }
             }
-        }); 
+      });
     }
 </script>
 @endsection

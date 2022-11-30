@@ -113,6 +113,7 @@ class RegisterController extends Controller
     }
 
     public function showRegistrationForm(){
+        $this->authorize('check-admin');
         $result = Classes::all();
         // dd($result);
         return view('auth.register', compact('result'));

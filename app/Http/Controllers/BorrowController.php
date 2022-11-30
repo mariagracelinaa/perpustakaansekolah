@@ -596,19 +596,19 @@ class BorrowController extends Controller
                             ->get();    
             
             // Cek denda / tidak
-            if($return_date > $borrow_trans[0]->due_date){
-                $return_date = Carbon::parse($return_date);
-                $due_date =Carbon::parse($borrow_trans[0]->due_date);
-                $interval = $return_date->diffInDays($due_date);
+            // if($return_date > $borrow_trans[0]->due_date){
+            //     $return_date = Carbon::parse($return_date);
+            //     $due_date =Carbon::parse($borrow_trans[0]->due_date);
+            //     $interval = $return_date->diffInDays($due_date);
 
-                $fine = $interval * 500;
-            }
+            //     $fine = $interval * 500;
+            // }
 
             // update tabel -> kembalikan buku
             $update_borrow_trans = DB::table('borrow_transaction')
                             ->where('borrows_id','=', $borrows_id)
                             ->where('register_num','=',$register_num)
-                            ->update(['status'=> 'sudah kembali','fine'=>$fine,'return_date'=>$return_date]);
+                            ->update(['status'=> 'sudah kembali','fine'=>0,'return_date'=>$return_date]);
             
             $get_total_fines = DB::table('borrow_transaction')
                         ->select(DB::raw('SUM(fine) as total_fine'))

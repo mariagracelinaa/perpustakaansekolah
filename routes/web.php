@@ -57,6 +57,8 @@ Route::middleware(['auth'])->group(function(){
     // Tambah data kategori
     Route::post('/tambah-kategori','CategoryController@store');
     Route::post('/daftar-kategori/getEditForm','CategoryController@getEditForm');
+    // Catat update penerbit
+    Route::post('daftar-kategori/updateData','CategoryController@updateData')->name('daftar-kategori.updateData');
 
     // Publisher
     // Admin Akses

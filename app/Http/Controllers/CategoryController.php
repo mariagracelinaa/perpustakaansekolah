@@ -110,10 +110,41 @@ class CategoryController extends Controller
     public function getEditForm(Request $request){
         $id = $request->get('id');
         $data = Category::find($id);
-        dd($data);
+        // dd($data);
         return response()->json(array(
             'status'=>'OK',
             'msg'=>view('category.getEditForm', compact('data'))->render()
         ), 200);
+    }
+
+    public function updateData(Request $request){
+        $this->authorize('check-admin');
+        // dd($request->get('eName'));
+        $validator = \Validator::make($request->all(), [
+            'eName' => 'required',
+            'eddc' => 'required',
+        ],
+        [
+            'eName.required' => 'Nama penulis tidak boleh kosong',
+            'eddc.required' => 'Kategori DDC harus dipilih',
+        ]);
+        
+        if (!$validator->passes())
+        {
+            return response()->json(['status'=>0, 'errors'=>$validator->errors()->toArray()]);
+        }else{
+            $id = $request->get('id');
+            $name = $request->get('eName');
+            $ddc = $request->get('eddc');
+            try{
+                $data = DB::table('categories')
+                        ->where('id', $id)
+                        ->update(['name' => $name, 'ddc' => $ddc]);
+                        
+                $request->session()->flash('status','Data kategori berhasil diubah');
+            }catch (\PDOException $e) {
+                $request->session()->flash('error', 'Gagal mengubah data kategori, silahkan coba lagi');
+            }  
+        }
     }
 }

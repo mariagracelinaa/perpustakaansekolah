@@ -103,7 +103,7 @@
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-user" aria-hidden="true"></i> {{Auth::user()->name}}</a>
                         <div class="dropdown-menu fade-down m-0">
                             <a href="{{url('/profil')}}" class="dropdown-item">Profil</a>
-                            <a href="{{url('/form-masuk')}}" class="dropdown-item">Absensi</a>
+                            <a href="{{url('/form-masuk')}}" class="dropdown-item">Presensi</a>
                             <a href="{{url('/riwayat-kunjungan')}}" class="dropdown-item">Riwayat Kunjungan</a>
                             <a href="{{url('/daftar-pinjaman')}}" class="dropdown-item">Pinjaman Saya</a>
                             <a href="{{url('/daftar-pesanan')}}" class="dropdown-item">Pesanan Saya</a>
