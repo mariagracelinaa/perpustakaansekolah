@@ -580,6 +580,7 @@ class BiblioController extends Controller
     public function formTopsis(){
         $author = Author::all();
         $category = DB::table('categories')->select()->orderBy('name','asc')->get();
+        // dd($category);
         return view('frontend.formTopsis',compact('author','category'));
     }
 

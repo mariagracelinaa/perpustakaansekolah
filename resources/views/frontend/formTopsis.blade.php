@@ -7,21 +7,78 @@
             @csrf
             {{-- <input type="hidden" name="id" value="{{$data->id}}"> --}}
             <div class="form-group">
-              <label>Kategori Buku</label><br>
+              <label>Kategori Buku</label><span style="color: red"> *</span><br>
               <select name="category" id="category" class="form-control" style="background-color: white">
                 <option value="1000">--- Pilih Kategori ---</option>
-                <option value="000">Karya Umum (Ilmu perpustakaan, ensiklopedia umum, penerbitan dan surat kabar)</option>
-                <option value="100">Filsafat (Psikologi, etika, logika, filsafat modern, metafisika)</option>
-                <option value="200">Agama (Alkitab, Agama Kristen)</option>
-                <option value="300">Ilmu Sosial (Ilmu ekonomi, masalah sosial, pendidikan)</option>
-                <option value="400">Bahasa (Bahasa indonesia, bahasa inggris,bahasa lainnya)</option>
-                <option value="500">Ilmu Murni (biologi, kimia, fisika, matematika, ilmu tumbuhan, astronomi)</option>
-                <option value="600">Ilmu Terapan (Pertanian, kesejahteraan rumah tangga, manajemen)</option>
-                <option value="700">Kesenian dan Olahraga (Menggambar, seni lukis, seni musik, olahraga)</option>
-                <option value="800">Kesusastraan (Kesusastraan indonesia, kesusastraan inggris, novel fiksi)</option>
-                <option value="900">Sejarah dan Geografi (Geografi umum, biografi, sejarah umum dunia)</option>
+                <option value="000" style="font-weight: bold">Karya Umum (Ilmu perpustakaan, ensiklopedia umum, penerbitan dan surat kabar)</option>
+                {{-- sub category 000 --}}
                 @foreach ($category as $cat)
-                    <option value="{{$cat->id}}">{{ucfirst($cat->name)}}</option>
+                    @if ($cat->ddc == 000)
+                        <option value="{{$cat->id}}">&nbsp &nbsp{{ucfirst($cat->name)}}</option>
+                    @endif
+                @endforeach
+                <option value="100" style="font-weight: bold">Filsafat (Psikologi, etika, logika, filsafat modern, metafisika)</option>
+                {{-- sub category 100 --}}
+                @foreach ($category as $cat)
+                    @if ($cat->ddc == 100)
+                        <option value="{{$cat->id}}">&nbsp &nbsp{{ucfirst($cat->name)}}</option>
+                    @endif
+                @endforeach
+                <option value="200" style="font-weight: bold">Agama (Alkitab, Agama Kristen)</option>
+                {{-- sub category 200 --}}
+                @foreach ($category as $cat)
+                    @if ($cat->ddc == 200)
+                        <option value="{{$cat->id}}">&nbsp &nbsp{{ucfirst($cat->name)}}</option>
+                    @endif
+                @endforeach
+                <option value="300" style="font-weight: bold">Ilmu Sosial (Ilmu ekonomi, masalah sosial, pendidikan)</option>
+                {{-- sub category 300 --}}
+                @foreach ($category as $cat)
+                    @if ($cat->ddc == 300)
+                        <option value="{{$cat->id}}">&nbsp &nbsp{{ucfirst($cat->name)}}</option>
+                    @endif
+                @endforeach
+                <option value="400" style="font-weight: bold">Bahasa (Bahasa indonesia, bahasa inggris,bahasa lainnya)</option>
+                {{-- sub category 400 --}}
+                @foreach ($category as $cat)
+                    @if ($cat->ddc == 400)
+                        <option value="{{$cat->id}}">&nbsp &nbsp{{ucfirst($cat->name)}}</option>
+                    @endif
+                @endforeach
+                <option value="500" style="font-weight: bold">Ilmu Murni (biologi, kimia, fisika, matematika, ilmu tumbuhan, astronomi)</option>
+                {{-- sub category 500 --}}
+                @foreach ($category as $cat)
+                    @if ($cat->ddc == 500)
+                        <option value="{{$cat->id}}">&nbsp &nbsp{{ucfirst($cat->name)}}</option>
+                    @endif
+                @endforeach
+                <option value="600" style="font-weight: bold">Ilmu Terapan (Pertanian, kesejahteraan rumah tangga, manajemen)</option>
+                {{-- sub category 600 --}}
+                @foreach ($category as $cat)
+                    @if ($cat->ddc == 600)
+                        <option value="{{$cat->id}}">&nbsp &nbsp{{ucfirst($cat->name)}}</option>
+                    @endif
+                @endforeach
+                <option value="700" style="font-weight: bold">Kesenian dan Olahraga (Menggambar, seni lukis, seni musik, olahraga)</option>
+                {{-- sub category 700 --}}
+                @foreach ($category as $cat)
+                    @if ($cat->ddc == 700)
+                        <option value="{{$cat->id}}">&nbsp &nbsp{{ucfirst($cat->name)}}</option>
+                    @endif
+                @endforeach
+                <option value="800" style="font-weight: bold">Kesusastraan (Kesusastraan indonesia, kesusastraan inggris, novel fiksi)</option>
+                {{-- sub category 800 --}}
+                @foreach ($category as $cat)
+                    @if ($cat->ddc == 800)
+                        <option value="{{$cat->id}}">&nbsp &nbsp{{ucfirst($cat->name)}}</option>
+                    @endif
+                @endforeach
+                <option value="900" style="font-weight: bold">Sejarah dan Geografi (Geografi umum, biografi, sejarah umum dunia)</option>
+                {{-- sub category 900 --}}
+                @foreach ($category as $cat)
+                    @if ($cat->ddc == 900)
+                        <option value="{{$cat->id}}">&nbsp &nbsp{{ucfirst($cat->name)}}</option>
+                    @endif
                 @endforeach
               </select>
             </div>
