@@ -44,12 +44,14 @@
                                             </div> --}}
                                         </div><br>
                                         <div class="row g-4" id="book_list">
+                                            @php
+                                                $i = 1;
+                                            @endphp
                                             @foreach ( $data as $d)
                                                 <a href="/detail-buku/{{$d[0]->id}}" class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s" style="text-decoration: none">
                                                     <div class="team-item bg-light">
-                                                        
-                                                        
                                                         <div class="overflow-hidden">
+                                                            <p style="color: black; text-decoration: none; float: left;">{{$i++}}</p>
                                                             <img class="img-fluid" src="{{asset('images/'.$d[0]->image)}}" id="cover-book">
                                                         </div>
                                                         <div class="text-center p-4">
@@ -85,6 +87,7 @@
                                 <div class="accordion-body">
                                     <table class="table">
                                         <thead>
+                                            <th>No</th>
                                             <th>Judul Buku</th>
                                             <th>Kriteria 1</th>
                                             <th>Kriteria 2</th>
@@ -93,8 +96,12 @@
                                             <th>Kriteria 5</th>
                                         </thead>
                                         <tbody>
+                                            @php
+                                                $i = 1;
+                                            @endphp
                                             @foreach ($book as $bk)
                                                 <tr>
+                                                    <td>{{$i++}}</td>
                                                     <td>{{$bk->title}}</td>
                                                     <td>{{$arr_count_borrow[$bk->id]->count}}</td>
                                                     <td>{{$arr_count_page[$bk->id]->page}}</td>
@@ -102,7 +109,6 @@
                                                     <td>{{$arr_age[$bk->id]->age}}</td>
                                                     <td>{{$arr_stock[$bk->id]->stock}}</td>
                                                 </tr>
-                                                
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -120,6 +126,7 @@
                                     <h4>Kuadratkan setiap nilai pada decision matrix</h4>
                                     <table class="table">
                                         <thead>
+                                            <th>No</th>
                                             <th>Judul Buku</th>
                                             <th>Kriteria 1</th>
                                             <th>Kriteria 2</th>
@@ -128,8 +135,12 @@
                                             <th>Kriteria 5</th>
                                         </thead>
                                         <tbody>
+                                            @php
+                                                $i = 1;
+                                            @endphp
                                             @foreach ($book as $bk)
                                                 <tr>
+                                                    <td>{{$i++}}</td>
                                                     <td>{{$bk->title}}</td>
                                                     <td>{{$pow_count_borrow[$bk->id]}}</td>
                                                     <td>{{$pow_count_page[$bk->id]}}</td>
@@ -140,6 +151,7 @@
                                             @endforeach
                                             <tr>
                                                 <th>Total</th>
+                                                <td></td>
                                                 <td>{{$k1}}</td>
                                                 <td>{{$k2}}</td>
                                                 <td>{{$k3}}</td>
@@ -148,6 +160,7 @@
                                             </tr>
                                             <tr>
                                                 <th>Akar</th>
+                                                <td></td>
                                                 <td>{{number_format($sqrt_k1, 4, '.', '')}}</td>
                                                 <td>{{number_format($sqrt_k2, 4, '.', '')}}</td>
                                                 <td>{{number_format($sqrt_k3, 4, '.', '')}}</td>
@@ -160,6 +173,7 @@
                                     <h4>Bagi setiap nilai pada decision matrix dengan hasil akar setiap kriteria</h4>
                                     <table class="table">
                                         <thead>
+                                            <th>No</th>
                                             <th>Judul Buku</th>
                                             <th>Kriteria 1</th>
                                             <th>Kriteria 2</th>
@@ -168,8 +182,12 @@
                                             <th>Kriteria 5</th>
                                         </thead>
                                         <tbody>
+                                            @php
+                                                $i = 1;
+                                            @endphp
                                             @foreach ($book as $bk)
                                                 <tr>
+                                                    <td>{{$i++}}</td>
                                                     <td>{{$bk->title}}</td>
                                                     <td>{{number_format($matrix_r_k1[$bk->id], 4, '.', '')}}</td>
                                                     <td>{{number_format($matrix_r_k2[$bk->id], 4, '.', '')}}</td>
@@ -195,6 +213,7 @@
                                     <h6>Bobot K1 = {{$bobot_k1}}; Bobot K2 = {{$bobot_k2}}; Bobot K3 = {{$bobot_k3}}; Bobot K4 = {{$bobot_k4}}; Bobot K5 = {{$bobot_k5}}</h6>
                                     <table class="table">
                                         <thead>
+                                            <th>No</th>
                                             <th>Judul Buku</th>
                                             <th>Kriteria 1</th>
                                             <th>Kriteria 2</th>
@@ -203,8 +222,12 @@
                                             <th>Kriteria 5</th>
                                         </thead>
                                         <tbody>
+                                            @php
+                                                $i = 1;
+                                            @endphp
                                             @foreach ($book as $bk)
                                                 <tr>
+                                                    <td>{{$i++}}</td>
                                                     <td>{{$bk->title}}</td>
                                                     <td>{{number_format($matrix_v_k1[$bk->id], 4, '.', '')}}</td>
                                                     <td>{{number_format($matrix_v_k2[$bk->id], 4, '.', '')}}</td>
@@ -268,6 +291,7 @@
                                     <h2>Jarak Solusi Ideal Positif</h2>
                                     <table class="table">
                                         <thead>
+                                            <th>No</th>
                                             <th>Buku</th>
                                             <th>Kriteria 1</th>
                                             <th>Kriteria 2</th>
@@ -277,8 +301,12 @@
                                             <th>S*</th>
                                         </thead>
                                         <tbody>
+                                            @php
+                                                $i = 1;
+                                            @endphp
                                             @foreach ($book as $bk)
                                                 <tr>
+                                                    <td>{{$i++}}</td>
                                                     <td>{{$bk->title}}</td>
                                                     <td>{{number_format($arr_jarak_solusi_ideal_positif_1[$bk->id], 4, '.', '')}}</td>
                                                     <td>{{number_format($arr_jarak_solusi_ideal_positif_2[$bk->id], 4, '.', '')}}</td>
@@ -294,6 +322,7 @@
                                     <h2>Jarak Solusi Ideal Negatif</h2>
                                     <table class="table">
                                         <thead>
+                                            <th>No</th>
                                             <th>Buku</th>
                                             <th>Kriteria 1</th>
                                             <th>Kriteria 2</th>
@@ -303,8 +332,12 @@
                                             <th>S'</th>
                                         </thead>
                                         <tbody>
+                                            @php
+                                                $i = 1;
+                                            @endphp
                                             @foreach ($book as $bk)
                                                 <tr>
+                                                    <td>{{$i++}}</td>
                                                     <td>{{$bk->title}}</td>
                                                     <td>{{number_format($arr_jarak_solusi_ideal_negatif_1[$bk->id], 4, '.', '')}}</td>
                                                     <td>{{number_format($arr_jarak_solusi_ideal_negatif_2[$bk->id], 4, '.', '')}}</td>
@@ -330,6 +363,8 @@
                                   <div class="accordion-body">
                                     <table class="table">
                                         <thead>
+                                            <th>No</th>
+                                            <th>Gambar Sampul</th>
                                             <th>Buku</th>
                                             <th>Kedekatan relatif (C)</th>
                                             <th>Persen %</th>
@@ -341,6 +376,8 @@
                                             @endphp
                                             @foreach ($arr_topsis as $at => $val)
                                                 <tr>
+                                                    <td>{{ $i }}</td>
+                                                    <td><img class="img-fluid" src="{{asset('images/'.$data[$i-1][0]->image)}}" id="cover-book" width="150" height="250"></td>
                                                     <td>{{$data[$i-1][0]->title}}</td>
                                                     <td>{{number_format($val, 4, '.', '')}}</td>
                                                     <td>{{number_format($val, 4, '.', '') *100}} %</td>

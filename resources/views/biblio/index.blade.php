@@ -147,7 +147,7 @@
                 </div>
                 {{-- Combobox Kategori --}}
                 <div class="form-group">
-                  <label>Pilih Ketegori Buku:</label>
+                  <label>Pilih Ketegori Buku:</label><span style="color: red"> *</span>
                   <select style="width: 100%; height:30px" name="category" id="category">
                     @foreach ($category as $cat)
                       <option value="{{$cat->id}}">{{$cat->name}}</option>  

@@ -341,26 +341,34 @@ class BiblioController extends Controller
                 // Hapus foto lama terlebih dahulu 
                 // dd($old_image[0]->image);
                 // Storage::delete();
-                File::delete(public_path('images/'.$old_image[0]->image));
 
-                // Simpan foto baru
-                // $file = $request->file('image');
-                // $imgFolder = 'images';
-                // $imgFile = $request->file('image')->getClientOriginalName();
-                // $file->move($imgFolder, $imgFile);
-                // $image = $imgFile;
+                // Cek apakah ada file gmbr
+                if($request->hasFile('image')){
+                    File::delete(public_path('images/'.$old_image[0]->image));
 
-                $ext = $request->file('image')->extension();
-                $file = $request->file('image');
-                $file = Image::make($file);
-                $file->resize(300, 400);
-                $imgFolder = 'images';
-                // $imgFile = $file->getClientOriginalName();
-                $imgFile = $title.'.'.$ext;
-                $file->save(public_path('images/') . $imgFile);
-                // $file->move($imgFolder, $imgFile);
-                $image = $imgFile;
+                    // Simpan foto baru
+                    // $file = $request->file('image');
+                    // $imgFolder = 'images';
+                    // $imgFile = $request->file('image')->getClientOriginalName();
+                    // $file->move($imgFolder, $imgFile);
+                    // $image = $imgFile;
 
+                    $ext = $request->file('image')->extension();
+                    $file = $request->file('image');
+                    $file = Image::make($file);
+                    $file->resize(300, 400);
+                    $imgFolder = 'images';
+                    // $imgFile = $file->getClientOriginalName();
+                    $imgFile = $title.'.'.$ext;
+                    $file->save(public_path('images/') . $imgFile);
+                    // $file->move($imgFolder, $imgFile);
+                    $image = $imgFile;
+
+                    $data = DB::table('biblios')
+                        ->where('id', $request->get('id'))
+                        ->update(['image' => $image]);
+                }
+                
                 $edition = $request->get('edition');
                 $page = $request->get('page');
                 $book_height = $request->get('height');
@@ -371,7 +379,7 @@ class BiblioController extends Controller
 
                 $data = DB::table('biblios')
                         ->where('id', $request->get('id'))
-                        ->update(['title' => $title, 'isbn' => $isbn, 'publishers_id' => $publishers_id,'publish_year' => $publish_year, 'first_purchase' => $first_purchase, 'categories_id' => $categories_id, 'classification' => $classification, 'image' => $image, 'edition' => $edition, 'page' => $page, 'book_height' => $book_height, 'location' => $location, 'synopsis' => $synopsis]);
+                        ->update(['title' => $title, 'isbn' => $isbn, 'publishers_id' => $publishers_id,'publish_year' => $publish_year, 'first_purchase' => $first_purchase, 'categories_id' => $categories_id, 'classification' => $classification, 'edition' => $edition, 'page' => $page, 'book_height' => $book_height, 'location' => $location, 'synopsis' => $synopsis]);
 
                 $delete = DB::table('authors_biblios')->where('biblios_id', '=', $request->get('id'))->delete();
 
@@ -485,7 +493,13 @@ class BiblioController extends Controller
                 ->get();
 
         // dd($count);
-        return view('frontend.detail', compact('data','items', 'author_name','count'));
+        $count_borrow = DB::table('borrow_transaction')
+            ->join('items', 'items.register_num', '=', 'borrow_transaction.register_num')
+            ->select(DB::raw('COUNT(*) as count'))
+            ->where('items.biblios_id','=', $biblios_id)
+            ->get();
+        // dd($count_borrow);
+        return view('frontend.detail', compact('data','items', 'author_name','count','count_borrow'));
     }
 
     public function front_newBook(){

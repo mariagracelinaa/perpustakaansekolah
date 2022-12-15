@@ -12,7 +12,7 @@
                         @csrf
 
                         <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Nama') }}</label>
+                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Nama') }}</label><span style="color: red"> *</span>
 
                             <div class="col-md-6">
                                 <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required oninvalid="this.setCustomValidity('Nama tidak boleh kosong')" oninput="setCustomValidity('')" autocomplete="name" autofocus placeholder="Tuliskan nama lengkap pengguna">
@@ -26,7 +26,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('NISN/NIY') }}</label>
+                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('NISN/NIY') }}</label><span style="color: red"> *</span>
 
                             <div class="col-md-6">
                                 <input id="nisn/niy" type="text" class="form-control @error('nisn/niy') is-invalid @enderror" name="nisn/niy" value="{{ old('nisn/niy') }}" required oninvalid="this.setCustomValidity('NISN/NIY tidak boleh kosong')" oninput="setCustomValidity('')" autocomplete="nisn/niy" autofocus oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder="Tuliskan nomor NISN atau NIY pengguna">
@@ -40,7 +40,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-md-4 col-form-label text-md-right">{{ __('Sebagai') }}</label>
+                            <label class="col-md-4 col-form-label text-md-right">{{ __('Sebagai') }}</label><span style="color: red"> *</span>
 
                             <div class="col-md-6">
                                 <select id="role" type="text" class="form-control @error('role') is-invalid @enderror" name="role" value="{{ old('role') }}" required oninvalid="this.setCustomValidity('Peran pengguna harus dipilih')" oninput="setCustomValidity('')" autocomplete="role" autofocus>  
@@ -78,7 +78,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Alamat Email') }}</label>
+                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Alamat Email') }}</label><span style="color: red"> *</span>
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required oninvalid="this.setCustomValidity('Alamat email tidak boleh kosong')" oninput="setCustomValidity('')" autocomplete="email" placeholder="Tuliskan alamat email pengguna">
@@ -92,7 +92,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Kata Sandi') }}</label>
+                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Kata Sandi') }}</label><span style="color: red"> *</span>
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required oninvalid="this.setCustomValidity('Kata sandi tidak boleh kosong')" oninput="setCustomValidity('')" autocomplete="new-password" placeholder="********">
@@ -106,7 +106,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Ulang Kata Sandi') }}</label>
+                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Ulang Kata Sandi') }}</label><span style="color: red"> *</span>
 
                             <div class="col-md-6">
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password" placeholder="********">

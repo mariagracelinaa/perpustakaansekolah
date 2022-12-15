@@ -15,9 +15,13 @@
                             <table style="border-collapse: separate; border-spacing: 10px;">
                                 <tbody>
                                     <tr>
-                                        <td style="width:350px; height:400px; vertical-align:top;" rowspan="13"><img src="{{asset('images/'.$data->image)}}" width="100%"></td>
+                                        <td style="width:350px; height:400px; vertical-align:top;" rowspan="14"><img src="{{asset('images/'.$data->image)}}" width="100%"></td>
                                         <td>Judul </td>
                                         <td> : {{$data->title}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 15%">Jumlah Terpinjam </td>
+                                        <td> : {{$count_borrow[0]->count}} kali</td>
                                     </tr>
                                     <tr>
                                         <td style="width: 15%">ISBN </td>

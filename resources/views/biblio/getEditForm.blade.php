@@ -114,7 +114,7 @@
             </div>
             {{-- Ini nanti buat upload gambar --}}
             <div class="form-group">
-                <label>Gambar Buku</label><span style="color: red"> *</span>
+                <label>Gambar Buku</label>
                 <br>
                 <img src= "{{asset('images/'.$data->image)}}" height="150px">
                 <p>{{$data->image}}</p>
