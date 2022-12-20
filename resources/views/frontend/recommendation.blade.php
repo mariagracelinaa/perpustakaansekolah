@@ -51,7 +51,7 @@
                                                 <a href="/detail-buku/{{$d[0]->id}}" class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s" style="text-decoration: none">
                                                     <div class="team-item bg-light">
                                                         <div class="overflow-hidden">
-                                                            <p style="color: black; text-decoration: none; float: left;">{{$i++}}</p>
+                                                            <p style="color: black; text-decoration: none; text-align: center; padding-top: 5px;margin: 0; font-size: 15pt; font-weight: bold">{{$i++}}</p>
                                                             <img class="img-fluid" src="{{asset('images/'.$d[0]->image)}}" id="cover-book">
                                                         </div>
                                                         <div class="text-center p-4">
