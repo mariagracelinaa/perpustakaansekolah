@@ -68,7 +68,8 @@ class BorrowController extends Controller
             $result = DB::table('borrows')
                 ->join('users','users.id','=','borrows.users_id')
                 ->join('borrow_transaction','borrows.id','=','borrow_transaction.borrows_id')
-                ->select('borrows.*','users.name')
+                // ->select('borrows.*','users.name')
+                ->select(DB::raw('DISTINCT borrows.*, users.name'))
                 ->where('borrow_transaction.status','=','belum kembali')
                 ->orderBy('borrows.id','desc')
                 ->get();
@@ -472,6 +473,7 @@ class BorrowController extends Controller
                 ->join('users','users.id', '=', 'borrows.users_id')
                 ->select('borrows.id','borrows.borrow_date', 'borrows.due_date' ,'borrow_transaction.return_date', 'borrow_transaction.fine', 'borrow_transaction.status', 'items.register_num', 'biblios.title')
                 ->where('users.id', '=', $users_id)
+                ->orderByRaw("FIELD(borrow_transaction.status , 'belum kembali', 'sudah kembali') asc")
                 ->orderBy('borrows.id', 'desc')
                 ->get();
 
@@ -655,6 +657,7 @@ class BorrowController extends Controller
                 ->join('users','users.id', '=', 'borrows.users_id')
                 ->select('borrows.id','borrows.borrow_date', 'borrows.due_date' ,'borrow_transaction.return_date', 'borrow_transaction.fine', 'borrow_transaction.status', 'items.register_num', 'biblios.title')
                 ->where('users.id', '=', $id)
+                ->orderByRaw("FIELD(borrow_transaction.status , 'belum kembali', 'sudah kembali') asc")
                 ->orderBy('borrows.id', 'desc')
                 ->get();
 

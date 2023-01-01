@@ -634,7 +634,7 @@ class BiblioController extends Controller
                         ->join('categories','categories.id','=','biblios.categories_id')
                         ->select('biblios.*')
                         ->where('categories.ddc','=', $request->get('category'))
-                        ->orderBy('id','desc')
+                        ->orderBy('id')
                         ->get();
                 // dd("Masuk DDC");
             }else{
