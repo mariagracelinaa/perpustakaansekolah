@@ -51,6 +51,11 @@ Route::post('/scan-qr','VisitController@qr_read');
 Route::post('/daftar-penulis-combobox','AuthorController@cb_box_author');
 
 Route::middleware(['auth'])->group(function(){
+    // Profile Admin
+    Route::get('/profile-edit','UserController@getFormEditAdmin');
+    Route::post('/ubah-profil-admin','UserController@editDataAdmin');
+
+
     // Category
     // Admin akses
     Route::resource('/daftar-kategori','CategoryController');

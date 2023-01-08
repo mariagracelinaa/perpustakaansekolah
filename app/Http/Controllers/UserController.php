@@ -13,6 +13,50 @@ use DB;
 
 class UserController extends Controller
 {
+    public function getFormEditAdmin(){
+        $this->authorize('check-admin');
+        $data = DB::table('users')
+            ->select()
+            ->where('role','=','admin')
+            ->get();
+            // dd($data);
+        return view('user.adminprofile', compact('data'));
+    }
+
+    public function editDataAdmin(Request $request){
+        $id = $request->get('id');
+        $name = $request->get('name');
+        $email = $request->get('email');
+        $password_old = $request->get('password_old');
+        $password_new = $request->get('password_new');
+
+        try{
+            $admin = DB::table('users')
+                    ->where('id', $id)
+                    ->update(['name' => $name,'email' => $email]);
+
+            if($password_old != NULL){
+                // dd("masuk if");
+
+                $pwd = User::select('password')->where('id', '=', $request->get('id'))->get();
+                // dd($pwd[0]->password);
+
+                if (Hash::check($password_old, $pwd[0]->password)) {
+                    $password_update = DB::table('users')
+                                ->where('id', $request->get('id'))
+                                ->update(['password' => Hash::make($password_new)]);
+
+                    return redirect()->back()->with('status','Data berhasil diubah');
+                }else{
+                    return redirect()->back()->with('error', 'Kata sandi lama tidak sesuai, masukkan kata sandi lama dengan benar');
+                }
+            }
+            return redirect()->back()->with('status','Data diri berhasil diubah');
+        }catch (\PDOException $e) {
+            return redirect()->back()->with('error', 'Gagal mengubah data diri, silahkan coba lagi');
+        }
+    }
+
     public function student()
     {
         $this->authorize('check-admin');

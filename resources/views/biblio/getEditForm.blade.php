@@ -119,6 +119,7 @@
                 <img src= "{{asset('images/'.$data->image)}}" height="150px">
                 <p>{{$data->image}}</p>
                 <input type="file" class="form-control" name="image" id="image">
+                <br><span class="text-danger error-text image_error"></span>
             </div>
             {{-- Ini nanti buat upload gambar --}}
             <div class="form-group">

@@ -118,7 +118,7 @@
                     @endif
                   </a>
                   <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item"><i class="fa fa-user" aria-hidden="true"></i> Profile</a>
+                    <a class="dropdown-item" href="{{url('/profile-edit')}}"><i class="fa fa-user" aria-hidden="true"></i> Profile</a>
                     <a class="dropdown-item" href="{{url('logout')}}"><i class="fa fa-sign-out" aria-hidden="true"></i> Keluar</a>
                   </div>
                 </li>

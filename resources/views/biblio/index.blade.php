@@ -165,6 +165,7 @@
                 <div class="form-group">
                   <label>Gambar Buku</label><span style="color: red"> *</span>
                   <input type="file" class="form-control" name="image" id="image">
+                  <br><span class="text-danger error-text image_error"></span>
                 </div>
                 {{-- Ini nanti buat upload gambar --}}
                 <div class="form-group">
