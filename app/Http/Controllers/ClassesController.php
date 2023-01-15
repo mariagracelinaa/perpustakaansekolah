@@ -54,7 +54,7 @@ class ClassesController extends Controller
             'name' => 'required',
         ],
         [
-            'name.required' => 'Nama penerbit tidak boleh kosong',
+            'name.required' => 'Nama kelas tidak boleh kosong',
         ]);
         
         if (!$validator->passes())
@@ -68,7 +68,7 @@ class ClassesController extends Controller
     
                 $request->session()->flash('status','Data ruang kelas baru berhasil disimpan');
             }catch (\PDOException $e) {
-                $request->session()->flash('error', 'Gagal menambah data baru, silahkan coba lagi');
+                $request->session()->flash('error', $e);
             }
         }
     }

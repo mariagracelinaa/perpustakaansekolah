@@ -41,9 +41,9 @@
                           <a class="btn" data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
                           <ul class="dropdown-menu">
                             <li><a href="#modalEdit" data-toggle="modal" class="btn" onclick="getEditForm({{$cls->id}})"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Ubah</a></li>
-                            <li>
+                            {{-- <li>
                               <a class="btn" onclick="if(confirm('Apakah anda yakin menghapus data {{$cls->name}}'))"><i class="fa fa-trash-o" aria-hidden="true"></i> Hapus</a>
-                            </li>
+                            </li> --}}
                           </ul>
                         </div>
                       </td>
@@ -150,7 +150,7 @@
     }
 
     function submitAdd(){
-    var formData = new FormData($("#add_class")[0]);
+      var formData = new FormData($("#add_class")[0]);
       $.ajax({
           url: "{{url('daftar-kelas')}}",
           type: 'POST',
