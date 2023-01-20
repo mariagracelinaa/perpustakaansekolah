@@ -77,6 +77,7 @@
                     <ul class="nav child_menu">
                       <li><a href="{{url('/sirkulasi-buku')}}">Layanan Sirkulasi Buku</a></li>
                       <li><a href="{{url('/daftar-peminjaman')}}">Daftar Peminjaman</a></li>
+                      <li><a href="{{url('/statistik-peminjam')}}">Statistik Peminjam</a></li>
                     </ul>
                   </li>
                   <li><a><i class="fa fa-desktop"></i> Data Administrasi <span class="fa fa-chevron-down"></span></a>

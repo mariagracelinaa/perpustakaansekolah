@@ -63,7 +63,10 @@
         <div class="x_panel">
           <div class="x_title">
             <h2>Daftar Pemesanan Buku</small></h2>
-            <div class="clearfix"></div>
+            <ul class="nav navbar-right panel_toolbox">
+              <a href="{{url('/daftar-pesanan-terbanyak')}}" type="button" class="btn btn-primary"><i class="fa fa-fire"></i> Buku dipesan terbanyak</a>  
+          </ul>
+          <div class="clearfix"></div>
           </div>
           <div class="x_content">
               <div class="row">
@@ -78,6 +81,7 @@
                   <th>Tanggal Pemesanan</th>
                   <th>Deskripsi</th>
                   <th>Status</th>
+                  <th>Aksi</th>
                 </tr>
               </thead>
               <tbody id="show_data">
@@ -108,6 +112,11 @@
                         Dibatalkan
                       </td>
                     @endif
+                    <td>
+                      @if ($bk->status == "proses")
+                        <a href="{{url('/tambah-sirkulasi-buku/'.$bk->id)}}">Tambah Pinjaman</a>
+                      @endif  
+                    </td>
                   </tr>
                 @endforeach
               </tbody>

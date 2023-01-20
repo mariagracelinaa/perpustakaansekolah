@@ -206,6 +206,22 @@ class BiblioController extends Controller
         //
     }
 
+    public function populerBook(){
+        $data = DB::table('borrow_transaction')
+            ->join('items','items.register_num','=','borrow_transaction.register_num')
+            ->join('biblios','biblios.id','=','items.biblios_id')
+            ->select('biblios.id', 'biblios.title','biblios.image',DB::raw('COUNT(*) as count'))
+            ->groupBy('biblios.id')
+            ->groupBy('biblios.title')
+            ->groupBy('biblios.image')
+            ->orderBy('count','desc')
+            ->limit(10)
+            ->get();
+
+        // dd($data);
+        return view('frontend.populerbook', compact('data'));
+    }
+
     public function detailBiblio($biblios_id){
         $this->authorize('check-admin');
         //Ambil data biblio sesuai ID yang ingin dilihat detailnya
@@ -414,11 +430,33 @@ class BiblioController extends Controller
         $data = DB::table('bookings')
                 ->join('biblios', 'biblios.id','=','bookings.biblios_id')
                 ->join('users','users.id','=','bookings.users_id')
-                ->select('users.name', 'biblios.title', 'bookings.booking_date','bookings.description','bookings.status')
+                ->select('users.name', 'users.id', 'biblios.title', 'bookings.booking_date','bookings.description','bookings.status')
                 ->orderBy('booking_date','ASC')
                 ->get();
         // dd($data);
         return view('booking.index', compact('data', 'start', 'end','filter','status'));
+    }
+
+    public function mostBooking(){
+        $this->authorize('check-admin');
+
+        $data = DB::table('bookings')
+                ->join('biblios','biblios.id','bookings.biblios_id')
+                ->join('authors_biblios','biblios.id','authors_biblios.biblios_id')
+                ->join('authors','authors.id','authors_biblios.authors_id')
+                ->join('publishers','biblios.publishers_id','publishers.id')
+                ->select('biblios.id','biblios.image','biblios.title','authors.name as author','publishers.name as publisher', DB::raw('COUNT(*) as count'))
+                ->where('authors_biblios.primary_author','=',1)
+                ->groupBy('biblios.id')
+                ->groupBy('biblios.image')
+                ->groupBy('biblios.title')
+                ->groupBy('publishers.name')
+                ->groupBy('authors.name')
+                ->orderBy('count','desc')
+                ->get();
+
+        // dd($data);
+        return view('booking.populer', compact('data'));
     }
 
     public function bookingList_filter(Request $request){

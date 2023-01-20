@@ -647,6 +647,74 @@ class BorrowController extends Controller
         }
     }
 
+    // pengguna paling banyak pinjam
+    public function activeUser(){
+        $this->authorize('check-admin');
+        $filter ="";
+        $start ="";
+        $end = "";
+        $role = "";
+
+        $data = DB::table('borrows')
+            ->join('users','users.id','borrows.users_id')
+            ->leftJoin('class','class.id','users.class_id')
+            ->select('users.id','users.name as name','class.name as class',DB::raw('COUNT(*) as count'))
+            ->groupBy('users.id')
+            ->groupBy('name')
+            ->groupBy('class')
+            ->orderBy('count','desc')
+            ->get();
+        
+        return view('borrow.mostBorrower', compact('data','filter','start','end','role'));
+    }
+
+    // pengguna paling banyak pinjam
+    public function activeUser_filter(Request $request){
+        $this->authorize('check-admin');
+        $filter = $request->get('filter');
+        $start =$request->get('date_start');
+        $end = $request->get('date_end');
+        $role = $request->get('role');
+
+        if($filter == 'role'){
+            $data = DB::table('borrows')
+                ->join('users','users.id','borrows.users_id')
+                ->leftJoin('class','class.id','users.class_id')
+                ->select('users.id','users.name as name','class.name as class',DB::raw('COUNT(*) as count'))
+                ->where('users.role','=',$role)
+                ->groupBy('users.id')
+                ->groupBy('name')
+                ->groupBy('class')
+                ->orderBy('count','desc')
+                ->get();    
+        }else if($filter == 'date'){
+            $data = DB::table('borrows')
+                ->join('users','users.id','borrows.users_id')
+                ->leftJoin('class','class.id','users.class_id')
+                ->select('users.id','users.name as name','class.name as class',DB::raw('COUNT(*) as count'))
+                ->whereBetween('borrows.borrow_date', [$start,$end])
+                ->groupBy('users.id')
+                ->groupBy('name')
+                ->groupBy('class')
+                ->orderBy('count','desc')
+                ->get(); 
+        }else{
+            $data = DB::table('borrows')
+                ->join('users','users.id','borrows.users_id')
+                ->leftJoin('class','class.id','users.class_id')
+                ->select('users.id','users.name as name','class.name as class',DB::raw('COUNT(*) as count'))
+                ->whereBetween('borrows.borrow_date', [$start,$end])
+                ->where('users.role','=',$role)
+                ->groupBy('users.id')
+                ->groupBy('name')
+                ->groupBy('class')
+                ->orderBy('count','desc')
+                ->get(); 
+        }
+        
+        return view('borrow.mostBorrower', compact('data','filter','start','end','role'));
+    }
+
     // ----------------------------------------- FRONT END ------------------------------------------------
     public function myBorrow(){
         $id = Auth::user()->id;

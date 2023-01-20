@@ -50,6 +50,9 @@ Route::post('/scan-qr','VisitController@qr_read');
 // Menampilkan data author di form TOPSIS
 Route::post('/daftar-penulis-combobox','AuthorController@cb_box_author');
 
+// Buku terpopuler
+Route::get('/buku-populer', 'BiblioController@populerBook');
+
 Route::middleware(['auth'])->group(function(){
     // Profile Admin
     Route::get('/profile-edit','UserController@getFormEditAdmin');
@@ -116,6 +119,8 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/daftar-pesanan-buku','BiblioController@bookingList');
     // Tampilkan daftar pesanan admin -> filter
     Route::get('/daftar-pemesanan-filter','BiblioController@bookingList_filter');
+    // Buku yang paling banyak dipesan
+    Route::get('/daftar-pesanan-terbanyak','BiblioController@mostBooking');
 
     //User Akses
 
@@ -169,6 +174,10 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/return','BorrowController@bookReturn');
     // Catat perpanjangan buku
     Route::post('/extension','BorrowController@bookExtension');
+    // Statistik peminjam
+    Route::get('/statistik-peminjam','BorrowController@activeUser');
+    // Statistik peminjam filter
+    Route::get('/statistik-peminjam-filter','BorrowController@activeUser_filter');
 
     // User Akses
     // Tampilkan daftar pinjaman pengguna login
