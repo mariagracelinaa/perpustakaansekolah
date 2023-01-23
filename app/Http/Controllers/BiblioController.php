@@ -682,29 +682,34 @@ class BiblioController extends Controller
     }
 
     public function addReview(Request $request){
-        $biblios_id = $request->get('biblios_id');
-        $users_id = $request->get('users_id');
-        $comment = $request->get('comment');
-        $book_rating = $request->get('book_rating');
-        $date = Carbon::now();
+        $this->authorize('check-user');
+        try{
+            $biblios_id = $request->get('biblios_id');
+            $users_id = $request->get('users_id');
+            $comment = $request->get('comment');
+            $book_rating = $request->get('book_rating');
+            $date = Carbon::now();
 
-        // cek apa sudah ada data review nya
-        $rate = DB::table('book_ratings')
-                ->select()
-                ->where('biblios_id','=', $biblios_id)
-                ->where('users_id','=',$users_id)
-                ->get();
-        if(!$rate->isEmpty()){
-            DB::table('book_ratings')
-            ->where('biblios_id', $biblios_id)
-            ->where('users_id', $users_id)
-            ->update(['rate' => $book_rating, 'comment' => $comment, 'date' => $date]);
-        }else{
-            DB::table('book_ratings')
-            ->insert(['biblios_id' => $biblios_id, 'users_id' => $users_id, 'rate' => $book_rating, 'comment' => $comment, 'date' => $date]);
+            // cek apa sudah ada data review nya
+            $rate = DB::table('book_ratings')
+                    ->select()
+                    ->where('biblios_id','=', $biblios_id)
+                    ->where('users_id','=',$users_id)
+                    ->get();
+            if(!$rate->isEmpty()){
+                DB::table('book_ratings')
+                ->where('biblios_id', $biblios_id)
+                ->where('users_id', $users_id)
+                ->update(['rate' => $book_rating, 'comment' => $comment, 'date' => $date]);
+            }else{
+                DB::table('book_ratings')
+                ->insert(['biblios_id' => $biblios_id, 'users_id' => $users_id, 'rate' => $book_rating, 'comment' => $comment, 'date' => $date]);
+            }
+
+            return redirect()->back()->with('status', 'Review berhasil dicatat');
+        }catch (\PDOException $e) {
+            return redirect()->back()->with('error', 'Review gagal dicatat, silahkan coba lagi!');
         }
-
-        return redirect()->back()->with('status', 'Review berhasil dicatat');
     }
 
     public function formTopsis(){

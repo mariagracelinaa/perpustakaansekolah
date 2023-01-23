@@ -6,6 +6,9 @@ use App\Author;
 use Illuminate\Http\Request;
 
 use DB;
+use Auth;
+
+use Carbon\Carbon;
 
 class AuthorController extends Controller
 {
@@ -175,4 +178,107 @@ class AuthorController extends Controller
         
         return response()->json(array('data' => $data));
     }
+
+    public function authorList(){
+        $author = Author::all();
+        // $data = [];
+        // for($i = 0; $i < count($author); $i++){
+        //     $count = DB::table('authors')
+        //         ->join('authors_biblios','authors.id','=','authors_biblios.authors_id')
+        //         ->select('authors.id','authors.name', DB::raw('COUNT(*) as jumlah_koleksi'))
+        //         ->where('authors_id','=', $author[$i]->id)
+        //         ->groupBy('authors.id')
+        //         ->groupBy('authors.name')
+        //         ->get();
+        //     // dd($count[0]);
+        //     $data[] = $count;
+        // }
+        // dd($data);
+        return view('frontend.authors', compact('author'));
+    }
+
+    public function detail_author($authors_id){
+        $author = DB::table('authors')
+                    ->select()
+                    ->where('authors.id','=', $authors_id)
+                    ->get();
+
+        $list_book = DB::table('biblios')
+                    ->join('authors_biblios','biblios.id','=','authors_biblios.biblios_id')
+                    ->select('biblios.*')
+                    ->where('authors_biblios.authors_id','=', $authors_id)
+                    ->get();
+        // hitung rating buku
+        // total rating x jumlah
+        $total_author_rating = 0;
+        for ($i=1; $i <= 5; $i++) { 
+            $cr = DB::table('author_ratings')
+                    ->select(DB::raw('COUNT(*) as count'))
+                    ->where('rate','=',$i)
+                    ->where('authors_id','=',$authors_id)
+                    ->get();
+            
+            $total_author_rating = $total_author_rating + ($i * $cr[0]->count);
+        }
+        // dd($total_author_rating);
+        // Dapatkan nilai rating range 1-5
+        $cs = DB::table('author_ratings')
+                ->select(DB::raw('COUNT(*) as authorRate'))
+                ->where('authors_id','=',$authors_id)
+                ->get();
+
+        if($cs[0]->authorRate == 0){
+            $rating = 0;
+        }else{
+            $rating = $total_author_rating / $cs[0]->authorRate; 
+        }
+
+        // Baca rating dari user tertentu
+        $author_rating_user = NULL;
+        if(Auth::user()){
+            $author_rating_user = DB::table('author_ratings')
+                                ->select()
+                                ->where('authors_id','=', $authors_id)
+                                ->where('users_id','=', Auth::user()->id)
+                                ->get();
+            if(!$author_rating_user->isEmpty()){
+                $author_rating_user = $author_rating_user[0];
+            }else{
+                $author_rating_user = NULL;
+            }
+        }
+        // dd($list_book);
+        return view('frontend.author_book', compact('list_book','rating','author','author_rating_user'));
+    }
+
+    public function addRating(Request $request){
+        $this->authorize('check-user');
+        try{
+            $authors_id = $request->get('authors_id');
+            $users_id = $request->get('users_id');
+            $author_rating = $request->get('author_rating');
+            $date = Carbon::now();
+
+            // cek apa sudah ada data review nya
+            $rate = DB::table('author_ratings')
+                    ->select()
+                    ->where('authors_id','=', $authors_id)
+                    ->where('users_id','=',$users_id)
+                    ->get();
+            if(!$rate->isEmpty()){
+                DB::table('author_ratings')
+                ->where('authors_id', $authors_id)
+                ->where('users_id', $users_id)
+                ->update(['rate' => $author_rating, 'date' => $date]);
+            }else{
+                DB::table('author_ratings')
+                ->insert(['authors_id' => $authors_id, 'users_id' => $users_id, 'rate' => $author_rating, 'date' => $date]);
+            }
+
+            return redirect()->back()->with('status', 'Rating berhasil dicatat');
+        }catch (\PDOException $e) {
+            return redirect()->back()->with('error', 'Rating gagal dicatat, silahkan coba lagi!');
+        }
+    }
+
 }

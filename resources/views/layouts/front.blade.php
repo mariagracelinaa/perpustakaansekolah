@@ -126,6 +126,7 @@
                         <a href="/form-rekomendasi" class="dropdown-item">Cari Rekomendasi Buku</a>
                     </div>
                 </div>
+                <a href="{{url('/penulis')}}" class="nav-item nav-link">Penulis</a>
                 @if (Auth::user())
                     <a href="{{url('/daftar-usulan')}}" class="nav-item nav-link">Daftar Usulan Buku</a>
                     <div class="nav-item dropdown">

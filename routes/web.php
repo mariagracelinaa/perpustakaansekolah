@@ -261,4 +261,9 @@ Route::middleware(['auth'])->group(function(){
     // User akses
     // Review
     Route::post('/tambah-review','BiblioController@addReview');
+
+    // Rating penulis
+    Route::get('/penulis','AuthorController@authorList');
+    Route::get('/buku-penulis/{id}','AuthorController@detail_author');
+    Route::post('/tambah-rating','AuthorController@addRating');
 });
