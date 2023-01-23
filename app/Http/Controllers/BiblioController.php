@@ -572,8 +572,24 @@ class BiblioController extends Controller
         }else{
            $rating = $total_book_rating / $cs[0]->reviewer; 
         }
-        // dd($review);
-        return view('frontend.detail', compact('data','items', 'author_name','count','count_borrow','review','rating'));
+
+        // Baca review dari user tertentu
+        $book_rating_user = NULL;
+        if(Auth::user()){
+            $book_rating_user = DB::table('book_ratings')
+                                ->select()
+                                ->where('biblios_id','=', $biblios_id)
+                                ->where('users_id','=', Auth::user()->id)
+                                ->get();
+            if(!$book_rating_user->isEmpty()){
+                $book_rating_user = $book_rating_user[0];
+            }else{
+                $book_rating_user = NULL;
+            }
+        }
+        
+        // dd($book_rating_user);
+        return view('frontend.detail', compact('data','items', 'author_name','count','count_borrow','review','rating','book_rating_user'));
     }
 
     public function front_newBook(){
@@ -666,8 +682,29 @@ class BiblioController extends Controller
     }
 
     public function addReview(Request $request){
+        $biblios_id = $request->get('biblios_id');
+        $users_id = $request->get('users_id');
+        $comment = $request->get('comment');
+        $book_rating = $request->get('book_rating');
+        $date = Carbon::now();
 
-        dd($request->all());
+        // cek apa sudah ada data review nya
+        $rate = DB::table('book_ratings')
+                ->select()
+                ->where('biblios_id','=', $biblios_id)
+                ->where('users_id','=',$users_id)
+                ->get();
+        if(!$rate->isEmpty()){
+            DB::table('book_ratings')
+            ->where('biblios_id', $biblios_id)
+            ->where('users_id', $users_id)
+            ->update(['rate' => $book_rating, 'comment' => $comment, 'date' => $date]);
+        }else{
+            DB::table('book_ratings')
+            ->insert(['biblios_id' => $biblios_id, 'users_id' => $users_id, 'rate' => $book_rating, 'comment' => $comment, 'date' => $date]);
+        }
+
+        return redirect()->back()->with('status', 'Review berhasil dicatat');
     }
 
     public function formTopsis(){

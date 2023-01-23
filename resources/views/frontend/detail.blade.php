@@ -21,7 +21,7 @@
                                     </tr>
                                     <tr>
                                         <td style="width: 15%">Rating </td>
-                                        <td> : <span class="bi bi-star-fill" style="color: yellow"></span> {{$rating}}/5</td>
+                                        <td> : <span class="bi bi-star-fill" style="color: yellow"></span> {{number_format($rating, 2, '.', '')}}/5</td>
                                     </tr>
                                     <tr>
                                         <td style="width: 15%">Jumlah Terpinjam </td>
@@ -169,21 +169,84 @@
                                                     <div class="form-body">
                                                         <div class="rating-css">
                                                             <div class="star-icon">
-                                                                <input type="radio" value="1" name="book_rating" id="rate1" checked>
-                                                                <label for="rate1" class="fa fa-star"></label>
-                                                                <input type="radio" value="2" name="book_rating" id="rate2">
-                                                                <label for="rate2" class="fa fa-star"></label>
-                                                                <input type="radio" value="3" name="book_rating" id="rate3">
-                                                                <label for="rate3" class="fa fa-star"></label>
-                                                                <input type="radio" value="4" name="book_rating" id="rate4">
-                                                                <label for="rate4" class="fa fa-star"></label>
-                                                                <input type="radio" value="5" name="book_rating" id="rate5">
-                                                                <label for="rate5" class="fa fa-star"></label>
+                                                                @if ($book_rating_user != NULL)
+                                                                    @if($book_rating_user->rate == 1)
+                                                                        <input type="radio" value="1" name="book_rating" id="rate1" checked>
+                                                                        <label for="rate1" class="fa fa-star"></label>
+                                                                        <input type="radio" value="2" name="book_rating" id="rate2">
+                                                                        <label for="rate2" class="fa fa-star"></label>
+                                                                        <input type="radio" value="3" name="book_rating" id="rate3">
+                                                                        <label for="rate3" class="fa fa-star"></label>
+                                                                        <input type="radio" value="4" name="book_rating" id="rate4">
+                                                                        <label for="rate4" class="fa fa-star"></label>
+                                                                        <input type="radio" value="5" name="book_rating" id="rate5">
+                                                                        <label for="rate5" class="fa fa-star"></label> 
+                                                                    @elseif($book_rating_user->rate == 2)
+                                                                        <input type="radio" value="1" name="book_rating" id="rate1">
+                                                                        <label for="rate1" class="fa fa-star"></label>
+                                                                        <input type="radio" value="2" name="book_rating" id="rate2" checked>
+                                                                        <label for="rate2" class="fa fa-star"></label>
+                                                                        <input type="radio" value="3" name="book_rating" id="rate3">
+                                                                        <label for="rate3" class="fa fa-star"></label>
+                                                                        <input type="radio" value="4" name="book_rating" id="rate4">
+                                                                        <label for="rate4" class="fa fa-star"></label>
+                                                                        <input type="radio" value="5" name="book_rating" id="rate5">
+                                                                        <label for="rate5" class="fa fa-star"></label>
+                                                                    @elseif($book_rating_user->rate == 3)
+                                                                        <input type="radio" value="1" name="book_rating" id="rate1">
+                                                                        <label for="rate1" class="fa fa-star"></label>
+                                                                        <input type="radio" value="2" name="book_rating" id="rate2">
+                                                                        <label for="rate2" class="fa fa-star"></label>
+                                                                        <input type="radio" value="3" name="book_rating" id="rate3" checked>
+                                                                        <label for="rate3" class="fa fa-star"></label>
+                                                                        <input type="radio" value="4" name="book_rating" id="rate4">
+                                                                        <label for="rate4" class="fa fa-star"></label>
+                                                                        <input type="radio" value="5" name="book_rating" id="rate5">
+                                                                        <label for="rate5" class="fa fa-star"></label>
+                                                                    @elseif($book_rating_user->rate == 4)
+                                                                        <input type="radio" value="1" name="book_rating" id="rate1">
+                                                                        <label for="rate1" class="fa fa-star"></label>
+                                                                        <input type="radio" value="2" name="book_rating" id="rate2">
+                                                                        <label for="rate2" class="fa fa-star"></label>
+                                                                        <input type="radio" value="3" name="book_rating" id="rate3">
+                                                                        <label for="rate3" class="fa fa-star"></label>
+                                                                        <input type="radio" value="4" name="book_rating" id="rate4" checked>
+                                                                        <label for="rate4" class="fa fa-star"></label>
+                                                                        <input type="radio" value="5" name="book_rating" id="rate5">
+                                                                        <label for="rate5" class="fa fa-star"></label>
+                                                                    @elseif($book_rating_user->rate == 5)
+                                                                        <input type="radio" value="1" name="book_rating" id="rate1">
+                                                                        <label for="rate1" class="fa fa-star"></label>
+                                                                        <input type="radio" value="2" name="book_rating" id="rate2">
+                                                                        <label for="rate2" class="fa fa-star"></label>
+                                                                        <input type="radio" value="3" name="book_rating" id="rate3">
+                                                                        <label for="rate3" class="fa fa-star"></label>
+                                                                        <input type="radio" value="4" name="book_rating" id="rate4">
+                                                                        <label for="rate4" class="fa fa-star"></label>
+                                                                        <input type="radio" value="5" name="book_rating" id="rate5" checked>
+                                                                        <label for="rate5" class="fa fa-star"></label>
+                                                                    @endif
+                                                                @else
+                                                                    <input type="radio" value="1" name="book_rating" id="rate1" checked>
+                                                                    <label for="rate1" class="fa fa-star"></label>
+                                                                    <input type="radio" value="2" name="book_rating" id="rate2">
+                                                                    <label for="rate2" class="fa fa-star"></label>
+                                                                    <input type="radio" value="3" name="book_rating" id="rate3">
+                                                                    <label for="rate3" class="fa fa-star"></label>
+                                                                    <input type="radio" value="4" name="book_rating" id="rate4">
+                                                                    <label for="rate4" class="fa fa-star"></label>
+                                                                    <input type="radio" value="5" name="book_rating" id="rate5">
+                                                                    <label for="rate5" class="fa fa-star"></label>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Komentar</label>
-                                                            <textarea name="comment" id="comment" rows="3" class="form-control" style="width: 100%"></textarea>
+                                                            @if ($book_rating_user != NULL)
+                                                                <textarea name="comment" id="comment" placeholder="Masukkan komentar Anda" rows="3" class="form-control" style="width: 100%">{{$book_rating_user->comment}}</textarea>
+                                                            @else
+                                                                <textarea name="comment" id="comment" placeholder="Masukkan komentar Anda" rows="3" class="form-control" style="width: 100%"></textarea>
+                                                            @endif
                                                         </div>
                                                         <div class="form-group" style="text-align: right">
                                                             <button type="submit" class="btn btn-primary" style="width:150px; margin-top: 10px; border-radius: 15px;">Simpan Review</button>
