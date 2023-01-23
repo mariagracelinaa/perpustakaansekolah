@@ -539,8 +539,41 @@ class BiblioController extends Controller
             ->select(DB::raw('COUNT(*) as count'))
             ->where('items.biblios_id','=', $biblios_id)
             ->get();
-        // dd($count_borrow);
-        return view('frontend.detail', compact('data','items', 'author_name','count','count_borrow'));
+
+        // baca review
+        $review = DB::table('book_ratings')
+                ->join('users','users.id','=','book_ratings.users_id')
+                ->select('book_ratings.*','users.name')
+                ->where('book_ratings.biblios_id','=',$biblios_id)
+                ->orderBy('book_ratings.date','desc')
+                ->limit(3)
+                ->get();
+        // hitung rating buku
+        // total rating x jumlah
+        $total_book_rating = 0;
+        for ($i=1; $i <= 5; $i++) { 
+            $cr = DB::table('book_ratings')
+                    ->select(DB::raw('COUNT(*) as count'))
+                    ->where('rate','=',$i)
+                    ->where('biblios_id','=',$biblios_id)
+                    ->get();
+            
+            $total_book_rating = $total_book_rating + ($i * $cr[0]->count);
+        }
+        // dd($total_book_rating);
+        // Dapatkan nilai rating range 1-5
+        $cs = DB::table('book_ratings')
+                    ->select(DB::raw('COUNT(*) as reviewer'))
+                    ->where('biblios_id','=',$biblios_id)
+                    ->get();
+    
+        if($cs[0]->reviewer == 0){
+            $rating = 0;
+        }else{
+           $rating = $total_book_rating / $cs[0]->reviewer; 
+        }
+        // dd($review);
+        return view('frontend.detail', compact('data','items', 'author_name','count','count_borrow','review','rating'));
     }
 
     public function front_newBook(){
@@ -630,6 +663,11 @@ class BiblioController extends Controller
             return session()->flash('error', 'Gagal membatalkan pemesanan buku, silahkan coba lagi');
         }
         
+    }
+
+    public function addReview(Request $request){
+
+        dd($request->all());
     }
 
     public function formTopsis(){

@@ -257,4 +257,8 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/ubah-usulan-catat', 'SuggestionController@editSuggestion');
     // Catat delete usulan
     Route::get('/hapus-usulan/{id}', 'SuggestionController@deleteSuggestionUser');
+
+    // User akses
+    // Review
+    Route::post('/tambah-review','BiblioController@addReview');
 });
