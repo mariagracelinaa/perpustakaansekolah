@@ -127,9 +127,9 @@
                 </div>   
             </div>
             <div class="form-group">
-                <label>Apakah ketebalan buku penting bagi Anda?</label>
+                <label>Apakah buku yang tebal cocok bagi Anda?</label>
                 <div style="text-align: center">
-                    <label>Tidak Penting</label>
+                    <label>Tidak Cocok</label>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="radio_page" value=1 style="width: 20px; height: 20px">
                         <label class="form-check-label">1</label>
@@ -150,36 +150,9 @@
                         <input class="form-check-input" type="radio" name="radio_page" value=5 style="width: 20px; height: 20px">
                         <label class="form-check-label">5</label>
                     </div>
-                    <label>Sangat Penting</label>
+                    <label>Sangat Cocok</label>
                 </div>   
             </div>
-            {{-- <div class="form-group">
-                <label>Apakah tahun terbitan buku penting bagi Anda?</label>
-                <div style="text-align: center">
-                    <label>Tidak Penting</label>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="radio_publish" value=1 style="width: 20px; height: 20px">
-                        <label class="form-check-label">1</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="radio_publish" value=2 style="width: 20px; height: 20px">
-                        <label class="form-check-label">2</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="radio_publish" value=3 style="width: 20px; height: 20px" checked>
-                        <label class="form-check-label">3</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="radio_publish" value=4 style="width: 20px; height: 20px">
-                        <label class="form-check-label">4</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="radio_publish" value=5 style="width: 20px; height: 20px">
-                        <label class="form-check-label">5</label>
-                    </div>
-                    <label>Sangat Penting</label>
-                </div>   
-            </div> --}}
             <div class="form-group">
                 <label>Apakah koleksi buku baru di perpustakaan lebih cocok untuk Anda?</label>
                 <div style="text-align: center">
@@ -234,33 +207,60 @@
                     <label>Sangat Penting</label>
                 </div>   
             </div>
-            {{-- <div class="form-group">
-                <label>Apakah Anda lebih menyukai buku edisi terbaru?</label>
+            <div class="form-group">
+                <label>Apakah rating buku penting bagi Anda?</label>
                 <div style="text-align: center">
-                    <label>Tidak Suka</label>
+                    <label>Tidak Penting</label>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="radio_edition" value=1 style="width: 20px; height: 20px">
+                        <input class="form-check-input" type="radio" name="radio_book_rating" value=1 style="width: 20px; height: 20px">
                         <label class="form-check-label">1</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="radio_edition" value=2 style="width: 20px; height: 20px">
+                        <input class="form-check-input" type="radio" name="radio_book_rating" value=2 style="width: 20px; height: 20px">
                         <label class="form-check-label">2</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="radio_edition" value=3 style="width: 20px; height: 20px" checked>
+                        <input class="form-check-input" type="radio" name="radio_book_rating" value=3 style="width: 20px; height: 20px" checked>
                         <label class="form-check-label">3</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="radio_edition" value=4 style="width: 20px; height: 20px">
+                        <input class="form-check-input" type="radio" name="radio_book_rating" value=4 style="width: 20px; height: 20px">
                         <label class="form-check-label">4</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="radio_edition" value=5 style="width: 20px; height: 20px">
+                        <input class="form-check-input" type="radio" name="radio_book_rating" value=5 style="width: 20px; height: 20px">
                         <label class="form-check-label">5</label>
                     </div>
-                    <label>Sangat Suka</label>
+                    <label>Sangat Penting</label>
                 </div>   
-            </div> --}}
+            </div>
+            <div class="form-group">
+                <label>Apakah rating penulis penting Anda?</label>
+                <div style="text-align: center">
+                    <label>Tidak Penting</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radio_author_rating" value=1 style="width: 20px; height: 20px">
+                        <label class="form-check-label">1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radio_author_rating" value=2 style="width: 20px; height: 20px">
+                        <label class="form-check-label">2</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radio_author_rating" value=3 style="width: 20px; height: 20px" checked>
+                        <label class="form-check-label">3</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radio_author_rating" value=4 style="width: 20px; height: 20px">
+                        <label class="form-check-label">4</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radio_author_rating" value=5 style="width: 20px; height: 20px">
+                        <label class="form-check-label">5</label>
+                    </div>
+                    <label>Sangat Penting</label>
+                </div>   
+            </div>
             <div class="form-group" style="text-align: right">
                 <button type="submit" class="btn btn-primary" style="width:200px; margin-top: 10px; border-radius: 15px;">Cari Rekomendasi</button>
             </div>

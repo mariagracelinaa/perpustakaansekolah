@@ -5,9 +5,9 @@
         <div class="col-md-12 col-sm-12 ">
             <div class="x_panel">
                 <div class="x_title" style="margin-left: 20px">
-                    <h2>Penulis : {{$author[0]->name}} <span class="bi bi-star-fill" style="color: yellow"></span> {{number_format($rating, 2, '.', '')}}/5</small></h2>
+                    <h2>Penulis : {{$author[0]->name}} <span class="bi bi-star-fill" style="color: yellow"></span> {{number_format($rating, 1, '.', '')}}/5</small></h2>
                     @if (!Auth::user())
-                        <p style="color: red">Anda dapat melakukan review buku ini dengan masuk menggunakan akun terlebih dahulu</p> 
+                        <p style="color: red">Anda dapat melakukan rating penulis dengan masuk menggunakan akun terlebih dahulu</p> 
                     @else
                         <form role="form" method="POST" id="add_rating" action="/tambah-rating">
                             @csrf

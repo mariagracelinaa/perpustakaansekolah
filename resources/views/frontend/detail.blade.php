@@ -21,7 +21,7 @@
                                     </tr>
                                     <tr>
                                         <td style="width: 15%">Rating </td>
-                                        <td> : <span class="bi bi-star-fill" style="color: yellow"></span> {{number_format($rating, 2, '.', '')}}/5</td>
+                                        <td> : <span class="bi bi-star-fill" style="color: yellow"></span> {{number_format($rating, 1, '.', '')}}/5</td>
                                     </tr>
                                     <tr>
                                         <td style="width: 15%">Jumlah Terpinjam </td>

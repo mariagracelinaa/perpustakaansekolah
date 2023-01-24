@@ -53,6 +53,11 @@ Route::post('/daftar-penulis-combobox','AuthorController@cb_box_author');
 // Buku terpopuler
 Route::get('/buku-populer', 'BiblioController@populerBook');
 
+// halaman penulis frontend
+Route::get('/penulis','AuthorController@authorList');
+// detail penulis frontend
+Route::get('/buku-penulis/{id}','AuthorController@detail_author');
+
 Route::middleware(['auth'])->group(function(){
     // Profile Admin
     Route::get('/profile-edit','UserController@getFormEditAdmin');
@@ -263,7 +268,5 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/tambah-review','BiblioController@addReview');
 
     // Rating penulis
-    Route::get('/penulis','AuthorController@authorList');
-    Route::get('/buku-penulis/{id}','AuthorController@detail_author');
     Route::post('/tambah-rating','AuthorController@addRating');
 });

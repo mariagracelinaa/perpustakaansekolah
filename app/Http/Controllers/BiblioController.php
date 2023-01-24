@@ -735,16 +735,17 @@ class BiblioController extends Controller
             }
             $bobot_k4 = $request->get('radio_age');
             $bobot_k5 = $request->get('radio_stock');
-            // $bobot_k6 = $request->get('radio_edition');
-            // dd($bobot_k1, $bobot_k2, $bobot_k3, $bobot_k4, $bobot_k5, $bobot_k6);
-            // dd($request->get('fav_author'));
+            $bobot_k6 = $request->get('radio_book_rating');
+            $bobot_k7 = $request->get('radio_author_rating');
+            // dd($bobot_k1, $bobot_k2,$bobot_k3, $bobot_k4,$bobot_k5, $bobot_k6,$bobot_k7);
             
-            // $bobot_k1 = 4;
-            // $bobot_k2 = 4;
-            // $bobot_k3 = 5;
-            // $bobot_k4 = 3;
-            // $bobot_k5 = 5;
-            // $bobot_k6 = 4;
+            // $bobot_k1 = 5;
+            // $bobot_k2 = 3;
+            // $bobot_k3 = 1;
+            // $bobot_k4 = 5;
+            // $bobot_k5 = 2;
+            // $bobot_k6 = 5;
+            // $bobot_k7 = 5;
             // bobot x -> kesesuaian penulis, kalo ada isinya cocok kasih 5. kalo gaada isi/ga cocok kasih 3
 
             // bobot 5 -> stok buku diperpustakaan, jika stok ada kasih 5, jika kosong kasih 1
@@ -847,16 +848,33 @@ class BiblioController extends Controller
             }
             // dd($arr_stock);
 
-            // Query edisi buku
-            // $arr_edition = [];
-            // foreach($book as $bk){
-            //     $edition = DB::table('biblios')
-            //             ->select('edition')
-            //             ->where('id','=', $bk->id)
-            //             ->get();
-            //     $arr_edition[$bk->id] = $edition[0];
-            // }
-            // dd($arr_edition);
+            // Query rating buku
+            $arr_book_rating = [];
+            foreach($book as $bk){
+                $total_book_rating = 0;
+                for ($i=1; $i <= 5; $i++) { 
+                    $cr = DB::table('book_ratings')
+                            ->select(DB::raw('COUNT(*) as count'))
+                            ->where('rate','=',$i)
+                            ->where('biblios_id','=',$bk->id)
+                            ->get();
+                    
+                    $total_book_rating = $total_book_rating + ($i * $cr[0]->count);
+                }
+                
+                // Dapatkan nilai rating range 1-5
+                $cs = DB::table('book_ratings')
+                            ->select(DB::raw('COUNT(*) as reviewer'))
+                            ->where('biblios_id','=',$bk->id)
+                            ->get();
+            
+                if($cs[0]->reviewer == 0){
+                    $arr_book_rating[$bk->id] = 0;
+                }else{
+                    $arr_book_rating[$bk->id] = round(($total_book_rating / $cs[0]->reviewer),1); 
+                }
+            }
+            dd($arr_book_rating);
 
             // ---------------------------------------------------- Matrix R ------------------------------------------------------
             // Setiap decision matrix dipangkat 2
