@@ -73,7 +73,7 @@
                 </div>
 
                 {{-- Hasil angka TOPSIS --}}
-                <div class="row">
+                {{-- <div class="row">
                     <div class="col-sm-12" style="margin: 20px">
                         <h2>Hasil Angka Topsis</h2>
                         <div class="accordion" id="accordionPanelsStayOpenExample">
@@ -391,7 +391,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>

@@ -208,7 +208,7 @@ class AuthorController extends Controller
                     ->select('biblios.*')
                     ->where('authors_biblios.authors_id','=', $authors_id)
                     ->get();
-        // hitung rating buku
+        // hitung rating penulis
         // total rating x jumlah
         $total_author_rating = 0;
         for ($i=1; $i <= 5; $i++) { 
